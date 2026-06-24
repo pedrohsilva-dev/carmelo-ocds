@@ -1,0 +1,450 @@
+{% load static %}
+{% load compress %}
+{% load permission_tags %}
+
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+<!-- =====================================================
+     META TAGS
+     ===================================================== -->
+
+<meta charset="utf-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+    http-equiv="X-UA-Compatible"
+    content="IE=edge"
+>
+
+<meta
+    name="description"
+    content="Sistema de Gestão OCDS"
+>
+
+<meta
+    name="author"
+    content="OCDS"
+>
+
+<meta
+    name="theme-color"
+    content="#2F1304"
+>
+
+<!-- =====================================================
+     TITLE
+     ===================================================== -->
+
+<title>
+    OCDS
+    {% block title %}
+        
+    {% endblock title %}
+
+</title>
+
+<!-- =====================================================
+     FAVICON
+     ===================================================== -->
+
+<link
+    rel="icon"
+    type="image/png"
+    href="{% static 'logo.png' %}"
+>
+
+<!-- =====================================================
+     CSS
+     ===================================================== -->
+
+<link
+    rel="stylesheet"
+    href="{% static 'css/bootstrap.min.css' %}"
+>
+<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
+ 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD" crossorigin="anonymous">
+
+<link
+    rel="stylesheet"
+    href="{% static 'css/custom.css' %}"
+>
+
+<!-- =====================================================
+     HTMX
+     ===================================================== -->
+
+<script
+    src="{% static 'js/htmx.min.js' %}"
+    defer
+></script>
+
+<!-- =====================================================
+     EXTRA HEAD
+     ===================================================== -->
+
+{% block extra_head %}
+{% endblock extra_head %}
+
+
+</head>
+
+<body>
+<!-- =====================================================
+     NAVBAR
+     ===================================================== -->
+
+{% block navbar %}
+
+<header>
+
+    <nav
+        class="navbar navbar-expand-lg bg-nav-carmel shadow-sm"
+    >
+
+        <div class="container-fluid">
+
+            <a
+                href="/"
+                class="navbar-brand d-flex align-items-center"
+            >
+
+                
+                    <img
+                    src="{% static 'assets/brand_gold.png' %}"
+                    alt="Logo OCDS"
+                    width="40"
+                    height="40"
+                    >
+
+                <span
+                    class="text-white ms-2 fw-bold mt-1 pt-1 ml-1"
+                >
+                    OCDS
+                </span>
+
+            </a>
+
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarMain"
+                aria-controls="navbarMain"
+                aria-expanded="false"
+                aria-label="Alternar navegação"
+            >
+
+                <span
+                    class="navbar-toggler-icon"
+                ></span>
+
+            </button>
+
+            <div
+                class="collapse navbar-collapse"
+                id="navbarMain"
+            >
+                <div class="d-flex w-full d-flex">
+                    {% if user.is_authenticated %}
+
+                        <ul
+                            class="navbar-nav"
+                        >
+
+                            {% if user|can:'list_members' %}
+
+                                <li class="nav-item">
+                                    <a
+                                        class="nav-link text-white"
+                                        href="{% url 'list_member' %}"
+                                    >
+                                        Membros <i class="bi bi-people" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% if user|can:'read_votes_registration' %}
+
+                                <li class="nav-item">
+                                    <a
+                                        class="nav-link text-white"
+                                        href="{% url 'votes_registration' %}"
+                                    >
+                                        Votos Existentes <i class="bi bi-check2-square" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+
+                            {% endif %}
+
+                        </ul>
+
+                    {% endif %}
+
+                    <div class="ml-auto">
+
+                        {% if user.is_authenticated %}
+
+                            <a
+                                href="{% url 'profile' %}"
+                                class="btn btn-item"
+                            >
+                                Perfil <i class="bi bi-person" aria-hidden="true"></i>
+                            </a>
+                             {% if user|can:'carmel_dashboard' %}
+                                <a
+                                    href="{% url 'carmel_profile' %}"
+                                    class="btn btn-item"
+                                >
+                                    Carmelo <i class="bi bi-info-circle" aria-hidden="true"></i>
+                                </a>
+                            {% endif %}
+
+                            <a
+                                href="{% url 'logout' %}"
+                                class="btn btn-danger"
+                            >
+                                Sair <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+                            </a>
+
+                        {% else %}
+                            <a
+                                href="{% url 'home' %}"
+                                class="btn btn-item self-end"
+                            >
+                                Pagina Inicial <i class="bi bi-house" aria-hidden="true"></i>
+                            </a>
+                            
+
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </nav>
+
+</header>
+
+{% endblock navbar %}
+
+<!-- =====================================================
+     TOASTS DJANGO
+     ===================================================== -->
+
+<aside
+
+    class="toast-container position-fixed p-3"
+
+    style="
+        top:0;
+        right:0;
+        z-index:9999;
+    "
+
+    x-data="toastSystem()"
+
+    @django-messages.window="
+        event.detail.value.forEach(
+            msg => add(msg)
+        )
+    "
+
+>
+
+    <template
+        x-for="toast in toasts"
+        :key="toast.id"
+    >
+
+        <div
+
+            x-show="toast.visible"
+
+            x-transition
+
+            class="toast show border-0 shadow"
+
+            :class="classes(toast.tags)"
+
+        >
+
+            <div class="d-flex">
+
+                <div
+                    class="toast-body"
+                    x-text="toast.message"
+                ></div>
+
+                <button
+
+                    class="btn-close btn-close-white me-2 m-auto"
+
+                    @click="remove(toast.id)"
+
+                ></button>
+
+            </div>
+
+        </div>
+
+    </template>
+
+</aside>
+
+<!-- =====================================================
+     MAIN CONTENT
+     ===================================================== -->
+
+<main>
+
+    {% block content %}
+    {% endblock content %}
+
+</main>
+
+<!-- =====================================================
+     FOOTER
+     ===================================================== -->
+
+{% block footer %}
+
+<footer
+    class="text-center py-3"
+>
+
+    <small class="text-muted">
+
+        © {% now "Y" %} OCDS
+
+    </small>
+
+</footer>
+
+{% endblock footer %}
+
+<!-- =====================================================
+     BOOTSTRAP
+     ===================================================== -->
+
+<script
+    src="{% static 'js/bootstrap.min.js' %}"
+></script>
+
+<!-- =====================================================
+     ALPINE
+     ===================================================== -->
+
+<script
+    src="{% static 'js/alpine.js' %}"
+    defer
+></script>
+
+<!-- =====================================================
+     TOAST SYSTEM
+     ===================================================== -->
+
+<script>
+
+    function toastSystem(){
+
+        return {
+
+            toasts: [],
+
+            add(msg){
+
+                const toast = {
+
+                    id:
+                        Date.now() +
+                        Math.random(),
+
+                    message:
+                        msg.message,
+
+                    tags:
+                        msg.tags,
+
+                    visible:
+                        true
+                }
+
+                this.toasts.push(
+                    toast
+                )
+
+                setTimeout(() => {
+
+                    this.remove(
+                        toast.id
+                    )
+
+                }, 4000)
+            },
+
+            remove(id){
+
+                const toast =
+                    this.toasts.find(
+                        t => t.id === id
+                    )
+
+                if(!toast){
+                    return
+                }
+
+                toast.visible = false
+
+                setTimeout(() => {
+
+                    this.toasts =
+                        this.toasts.filter(
+                            t => t.id !== id
+                        )
+
+                }, 200)
+            },
+
+            classes(tags){
+
+                if(tags.includes('success')){
+                    return 'bg-success text-white'
+                }
+
+                if(tags.includes('error')){
+                    return 'bg-danger text-white'
+                }
+
+                if(tags.includes('warning')){
+                    return 'bg-warning text-dark'
+                }
+
+                return 'bg-primary text-white'
+            }
+        }
+    }
+
+</script>
+
+<!-- =====================================================
+     EXTRA BODY
+     ===================================================== -->
+
+{% block extra_body %}
+{% endblock extra_body %}
+
+
+</body>
+
+</html>

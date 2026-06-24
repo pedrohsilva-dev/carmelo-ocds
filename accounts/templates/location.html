@@ -1,0 +1,124 @@
+<div id="response_address">
+
+{% if address %}
+    {{address}}
+
+    <div x-data="{
+        show_update_location: false
+    }">
+        <form>   
+            <div
+                class="modal-custom fade rounded "
+                style="opacity: 100;"
+                x-show="show_update_location"
+                x-cloak
+            >
+                <div class="modal-dialog modal-dialog-centered ">
+                    <div class="modal-content bg-carmel border-none">
+                        <div class="modal-header bg-carmel-header border-none">
+                            <h5 class="modal-title border-none text-white">
+                                Atualizar Localização
+                            </h5>
+                            <button type="button" @click="show_update_location = false" class="close text-white" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body bg-carmel-body text-white border-none">
+                            {% csrf_token %}
+                            <div class="d-flex flex-column">
+
+                                <div class="d-flex flex-wrap container justify-content-around">
+                                    {{address_form}}
+                                </div>
+
+                                <div class="d-flex flex-column flex-justify-content-center px-5 pt-5">
+                                    <button type="button" class="btn btn-item border-white flex-justify-content-center" onClick="getCEP()">Buscar CEP</button>
+                                    <div id="message_cep_result" class="text-center"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-none">
+                            <button
+                                class="btn btn-success"
+                                hx-post="{% url 'edit_address' %}"
+                                hx-target="#response_address"
+                                hx-trigger="click"
+                            >
+                                Atualizar Localização
+                            </button>
+                        </div>
+
+                        
+                    </div>
+                </div>
+            </div>
+        </form>
+        <button class="btn btn-primary" @click="show_update_location = true">
+            <i class="bi bi-pencil-square" aria-hidden="true"></i>
+        </button>
+        <button class="btn btn-danger" hx-confirm="Deseja apagar mesmo a localização?" hx-get="{% url 'delete_address' %}" hx-trigger="click" hx-target="#response_address">
+            <i class="bi bi-trash" aria-hidden="true"></i>
+        </button>
+    </div>
+
+
+
+{% else %}
+    <div x-data="{
+        show_create_location: false
+    }">
+        <form>   
+            <div
+                class="modal-custom fade rounded "
+                style="opacity: 100;"
+                x-show="show_create_location"
+                x-cloak
+            >
+                <div class="modal-dialog modal-dialog-centered ">
+                    <div class="modal-content bg-carmel border-none">
+                        <div class="modal-header bg-carmel-header border-none">
+                            <h5 class="modal-title border-none text-white">
+                                Adicionar Localização
+                            </h5>
+                            <button type="button" @click="show_create_location = false" class="close text-white" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body bg-carmel-body text-white border-none">
+                            {% csrf_token %}
+                            <div class="d-flex flex-column">
+
+                                <div class="d-flex flex-wrap container justify-content-around">
+                                    {{address_form}}
+                                </div>
+
+                                <div class="d-flex flex-column flex-justify-content-center px-5 pt-5">
+                                    <button type="button" class="btn btn-item border-white flex-justify-content-center" onClick="getCEP()">Buscar CEP</button>
+                                    <div id="message_cep_result" class="text-center"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-none">
+                            <button
+                                class="btn btn-success"
+                                hx-post="{% url 'register_address' %}"
+                                hx-target="#response_address"
+                                hx-trigger="click"
+                            >
+                                Adicionar Localização
+                            </button>
+                        </div>
+
+                        
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="d-flex justify-content-between my-2">
+            <button @click="show_create_location = !show_create_location" class="btn bg-carmel-header text-white align-self-center">Adicionar Localização {% include "location.svg" %}</button>
+        </div>
+    </div>
+{% endif %}
+
+</div>

@@ -1,0 +1,53 @@
+<div
+  x-data="{openFormContribution: false}"
+
+  {% if form_contribution.errors %}
+    x-init="openFormContribution = true"
+  {% endif %}
+
+  x-cloak
+>
+  <div class="container d-flex justify-content-end my-3">
+    <button class="btn btn-success" type="button" @click="openFormContribution = true">Nova Contribuição</button>
+  </div>
+  <form class="modal-custom" x-show="openFormContribution" cloak x-transition>
+    {% csrf_token %}
+    
+    <div class="modal-dialog">
+      <div class="modal-content bg-carmel border-none">
+        <div class="modal-header bg-carmel-header border-none">
+          <h3 class="modal-title text-white h6">
+            Adicionar Nova Contribuição
+          </h3>
+          <button type="button" class="close" @click="openFormContribution = false" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          
+        </div>
+        <div class="modal-body bg-carmel-body border-none">
+           <div class="container">
+      <div class="row">
+        <div class="mb-3 col-6 form-group text-center text-white">
+          <label for="id_price" class="form-label">Valor da Contribuição</label>
+          <p  class="h4 bg-carmel border-none text-white pt-1">{{price_default}}</p>
+        </div>
+        <div class="mb-3 col-6 form-group text-white">
+          <label for="id_date_pay" class="form-label">Data do Pagamento</label>
+          {{ form_contribution.date_pay }}
+          {% for err in form_contribution.errors.date_pay %}
+            <div class="text-danger small">{{ err }}</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+        </div>
+        <div class="modal-footer border-none">
+          <button type="button" class="btn btn-success" hx-post="{% url 'register_contribution' user=user_current %}" hx-target="#list-contribution" hx-trigger="click">Registrar Contribuição</button>
+        </div>
+      </div>
+    </div>
+   
+    
+    
+  </form>
+</div>

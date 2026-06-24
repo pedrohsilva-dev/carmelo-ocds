@@ -1,0 +1,96 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block head_title %}
+403 - Erro de redirecionamento
+{% endblock head_title %}
+
+{% block extra_head %}
+
+<style>
+
+:root{
+    --gold:#C9A96E;
+    --gold-dark:#8E6933;
+    --bg:#0f1217;
+    --bg-light:#171c23;
+    --text:#F5F1EA;
+}
+
+body{
+    background:
+        linear-gradient(
+            135deg,
+            #0f1217,
+            #171c23,
+            #0b0e13
+        );
+
+    color:var(--text);
+
+    overflow-x:hidden;
+}
+
+body::before{
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
+    background-image:url("{% static 'images/renda_carmo.png' %}");
+
+    background-repeat:repeat;
+
+    background-size:280px;
+
+    opacity:.03;
+
+    pointer-events:none;
+
+    z-index:-1;
+}
+</style>
+
+{% endblock extra_head %}
+
+{% block content %}
+<div class="error-content">
+
+    <div class="error-number">
+        403
+    </div>
+
+    <h1 class="error-title">
+        ACESSO RESTRITO
+    </h1>
+
+    <p class="error-description">
+        Você não possui permissão para acessar esta área do sistema.
+    </p>
+
+    <div class="ornament-divider">
+        ✦ ✦ ✦
+    </div>
+
+    <blockquote class="error-quote">
+        “A humildade caminha na verdade.”
+    </blockquote>
+
+    <div class="d-flex justify-content-center gap-3 flex-wrap mt-4">
+
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'dashboard' %}" class="btn btn-gold">
+            <i class="bi bi-speedometer2"></i>
+            Ir para o painel
+        </a>
+        {% endif %}
+
+        <a href="{% url 'core:home' %}" class="btn btn-outline-gold">
+            Voltar ao início
+        </a>
+
+    </div>
+
+</div>
+{% endblock content %}

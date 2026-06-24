@@ -1,0 +1,497 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block head_title %}
+Página Inicial
+{% endblock head_title %}
+
+{% block extra_head %}
+
+<style>
+
+:root{
+    --gold:#C9A96E;
+    --gold-dark:#8E6933;
+    --bg:#0f1217;
+    --bg-light:#171c23;
+    --text:#F5F1EA;
+}
+
+body{
+    background:
+        linear-gradient(
+            135deg,
+            #0f1217,
+            #171c23,
+            #0b0e13
+        );
+
+    color:var(--text);
+
+    overflow-x:hidden;
+}
+
+body::before{
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
+    background-image:url("{% static 'images/renda_carmo.png' %}");
+
+    background-repeat:repeat;
+
+    background-size:280px;
+
+    opacity:.03;
+
+    pointer-events:none;
+
+    z-index:-1;
+}
+
+.hero-section{
+    min-height:90vh;
+
+    display:flex;
+
+    align-items:center;
+
+    padding:80px 0;
+}
+
+.hero-title{
+    font-size:3rem;
+
+    font-weight:700;
+}
+
+.hero-subtitle{
+    color:var(--gold);
+
+    font-size:1.25rem;
+}
+
+.glass-card{
+    background:rgba(15,18,23,.75);
+
+    backdrop-filter:blur(16px);
+
+    border:1px solid rgba(201,169,110,.15);
+
+    border-radius:24px;
+
+    padding:2rem;
+
+    box-shadow:
+        0 20px 50px rgba(0,0,0,.35);
+}
+
+.section-title{
+    color:var(--gold);
+
+    font-weight:700;
+
+    margin-bottom:2rem;
+}
+
+.home-photo{
+    width:100%;
+
+    border-radius:24px;
+
+    border:1px solid rgba(201,169,110,.15);
+
+    transition:.4s;
+}
+
+.home-photo:hover{
+    transform:translateY(-5px);
+}
+
+.saint-card{
+    height:100%;
+}
+
+.saint-card h4{
+    color:var(--gold);
+}
+
+.contact-card{
+    text-align:center;
+}
+
+.contact-card h5{
+    color:var(--gold);
+}
+
+footer{
+    border-top:1px solid rgba(201,169,110,.1);
+}
+
+@media(max-width:768px){
+
+    .hero-title{
+        font-size:2rem;
+    }
+
+}
+
+</style>
+
+{% endblock extra_head %}
+
+{% block content %}
+
+<section class="hero-section container">
+
+
+<div class="row align-items-center gy-5">
+
+    <div class="col-lg-6">
+
+        <img
+            src="{% static 'assets/top_login.png' %}"
+            width="130"
+            class="mb-4"
+        >
+
+        <h1 class="hero-title">
+            Ordem dos Carmelitas
+            Descalços Seculares
+        </h1>
+
+        <p class="hero-subtitle">
+            Comunidade Alegria da Sagrada Face
+        </p>
+
+        <p class="lead">
+            Filhos e filhas de Nossa Senhora do Monte Carmelo,
+            vivendo o carisma teresiano no mundo.
+        </p>
+
+        <a
+            href="{% url 'login' %}"
+            class="btn btn-item mt-3"
+        >
+            Entrar no Sistema <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>
+        </a>
+
+    </div>
+
+    <div class="col-lg-6">
+
+        <img
+            src="{% static 'logo.png' %}"
+            class="home-photo border-none"
+            alt="OCDS"
+        >
+
+    </div>
+
+</div>
+
+
+</section>
+
+<section class="container py-5">
+
+
+<div class="glass-card">
+
+    <h2 class="section-title">
+        Quem Somos
+    </h2>
+
+    <p>
+        Os Carmelitas Seculares, em união com os Frades e as Monjas,
+        são filhos e filhas da Ordem de Nossa Senhora do Monte Carmelo
+        e de Santa Teresa de Jesus.
+    </p>
+
+    <p>
+        Compartilham o mesmo carisma, os mesmos bens espirituais,
+        a mesma vocação à santidade e a mesma missão apostólica,
+        vivendo sua vocação no mundo segundo seu estado de vida.
+    </p>
+
+</div>
+
+
+</section>
+
+<section class="container py-5">
+
+
+<div class="row align-items-center gy-4">
+
+    <div class="col-lg-5">
+
+        <img
+            src="{% static 'assets/home/photo1.png' %}"
+            class="home-photo"
+        >
+
+    </div>
+
+    <div class="col-lg-7">
+
+        <h2 class="section-title">
+            Nossa História
+        </h2>
+
+        <p>
+            A Comunidade Alegria da Sagrada Face nasceu em
+            Itapetininga através de leigos comprometidos com a Igreja,
+            desejosos de viver o carisma teresiano.
+        </p>
+
+        <p>
+            Após anos de retiros e formação, a comunidade foi
+            oficialmente estabelecida e recebeu a Ereção Canônica
+            em 1º de outubro de 2018, festa de Santa Teresinha.
+        </p>
+
+        <p>
+            Atualmente a comunidade continua sua missão de oração,
+            formação e apostolado junto à Igreja.
+        </p>
+
+    </div>
+
+</div>
+
+
+</section>
+
+<section class="container py-5">
+
+
+<h2 class="section-title text-center">
+    Espiritualidade Carmelita
+</h2>
+
+<div class="row g-4">
+
+    <div class="col-md-4">
+
+        <div class="glass-card saint-card">
+
+            <h4>Santa Teresa de Jesus</h4>
+
+            <p>
+                Mestra da oração e reformadora do Carmelo.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="glass-card saint-card">
+
+            <h4>São João da Cruz</h4>
+
+            <p>
+                Doutor da Igreja e mestre da vida interior.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="glass-card saint-card">
+
+            <h4>Santa Teresinha</h4>
+
+            <p>
+                Modelo de confiança e abandono em Deus.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</section>
+
+<section class="container py-5">
+
+
+<div class="row align-items-center gy-4">
+
+    <div class="col-lg-7">
+
+        <h2 class="section-title">
+            Formação OCDS
+        </h2>
+
+        <p>
+            A formação segue quatro dimensões fundamentais:
+        </p>
+
+        <ul>
+            <li>Formação Espiritual</li>
+            <li>Formação Carmelitana</li>
+            <li>Formação Doutrinal</li>
+            <li>Formação Humana</li>
+        </ul>
+
+        <p>
+            Os membros participam de encontros,
+            retiros de silêncio e da Escola Edith Stein.
+        </p>
+
+    </div>
+
+    <div class="col-lg-5">
+
+        <img
+            src="{% static 'assets/home/photo2.png' %}"
+            class="home-photo"
+        >
+
+    </div>
+
+</div>
+
+
+</section>
+
+<section class="container py-5">
+
+
+<div class="row align-items-center gy-4">
+
+    <div class="col-lg-5">
+
+        <img
+            src="{% static 'assets/home/photo3.png' %}"
+            class="home-photo"
+        >
+
+    </div>
+
+    <div class="col-lg-7">
+
+        <h2 class="section-title">
+            Apostolado e Missão
+        </h2>
+
+        <p>
+            A oração e o apostolado são inseparáveis.
+        </p>
+
+        <p>
+            A comunidade atua na evangelização,
+            formação de leigos, retiros espirituais,
+            orientação espiritual e colaboração com
+            as atividades paroquiais.
+        </p>
+
+    </div>
+
+</div>
+
+
+</section>
+
+<section class="container py-5">
+
+
+<h2 class="section-title text-center">
+    Nossa Comunidade
+</h2>
+
+<div class="row g-4">
+
+    <div class="col-md-4">
+        <img src="{% static 'assets/home/photo3.png' %}" class="home-photo">
+    </div>
+
+    <div class="col-md-4">
+        <img src="{% static 'assets/home/photo4.png' %}" class="home-photo">
+    </div>
+
+    <div class="col-md-4">
+        <img src="{% static 'assets/home/photo5.png' %}" class="home-photo">
+    </div>
+
+</div>
+
+
+</section>
+
+<section class="container py-5">
+
+
+<div class="glass-card">
+
+    <h2 class="section-title text-center">
+        Conheça a OCDS
+    </h2>
+
+    <div class="row">
+
+        <div class="col-md-6">
+
+            <div class="contact-card">
+
+                <h5>Comissão Vocacional</h5>
+
+                <p>
+                    vocacaoocds@gmail.com
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="contact-card">
+
+                <h5>Comissão Missionária</h5>
+
+                <p>
+                    marciaocds@gmail.com
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</section>
+
+<footer class="container py-5 text-center">
+
+
+<img
+    src="{% static 'assets/top_login.png' %}"
+    width="100"
+    class="mb-4"
+>
+
+<p class="mb-0">
+    "Que nada te perturbe,
+    nada te espante,
+    tudo passa,
+    Deus não muda.
+    Só Deus basta."
+</p>
+
+
+</footer>
+
+{% endblock content %}

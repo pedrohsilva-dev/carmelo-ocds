@@ -1,0 +1,835 @@
+{
+  "project": "Django AI Schema Export",
+  "models_count": 8,
+  "models": [
+    {
+      "app": "carmel",
+      "model": "Carmel",
+      "table": "carmel_carmel",
+      "is_abstract": false,
+      "is_proxy": false,
+      "fields": [
+        {
+          "name": "id",
+          "type": "BigAutoField",
+          "null": false,
+          "blank": true,
+          "unique": true,
+          "editable": true
+        },
+        {
+          "name": "created_at",
+          "type": "DateTimeField",
+          "null": false,
+          "blank": true,
+          "unique": false,
+          "editable": false
+        },
+        {
+          "name": "updated_at",
+          "type": "DateTimeField",
+          "null": false,
+          "blank": true,
+          "unique": false,
+          "editable": false
+        },
+        {
+          "name": "name",
+          "type": "CharField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true
+        },
+        {
+          "name": "description",
+          "type": "TextField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true
+        },
+        {
+          "name": "price_contribution_default",
+          "type": "DecimalField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true
+        },
+        {
+          "name": "pay_day_contribution_default",
+          "type": "IntegerField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true
+        }
+      ],
+      "relations": [],
+      "methods": [
+        "clean",
+        "delete",
+        "save"
+      ],
+      "meta": {
+        "ordering": []
+      },
+      "potential_issues": [],
+      "test_suggestions": [
+        {
+          "type": "create_valid_instance",
+          "model": "Carmel"
+        },
+        {
+          "type": "missing_required_fields_validation",
+          "model": "Carmel"
+        },
+        {
+          "type": "unique_constraint_test",
+          "model": "Carmel"
+        },
+        {
+          "type": "relation_integrity_test",
+          "model": "Carmel"
+        }
+      ]
+    },
+    {
+      "app": "members",
+      "model": "Address",
+      "table": "members_address",
+      "is_abstract": false,
+      "is_proxy": false,
+      "fields": [
+        {
+          "name": "id",
+          "type": "BigAutoField",
+          "null": false,
+          "blank": true,
+          "unique": true,
+          "editable": true
+        },
+        {
+          "name": "street",
+          "type": "CharField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true
+        },
+        {
+          "name": "number",
+          "type": "CharField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true
+        },
+        {
+          "name": "neighborhood",
+          "type": "CharField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true
+        },
+        {
+          "name": "city",
+          "type": "CharField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true
+        },
+        {
+          "name": "state",
+          "type": "CharField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true
+        },
+        {
+          "name": "zipcode",
+          "type": "CharField",
+          "null": false,
+          "blank": true,
+          "unique": false,
+          "editable": true
+        },
+        {
+          "name": "member",
+          "type": "OneToOneField",
+          "null": true,
+          "blank": true,
+          "unique": true,
+          "editable": true,
+          "is_relation": true,
+          "relation_type": "OneToOneField",
+          "related_model": "Member"
+        }
+      ],
+      "relations": [
+        "member"
+      ],
+      "methods": [
+        "clean",
+        "delete",
+        "save"
+      ],
+      "meta": {
+        "ordering": []
+      },
+      "potential_issues": [
+        "unique=True com null=True pode gerar múltiplos NULLs no banco"
+      ],
+      "test_suggestions": [
+        {
+          "type": "create_valid_instance",
+          "model": "Address"
+        },
+        {
+          "type": "missing_required_fields_validation",
+          "model": "Address"
+        },
+        {
+          "type": "unique_constraint_test",
+          "model": "Address"
+        },
+        {
+          "type": "relation_integrity_test",
+          "model": "Address"
+        }
+      ]
+    },
+    {
+      "app": "members",
+      "model": "Phone",
+      "table": "members_phone",
+      "is_abstract": false,
+      "is_proxy": false,
+      "fields": [
+        {
+          "name": "id",
+          "type": "BigAutoField",
+          "null": false,
+          "blank": true,
+          "unique": true,
+          "editable": true
+        },
+        {
+          "name": "name",
+          "type": "CharField",
+          "null": false,
+          "blank": true,
+          "unique": false,
+          "editable": true
+        },
+        {
+          "name": "number",
+          "type": "CharField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true
+        },
+        {
+          "name": "member",
+          "type": "ForeignKey",
+          "null": true,
+          "blank": true,
+          "unique": false,
+          "editable": true,
+          "is_relation": true,
+          "relation_type": "ForeignKey",
+          "related_model": "Member"
+        }
+      ],
+      "relations": [
+        "member"
+      ],
+      "methods": [
+        "clean",
+        "delete",
+        "save"
+      ],
+      "meta": {
+        "ordering": []
+      },
+      "potential_issues": [],
+      "test_suggestions": [
+        {
+          "type": "create_valid_instance",
+          "model": "Phone"
+        },
+        {
+          "type": "missing_required_fields_validation",
+          "model": "Phone"
+        },
+        {
+          "type": "unique_constraint_test",
+          "model": "Phone"
+        },
+        {
+          "type": "relation_integrity_test",
+          "model": "Phone"
+        }
+      ]
+    },
+    {
+      "app": "members",
+      "model": "Member",
+      "table": "members_member",
+      "is_abstract": false,
+      "is_proxy": false,
+      "fields": [
+        {
+          "name": "id",
+          "type": "BigAutoField",
+          "null": false,
+          "blank": true,
+          "unique": true,
+          "editable": true
+        },
+        {
+          "name": "password",
+          "type": "CharField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true
+        },
+        {
+          "name": "last_login",
+          "type": "DateTimeField",
+          "null": true,
+          "blank": true,
+          "unique": false,
+          "editable": true
+        },
+        {
+          "name": "is_superuser",
+          "type": "BooleanField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true,
+          "default": "False"
+        },
+        {
+          "name": "created_at",
+          "type": "DateTimeField",
+          "null": false,
+          "blank": true,
+          "unique": false,
+          "editable": false
+        },
+        {
+          "name": "updated_at",
+          "type": "DateTimeField",
+          "null": false,
+          "blank": true,
+          "unique": false,
+          "editable": false
+        },
+        {
+          "name": "name",
+          "type": "CharField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true
+        },
+        {
+          "name": "email",
+          "type": "EmailField",
+          "null": false,
+          "blank": false,
+          "unique": true,
+          "editable": true
+        },
+        {
+          "name": "church",
+          "type": "CharField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true
+        },
+        {
+          "name": "entry_date",
+          "type": "DateField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true
+        },
+        {
+          "name": "carmel",
+          "type": "ForeignKey",
+          "null": true,
+          "blank": true,
+          "unique": false,
+          "editable": true,
+          "is_relation": true,
+          "relation_type": "ForeignKey",
+          "related_model": "Carmel"
+        },
+        {
+          "name": "roles",
+          "type": "CharField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true,
+          "default": "NM",
+          "choices": [
+            {
+              "value": "MN",
+              "label": "Responsavel"
+            },
+            {
+              "value": "FN",
+              "label": "Tesoreiro"
+            },
+            {
+              "value": "NM",
+              "label": "Normal"
+            }
+          ]
+        },
+        {
+          "name": "slug",
+          "type": "SlugField",
+          "null": false,
+          "blank": true,
+          "unique": true,
+          "editable": true
+        },
+        {
+          "name": "is_active",
+          "type": "BooleanField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true,
+          "default": "True"
+        },
+        {
+          "name": "is_staff",
+          "type": "BooleanField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true,
+          "default": "False"
+        },
+        {
+          "name": "groups",
+          "type": "ManyToManyField",
+          "null": false,
+          "blank": true,
+          "unique": false,
+          "editable": true,
+          "is_relation": true,
+          "relation_type": "ManyToManyField",
+          "related_model": "Group"
+        },
+        {
+          "name": "user_permissions",
+          "type": "ManyToManyField",
+          "null": false,
+          "blank": true,
+          "unique": false,
+          "editable": true,
+          "is_relation": true,
+          "relation_type": "ManyToManyField",
+          "related_model": "Permission"
+        }
+      ],
+      "relations": [
+        "carmel",
+        "groups",
+        "user_permissions"
+      ],
+      "methods": [
+        "clean",
+        "delete",
+        "save"
+      ],
+      "meta": {
+        "ordering": []
+      },
+      "potential_issues": [
+        "ForeignKey sem db_index explícito (pode impactar performance)",
+        "ForeignKey sem db_index explícito (pode impactar performance)"
+      ],
+      "test_suggestions": [
+        {
+          "type": "create_valid_instance",
+          "model": "Member"
+        },
+        {
+          "type": "missing_required_fields_validation",
+          "model": "Member"
+        },
+        {
+          "type": "unique_constraint_test",
+          "model": "Member"
+        },
+        {
+          "type": "relation_integrity_test",
+          "model": "Member"
+        }
+      ]
+    },
+    {
+      "app": "votes",
+      "model": "VotesRegistration",
+      "table": "votes_votesregistration",
+      "is_abstract": false,
+      "is_proxy": false,
+      "fields": [
+        {
+          "name": "id",
+          "type": "BigAutoField",
+          "null": false,
+          "blank": true,
+          "unique": true,
+          "editable": true
+        },
+        {
+          "name": "name",
+          "type": "CharField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true
+        },
+        {
+          "name": "description",
+          "type": "TextField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true
+        }
+      ],
+      "relations": [],
+      "methods": [
+        "clean",
+        "delete",
+        "save"
+      ],
+      "meta": {
+        "ordering": []
+      },
+      "potential_issues": [],
+      "test_suggestions": [
+        {
+          "type": "create_valid_instance",
+          "model": "VotesRegistration"
+        },
+        {
+          "type": "missing_required_fields_validation",
+          "model": "VotesRegistration"
+        },
+        {
+          "type": "unique_constraint_test",
+          "model": "VotesRegistration"
+        },
+        {
+          "type": "relation_integrity_test",
+          "model": "VotesRegistration"
+        }
+      ]
+    },
+    {
+      "app": "votes",
+      "model": "Vote",
+      "table": "votes_vote",
+      "is_abstract": false,
+      "is_proxy": false,
+      "fields": [
+        {
+          "name": "id",
+          "type": "BigAutoField",
+          "null": false,
+          "blank": true,
+          "unique": true,
+          "editable": true
+        },
+        {
+          "name": "created_at",
+          "type": "DateTimeField",
+          "null": false,
+          "blank": true,
+          "unique": false,
+          "editable": false
+        },
+        {
+          "name": "updated_at",
+          "type": "DateTimeField",
+          "null": false,
+          "blank": true,
+          "unique": false,
+          "editable": false
+        },
+        {
+          "name": "votes_registration",
+          "type": "ForeignKey",
+          "null": true,
+          "blank": false,
+          "unique": false,
+          "editable": true,
+          "is_relation": true,
+          "relation_type": "ForeignKey",
+          "related_model": "VotesRegistration"
+        },
+        {
+          "name": "date",
+          "type": "DateTimeField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true
+        },
+        {
+          "name": "type",
+          "type": "CharField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true,
+          "choices": [
+            {
+              "value": "DEF",
+              "label": "Definitivo"
+            },
+            {
+              "value": "TEMP",
+              "label": "Temporários"
+            }
+          ]
+        },
+        {
+          "name": "year_duration",
+          "type": "IntegerField",
+          "null": true,
+          "blank": true,
+          "unique": false,
+          "editable": true
+        },
+        {
+          "name": "member",
+          "type": "ForeignKey",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true,
+          "is_relation": true,
+          "relation_type": "ForeignKey",
+          "related_model": "Member"
+        }
+      ],
+      "relations": [
+        "votes_registration",
+        "member"
+      ],
+      "methods": [
+        "clean",
+        "delete",
+        "save"
+      ],
+      "meta": {
+        "ordering": []
+      },
+      "potential_issues": [
+        "null=True mas blank=False (possível inconsistência em forms)"
+      ],
+      "test_suggestions": [
+        {
+          "type": "create_valid_instance",
+          "model": "Vote"
+        },
+        {
+          "type": "missing_required_fields_validation",
+          "model": "Vote"
+        },
+        {
+          "type": "unique_constraint_test",
+          "model": "Vote"
+        },
+        {
+          "type": "relation_integrity_test",
+          "model": "Vote"
+        }
+      ]
+    },
+    {
+      "app": "contributions",
+      "model": "Contribution",
+      "table": "contributions_contribution",
+      "is_abstract": false,
+      "is_proxy": false,
+      "fields": [
+        {
+          "name": "id",
+          "type": "BigAutoField",
+          "null": false,
+          "blank": true,
+          "unique": true,
+          "editable": true
+        },
+        {
+          "name": "created_at",
+          "type": "DateTimeField",
+          "null": false,
+          "blank": true,
+          "unique": false,
+          "editable": false
+        },
+        {
+          "name": "updated_at",
+          "type": "DateTimeField",
+          "null": false,
+          "blank": true,
+          "unique": false,
+          "editable": false
+        },
+        {
+          "name": "price",
+          "type": "DecimalField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true
+        },
+        {
+          "name": "date_pay",
+          "type": "DateField",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true
+        },
+        {
+          "name": "member",
+          "type": "ForeignKey",
+          "null": false,
+          "blank": false,
+          "unique": false,
+          "editable": true,
+          "is_relation": true,
+          "relation_type": "ForeignKey",
+          "related_model": "Member"
+        }
+      ],
+      "relations": [
+        "member"
+      ],
+      "methods": [
+        "clean",
+        "delete",
+        "save"
+      ],
+      "meta": {
+        "ordering": []
+      },
+      "potential_issues": [],
+      "test_suggestions": [
+        {
+          "type": "create_valid_instance",
+          "model": "Contribution"
+        },
+        {
+          "type": "missing_required_fields_validation",
+          "model": "Contribution"
+        },
+        {
+          "type": "unique_constraint_test",
+          "model": "Contribution"
+        },
+        {
+          "type": "relation_integrity_test",
+          "model": "Contribution"
+        }
+      ]
+    },
+    {
+      "app": "accounts",
+      "model": "ResetPasswordAccess",
+      "table": "accounts_resetpasswordaccess",
+      "is_abstract": false,
+      "is_proxy": false,
+      "fields": [
+        {
+          "name": "id",
+          "type": "BigAutoField",
+          "null": false,
+          "blank": true,
+          "unique": true,
+          "editable": true
+        },
+        {
+          "name": "token",
+          "type": "CharField",
+          "null": true,
+          "blank": true,
+          "unique": false,
+          "editable": true
+        },
+        {
+          "name": "member",
+          "type": "OneToOneField",
+          "null": false,
+          "blank": false,
+          "unique": true,
+          "editable": true,
+          "is_relation": true,
+          "relation_type": "OneToOneField",
+          "related_model": "Member"
+        },
+        {
+          "name": "expired_at",
+          "type": "DateTimeField",
+          "null": true,
+          "blank": true,
+          "unique": false,
+          "editable": true
+        }
+      ],
+      "relations": [
+        "member"
+      ],
+      "methods": [
+        "clean",
+        "delete",
+        "save"
+      ],
+      "meta": {
+        "ordering": []
+      },
+      "potential_issues": [],
+      "test_suggestions": [
+        {
+          "type": "create_valid_instance",
+          "model": "ResetPasswordAccess"
+        },
+        {
+          "type": "missing_required_fields_validation",
+          "model": "ResetPasswordAccess"
+        },
+        {
+          "type": "unique_constraint_test",
+          "model": "ResetPasswordAccess"
+        },
+        {
+          "type": "relation_integrity_test",
+          "model": "ResetPasswordAccess"
+        }
+      ]
+    }
+  ]
+}

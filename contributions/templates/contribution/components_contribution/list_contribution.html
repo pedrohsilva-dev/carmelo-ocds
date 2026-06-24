@@ -1,0 +1,39 @@
+{% if months.count_missing != 0 %}
+    {% include 'contribution/register.html' %}
+{% endif %}
+<div class="d-flex justify-content-end mb-2 mx-2 my-2 align-items-center">
+    <!-- centralizar os meses pagos e não pagos vertical cada items -->
+    <!-- classe para colocar do bootstrap nesse proximo paragrafo -->
+    <p class="text-white px-4">Data de Entrada: <span class="h6">{{ date_entry }}</span></p>
+    <p class="bg-success text-white mx-1 px-3 py-1"><span class="font-weight-bold">Meses Pagos</span> <span class="badge bg-white text-dark h4">{{months.count_paid}}</span></p>
+    <p class="bg-danger text-white mx-1 px-3 py-1"><span class="font-weight-bold">Meses Faltantes</span> <span class="badge bg-white text-dark h4">{{months.count_missing}}</span></p>
+</div>
+<div>
+    {% for missing_month in months.missing_months %}
+        <p class="bg-warning text-dark mx-1 px-3 py-1">{{ missing_month }}</p>
+    {% endfor %}
+</div>
+{% for contribution in contributions %}
+    <div class="container ">
+        <!-- Deixar qauntidade de meses pagos e não pagos bonitos com bootstrap-->
+       
+        <ul class="list-group list-group-numbered">
+            <li class="list-group-item bg-carmel mb-1 text-white d-flex justify-content-between align-items-center">
+                <div>
+                    <div>{{contribution.price}}</div>
+                    <div>{{contribution.date_pay}}</div>    
+                </div>
+                <div>
+                    <button class="btn btn-danger" hx-get="{% url 'delete_contribution' id=contribution.id user=user_current %}" hx-confirm="Deseja Deletar Mesmo?" hx-target="#list-contribution" hx-trigger="click">Deletar</button>
+                </div>
+            </li>
+        </ul>
+    </div>
+{% empty %} 
+    <div
+        class="alert alert-warning mx-2"
+        role="alert"
+    >
+        <strong>Não existe nenhuma Contribuição</strong>
+    </div>
+{% endfor %}

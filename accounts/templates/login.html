@@ -1,0 +1,524 @@
+{% extends 'partials/base.html' %}
+
+{% load static %}
+
+{% block title %}
+Login Carmelo
+{% endblock %}
+
+{% block title_navbar %}
+Sistema do Carmelo
+{% endblock %}
+
+{% block extra_head %}
+
+<style>
+
+body{
+
+    min-height:100vh;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(201,169,110,.15),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at bottom left,
+            rgba(201,169,110,.08),
+            transparent 25%
+        ),
+
+        linear-gradient(
+            135deg,
+            #0f1217,
+            #171c23,
+            #0b0e13
+        );
+
+    overflow-x:hidden;
+}
+
+/* Renda Mariana */
+
+body::before{
+
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
+    background-image:
+        url("{% static 'images/renda_carmo.png' %}");
+
+    background-repeat:
+        repeat;
+
+    background-size:
+        280px;
+
+    opacity:
+        .03;
+
+    pointer-events:none;
+
+    z-index:-2;
+}
+
+/* brilho dourado */
+
+
+
+body::after{
+
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
+    pointer-events:none;
+
+    z-index:0;
+
+    background:
+        radial-gradient(
+            220px circle at
+            var(--mouse-x,50%)
+            var(--mouse-y,50%),
+
+            rgba(201,169,110,.15) 0%,
+            rgba(201,169,110,.08) 35%,
+            transparent 70%
+        );
+}
+
+#login-carmel{
+
+    min-height: 76vh;
+
+    display:flex;
+
+    align-items:center;
+}
+
+/* Card */
+
+.login-form{
+
+    backdrop-filter:blur(14px);
+
+    background:rgba(15,18,23,.78);
+
+    border:1px solid rgba(201,169,110,.15);
+
+    box-shadow:
+        0 25px 60px rgba(0,0,0,.45);
+
+    overflow:hidden;
+
+    border-radius:24px;
+}
+
+/* Header */
+
+.card-header-color{
+
+    background:
+        linear-gradient(
+            90deg,
+            #8E6933,
+            #C9A96E
+        ) !important;
+
+    color:white;
+
+    font-weight:600;
+
+    letter-spacing:.5px;
+}
+
+/* Inputs */
+
+.form-control{
+
+    background:
+        rgba(255,255,255,.03);
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    color:white;
+}
+
+.form-control:focus{
+
+    background:
+        rgba(255,255,255,.05);
+
+    border-color:
+        #C9A96E;
+
+    color:white;
+
+    box-shadow:
+        0 0 0 4px rgba(201,169,110,.15);
+}
+
+/* Nossa Senhora */
+
+.nsc img{
+
+    border-radius:24px;
+
+
+    transition:
+        all .5s ease;
+}
+
+.nsc img:hover{
+
+    transform:
+        scale(1.03);
+}
+
+.title-carmel{
+
+    color:#F5F1EA;
+
+    font-weight:700;
+
+    margin-top:25px;
+    font-size: 150%;
+}
+
+.subtitle-carmel{
+
+    color:#C9A96E;
+
+    opacity:.85;
+}
+
+.password-toggle{
+
+    cursor:pointer;
+
+    color:#C9A96E;
+
+    user-select:none;
+}
+
+@media (max-width: 992px) {
+    .img-size {
+        width: 232px;
+        height: 324px;
+        padding-top: 95px !important;
+    }
+}
+
+@media(max-width:767px){
+
+    #login-carmel{
+
+        padding-top:20px;
+         max-width: 90% !important;
+         margin: 1px auto;
+        
+    }
+
+    #nsc-slider{
+        display: none;
+    }
+
+    .title-carmel{
+
+        font-size:1.5rem;
+    }
+}
+
+</style>
+
+{% endblock extra_head %}
+
+{% block content %}
+
+<section id="login-carmel">
+    <div class="row align-items-center w-full container-fluid">
+
+        <!-- IMAGENS -->
+
+        <div id="nsc-slider" class="col-12 col-md-6 text-center">
+
+            <div
+                class="nsc mx-auto"
+                x-data="nscSlider()"
+                x-init="init()"
+                x-cloak
+            >
+
+                <div
+                    class="nsc1 img-size"
+                    :style="`
+                        top:${active ? '20px':'0px'};
+                        left:${active ? '30px':'0px'};
+                        z-index:${active ? '1':'2'};
+                        position:absolute;
+                        transition:.6s ease;
+                          background-image: url({% static 'assets/background_nsc.png' %});
+                        background-size: cover;
+                    `"
+                    
+                >
+                    <img
+                        class="img-fluid"
+                            style="width: 140px; height: 190px;"
+                         style="background-image: url({% static 'assets/background_nsc.png' %});background-size: cover;"
+                        src="{% static 'assets/nsc.png' %}"
+                        alt="Nossa Senhora do Carmo"
+                    >
+                </div>
+
+                <div
+                    class="nsc2 img-size"
+                    :style="`
+                        top:${active ? '0px':'20px'};
+                        left:${active ? '0px':'30px'};
+                        z-index:${active ? '2':'1'};
+                        position:absolute;
+                        transition:.6s ease;
+                        background-image: url({% static 'assets/background_nsc.png' %});
+                        background-size: cover;
+                      
+                    `
+                    
+                    "
+                    
+                >
+                    <img
+                        class="img-fluid"
+                       style="width: 160px; height: 200px;"
+                        src="{% static 'assets/brand_nsc.png' %}"
+                        alt="Nossa Senhora do Carmo"
+                    >
+                </div>
+
+            </div>
+
+            <div class="py-1">
+
+                <h2 class="title-carmel">
+                    Ordem dos Carmelitas Descalços Seculares
+                </h2>
+
+                <p class="subtitle-carmel">
+                    Sistema de Gestão do Carmelo
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- LOGIN -->
+
+        <div class="col-12 col-md-6" x-data="{ show_forgot_password: false }">
+
+            <div class="card card-carmel login-form">
+
+                <div class="card-header text-center h4 d-flex flex-column align-items-center">
+                  
+                    <span>
+                        Login do Sistema
+                    </span>
+                </div>
+
+                <div class="card-body card-body-color">
+
+                    <form
+                        action="{% url 'login' %}"
+                        method="POST"
+
+                        x-data="{
+                            hide_password:true
+                        }"
+                    >
+
+                        {% csrf_token %}
+
+                        <div>
+                            {% for message in messages %}
+                                {% if message.tags == "error" %}
+                                    <div
+                                        class="alert alert-danger"
+                                        role="alert"
+                                    >
+                                        <strong>{{message}}</strong>
+                                    </div>
+                                    
+                                {% elif message.tags == "success" %}
+                                <div
+                                        class="alert alert-success"
+                                        role="alert"
+                                    >
+                                    <strong>{{message}}</strong>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label
+                                for="id_email"
+                                class="form-label text-white"
+                            >
+                                Email
+                            </label>
+
+                            {{ form.email }}
+                            {% for err in form.errors.email %}
+                                <div class="text-danger small">{{ err }}</div>
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label
+                                for="id_password"
+                                class="form-label text-white"
+                            >
+                                Senha
+                            </label>
+
+                            <div class="position-relative">
+
+                                {{ form.password }}
+                                {% for err in form.errors.password %}
+                                <div class="text-danger small">{{ err }}</div>
+                                {% endfor %}
+
+                                <span
+                                    class="position-absolute password-toggle"
+                                    style="right:12px;top:10px;"
+                                    @click="hide_password=!hide_password"
+                                >
+
+                                    <span x-show="hide_password">
+                                         <i class="bi bi-eye-slash" aria-hidden="true"></i>
+                                    </span>
+                                        
+                                    <span x-show="!hide_password">
+                                        <i class="bi bi-eye" aria-hidden="true"></i>
+                                    </span>
+
+                                </span>
+
+                            </div>
+
+                        </div> 
+
+                        <div class="text-end">
+
+                            <a type="button" @click="show_forgot_password = true" class="text-decoration-none text-white" style="font-size: 14px;">
+                                Esqueceu sua senha?
+                            </a>
+
+                        </div>
+                        
+
+                        <div class=" mt-5">
+
+                            <button
+                                type="submit"
+                                class="btn btn-item w-full"
+                            >
+                                Entrar no Sistema
+                            </button>
+                              <div style="max-width: 280px;" class="mx-auto my-2">
+                        <img class="w-full"  src="{% static 'assets/top_login.png' %}" alt="Logo Dourada Ordem dos Carmelitas Descalços Seculares ">
+                    </div>
+                            <p class="text-center my-2" style="font-size: 8px;">"Que nada te perturbe, Nada te Espante, Tudo passa,<br>Deus não muda, A paciência tudo alcança;<br>Quem a Deus tem, Nada lhe falta: Só Deus basta."</p>
+                        </div>
+                        
+
+                    </form>
+                    
+                </div>
+                
+            </div>
+            {% include "forgot_password.html" %}
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_body %}
+
+<script>
+
+function nscSlider(){
+
+    return {
+
+        active:false,
+
+        interval:null,
+
+        init(){
+
+            if(this.interval){
+                clearInterval(this.interval)
+            }
+
+            this.interval = setInterval(() => {
+                this.active = !this.active
+            },5000)
+        }
+    }
+}
+
+
+// Animação de Grow
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+
+let currentX = mouseX;
+let currentY = mouseY;
+
+document.addEventListener('mousemove', e => {
+
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+
+});
+
+function animate() {
+
+    currentX += (mouseX - currentX) * 0.08;
+    currentY += (mouseY - currentY) * 0.08;
+
+    document.body.style.setProperty(
+        '--mouse-x',
+        `${currentX}px`
+    );
+
+    document.body.style.setProperty(
+        '--mouse-y',
+        `${currentY}px`
+    );
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+</script>
+
+{% endblock extra_body %}

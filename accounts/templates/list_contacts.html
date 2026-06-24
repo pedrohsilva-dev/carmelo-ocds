@@ -1,0 +1,19 @@
+<ul class="list-group" id="response_tel">
+    {% for phone in phones %}
+    <li class="list-group-item d-flex justify-content-between align-items-center bg-carmel-body">
+        <div class="d-flex flex-column">
+            <span class="badge rounded-pill text-bg-primary text-white h3" >{{phone.name}}</span>
+            <span class="badge rounded-pill text-bg-primary text-white h5">{{phone.number}}</span>
+        </div>
+        <div class="d-flex">
+            <form class="mx-1">
+                {% csrf_token %}
+                <button class="btn btn-danger" hx-post="{% url 'delete_phone' id=phone.id %}" hx-trigger="click" hx-target="#response_tel">Deletar</button>
+            </form>
+        </div>
+    </li>
+    {% empty %}
+        Nenhum Numero cadastrado
+    {% endfor %}
+</ul>
+

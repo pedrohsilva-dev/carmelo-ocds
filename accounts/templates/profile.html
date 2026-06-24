@@ -1,0 +1,175 @@
+{% extends 'partials/base.html' %}
+
+{% load static %}
+
+{% block head_title %}
+    Membro {{user.name}}
+{% endblock %}
+
+{% block title_navbar %}
+    Perfil do Membro {{user.name}}
+{% endblock %}
+    
+{% block content %}
+  
+    <div class="profile container my-2">
+        <div class="d-flex justify-content-center ">
+            <div class="d-flex flex-wrap">
+                <div class="container">
+                    <p class="text-white d-flex justify-content-between">
+                        <span class="align-self-center h6">Nome</span>
+                        <span class="align-self-center">{{user.name}}</span>
+                    </p>
+                    <p class="text-white d-flex justify-content-between">
+                        <span class="align-self-center h6">Email</span>
+                        <span class="align-self-center">{{user.email}}</span>
+                    </p>
+
+                    <div class="d-flex justify-content-between text-white">
+                        <span class="align-self-center h6">Localização </span>
+                        <div class="align-self-center">
+                            {% include 'location.html' %}
+                        </div>
+                    </div>
+                </div>
+                <div class="container ">
+                    <div x-data="{
+                        show_create_number: false
+                    }">
+                        <form>   
+                            <div
+                                class="modal-custom fade rounded "
+                                style="opacity: 100;"
+                                x-show="show_create_number"
+                                x-cloak
+                            >
+                                <div class="modal-dialog modal-dialog-centered ">
+                                    <div class="modal-content bg-carmel border-none">
+                                        <div class="modal-header bg-carmel-header border-none">
+                                            <h5 class="modal-title border-none text-white">
+                                                Adicionar Telefones
+                                            </h5>
+                                            <button type="button" @click="show_create_number = false" class="close text-white" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body bg-carmel-body text-white border-none">
+                                            {% csrf_token %}
+                                            <div class="d-flex flex-wrap container justify-content-around">
+                                                <div>
+                                                    <label for="#tel-add-label">De quem é o telefone?</label>
+                                                    <input id="tel-add-label" type="text" class="form-control" name="name">
+                                                </div>
+                                                <div>
+                                                    <label for="#tel-add-input">Numero de telefone</label>
+                                                    <input id="tel-add-input" type="tel" class="form-control" name="phone">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer border-none">
+                                            <button
+                                                class="btn btn-success"
+                                                hx-post="{% url 'register_phone' %}"
+                                                hx-target="#response_tel"
+                                                hx-trigger="click"
+                                            >
+                                                Adicionar Telefone
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="d-flex justify-content-between my-2">
+                            <p class="h6 text-white align-self-center">Telefones</p>
+                            <button @click="show_create_number = !show_create_number" class="btn bg-carmel-header text-white"><span class="mx-2">Adicionar  Contatos</span> <span>{% include "phones.svg" %}</span></button>
+                        </div>
+                    </div>
+                    {% include 'list_contacts.html' %}
+
+                    <!-- List Last Contribuition -->
+                    <div class="d-flex justify-content-between my-2">
+                        <p class="h6 text-white align-self-center">Última Contribuição </p>
+                        <p class="h6 text-white align-self-center">{{ contributions.price }} - {{ contributions.date_pay }}</p>
+                    </div>
+
+                    <!-- List Votes -->
+                    <div class="d-flex flex-column my-2">
+                        <p class="h6 text-white">Votos</p>
+                        <div class="list-group">
+                            <!--FOR VOTES-->
+                            {% for vote in votes %}
+                                <div class="list-group-item my-1 bg-carmel text-white">
+                                    <div class="flex-column">
+                                        <p>{{vote.votes_registration.name}}</p>
+                                        <span class="text-wrap">{{vote.votes_registration.description}}</span>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <p class="text-white">Nenhum voto encontrado.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+
+
+                </div>
+            </div> 
+        </div>
+             
+    </div>
+    
+{% endblock %}
+
+
+
+{% block extra_body %}
+    <script>
+  function getCEP(){
+    document.querySelector('div#message_cep_result').innerText = "loading"
+
+    var neighborhood = document.querySelector('input#id_neighborhood')
+    var uf = document.querySelector('input#id_state')
+    var city = document.querySelector('input#id_city')
+    var street = document.querySelector('input#id_street')
+
+    const cep = String(document.querySelector("input#id_zipcode").value).trim();
+
+    if(cep.length === 9){
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then((res) => {
+
+            if (res.ok) {
+                return res.json();
+            }
+
+            throw new Error("Erro ao buscar CEP");
+
+        })
+        .then((data) => {
+            if (data["erro"] == "true"){
+                throw new Error("CEP não existe");
+            }
+
+            neighborhood.value = data["bairro"]
+            city.value = data["localidade"]
+            uf.value = data["uf"]
+            street.value = data['logradouro']
+
+            document.querySelector('div#message_cep_result').innerText = ""
+        })
+        .catch((err) => {
+            document.querySelector('div#message_cep_result').innerText = err.message
+
+        });
+    } else {
+        document.querySelector('div#message_cep_result').innerText = "Campo CEP não Preenchido corretamente"
+    }
+
+    
+}
+    </script>
+{% endblock extra_body %}
+    
+

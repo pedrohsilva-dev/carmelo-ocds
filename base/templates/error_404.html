@@ -1,0 +1,156 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block head_title %}
+404 - Pagina não encontrada
+{% endblock head_title %}
+
+{% block extra_head %}
+
+<style>
+
+:root{
+    --gold:#C9A96E;
+    --gold-dark:#8E6933;
+    --bg:#0f1217;
+    --bg-light:#171c23;
+    --text:#F5F1EA;
+}
+
+body{
+    background:
+        linear-gradient(
+            135deg,
+            #0f1217,
+            #171c23,
+            #0b0e13
+        );
+
+    color:var(--text);
+
+    overflow-x:hidden;
+}
+
+body::before{
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
+    background-image:url("{% static 'images/renda_carmo.png' %}");
+
+    background-repeat:repeat;
+
+    background-size:280px;
+
+    opacity:.03;
+
+    pointer-events:none;
+
+    z-index:-1;
+}
+
+.error-content{
+    text-align: center;
+}
+
+.error-number{
+    font-size:clamp(5rem, 12vw, 9rem);
+    font-family:"Cormorant Garamond", serif;
+    color:#d4af37;
+    font-weight:600;
+    line-height:1;
+    text-shadow:0 0 20px rgba(212,175,55,.25);
+}
+
+.error-title{
+    color:#e8c86a;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    margin-top:.75rem;
+}
+
+.error-description{
+    max-width:550px;
+    margin:1.5rem auto;
+    color:#f1e6c5;
+}
+
+.error-quote{
+    font-family:"Cormorant Garamond", serif;
+    font-size:1.5rem;
+    color:#d4af37;
+    margin-top:2rem;
+}
+
+.error-author{
+    color:#d9c98c;
+    margin-top:.5rem;
+}
+
+.ornament-divider{
+    color:#d4af37;
+    font-size:1.2rem;
+    margin:1.5rem 0;
+}
+
+.btn-gold{
+    background:#d4af37;
+    color:#2c1810;
+    border:none;
+    padding:.75rem 1.5rem;
+}
+
+.btn-outline-gold{
+    border:1px solid #d4af37;
+    color:#d4af37;
+    padding:.75rem 1.5rem;
+}
+
+
+</style>
+
+{% endblock extra_head %}
+
+{% block content %}
+<div class="error-content">
+
+    <div class="error-number">
+        404
+    </div>
+
+    <h1 class="error-title">
+        PÁGINA NÃO ENCONTRADA
+    </h1>
+
+    <p class="error-description">
+        O caminho que você procura não foi encontrado.
+        Talvez a página tenha sido movida ou não exista mais.
+    </p>
+
+    <div class="ornament-divider">
+        ✦ ✦ ✦
+    </div>
+
+    <blockquote class="error-quote">
+        “Só Deus basta.”
+    </blockquote>
+
+    <p class="error-author">
+        — Santa Teresa de Jesus
+    </p>
+
+    <div class="d-flex justify-content-center gap-3 flex-wrap mt-4">
+        <a href="{% url 'core:home' %}" class="btn btn-gold">
+            <i class="bi bi-house-door"></i>
+            Voltar ao início
+        </a>
+
+        <button onclick="history.back()" class="btn btn-outline-gold">
+            Voltar página anterior
+        </button>
+    </div>
+
+</div>
+{% endblock content %}

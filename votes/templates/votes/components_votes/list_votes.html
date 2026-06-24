@@ -1,0 +1,135 @@
+<div 
+id="create_vote_member"
+
+    {% if form_vote.errors %}
+        x-data="{modal_register_votes_modal: true}"
+    {% else %}
+        x-data="{modal_register_votes_modal: false}"
+    {% endif %}
+
+>
+    <a type="button" class="btn btn-success" @click="modal_register_votes_modal = true">
+    Novo Voto
+</a>
+<div class="modal-custom" x-show="modal_register_votes_modal" x-cloak x-transition>
+    <div class="modal-dialog">
+    <div class="modal-content bg-carmel">
+        <div class="modal-header bg-carmel-header border-none">
+        <h5 class="modal-title text-white" id="titleModalMemberVote">Adicionar Voto do Membro</h5>
+        <a type="button" @click="modal_register_votes_modal = false" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </a>
+        </div>
+        <div class="modal-body bg-carmel-body">
+        <div class="container text-white" >
+            <form x-data="{type_vote: 'TEMP'} ">
+
+            {% csrf_token %}
+            <input type="hidden" name="user_current" value="{{user_current}}">
+            <div>
+                <label for="id_name">Voto a atribuir</label>
+                {{form_vote.votes_registration}}
+                {% for err in form_vote.errors.votes_registration %}
+                    <div class="text-danger small">{{ err }}</div>
+                {% endfor %}
+            </div>
+            <div class="row">
+                
+                <div class="col-6">
+                <label for="id_date">Data do Voto</label>
+                {{form_vote.date}}
+                   {% for err in form_vote.errors.date %}
+                    <div class="text-danger small">{{ err }}</div>
+                {% endfor %}
+                </div>
+                <div class="col-6">
+                    <label for="id_type">Tipo do Voto</label>
+                    {{form_vote.type}}
+                    {% for err in form_vote.errors.type %}
+                    <div class="text-danger small">{{ err }}</div>
+                {% endfor %}
+                    
+                </div>
+                 <div class="col-6 text-white" x-show="type_vote == 'TEMP'" cloak x-transition>
+                    <label for="">Duração do Voto</label>
+                    {{form_vote.year_duration}}
+                    {% for err in form_vote.errors.year_duration %}
+                        <div class="text-danger small">{{ err }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div>
+            <div class="d-flex justify-content-end my-3">
+            <button
+                type="button"
+                hx-post="{% url 'register_vote' %}"
+                hx-trigger="click"
+                hx-target="#response_votes"
+                class="btn btn-success"
+            >Cadastrar Voto</button>
+            </div>
+        </div>
+        </form>
+
+    </div>
+        </div>
+    
+    </div>
+    </div>
+</div>
+</div>
+
+<div id="edit_vote_member">
+    {% include 'votes/components_votes/form_edit_vote_member.html'%}
+</div>
+<ul class="list-group">
+
+    {% for vote in votes %}
+
+        <li class="list-group-item bg-carmel">
+            <form class="d-flex justify-content-between align-items-center">
+                
+                {% csrf_token %}
+                <input type="hidden" name="user_current" value="{{user_current}}">
+                <div class="text-white">
+                    <div>
+                        <p>
+                            <div>
+                                {{vote.votes_registration}}
+                            </div>
+                        </p>
+                        <span>
+                            <div>
+                                {{vote.date}}
+                            </div>
+                        </span>
+                    </div>
+                    <div>
+                        {% if vote.type == "TEMP" %}
+                            <p class="text-warning">Temporarios</p>
+                        {% elif vote.type == "DEF" %}
+                            <p class="text-danger">Definitivos</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="d-flex flex-column">
+                        <div class="d-flex justify-content-center my-1">
+                            <button type="button" class="btn btn-warning mx-1 px-5" hx-get="{% url 'edit_vote_member' user=user_current id=vote.id %}" hx-trigger="click" hx-target="#edit_vote_member">Alterar</button>
+                        </div>
+                         <div class="d-flex justify-content-center my-1">
+                            <button type="button" class="btn btn-danger mx-1 px-5" hx-confirm="Deseja Apagar esse voto?" hx-post="{% url 'delete_vote' id=vote.id %}" hx-trigger="click" hx-target="#response_votes">Apagar</button>
+                        </div>
+                </div>
+            </form>
+        </li>  
+    {% empty %} 
+        <li
+            class="alert alert-warning col-12"
+            role="alert"
+        >
+            <strong>Não existe nenhum Voto</strong>
+        </li>
+    {% endfor %}
+
+
+</ul>

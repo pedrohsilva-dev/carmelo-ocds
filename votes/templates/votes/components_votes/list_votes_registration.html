@@ -1,0 +1,57 @@
+<div
+x-data="{ modalFormVote: false }"
+
+{% if form.errors %}
+    x-init="modalFormVote = true"
+{% endif %}
+class="d-flex justify-content-end my-2"
+
+>
+    <button class="btn btn-success" type="button" @click="modalFormVote = true">Cadastrar novo nome do Voto</button>
+    <div x-show="modalFormVote" class="modal-custom" cloak>
+        <form class="modal-dialog ">
+            <div class="modal-content bg-carmel">
+                <div class="modal-header bg-carmel-header border-none text-white" >
+                    <h5 class="modal-title" id="staticBackdropLabel">Nome do Voto</h5>
+                    <button type="button" class="close text-white" @click="modalFormVote = false" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="id_name" class="text-white">Nome do Voto</label>
+                        {{form.name}}
+                        {% for err in form.errors.name %}
+                            <div class="text-danger small">{{ err }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_description" class="text-white">Descrição do Voto</label>
+                        {{form.description}}
+                        {% for err in form.errors.description %}
+                            <div class="text-danger small">{{ err }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-success" hx-post="{% url 'register_votes_registration' %}" hx-trigger="click" hx-target="#list-votes-registration">Cadastrar Nome de Voto</button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+<ul class="list-group">
+    {% for vote_registration in votes_registration %}
+        <li class="list-group-item d-flex justify-content-between align-items-center my-1 bg-carmel text-white">
+            <div class="flex-column">
+                <p>{{vote_registration.name}}</p>
+                <span class="text-wrap">{{vote_registration.description}}</span>
+            </div>
+            <div class="d-flex flex-column">
+                <button class="btn btn-danger" hx-get="{% url 'delete_votes_registration' id=vote_registration.id %}" hx-confirm="Deletar mesmo esse nome de voto?" hx-target="#list-votes-registration" hx-trigger="click">Excluir</button>
+            </div>
+        </li>
+    {% endfor %}
+</ul>

@@ -1,0 +1,30 @@
+{% extends 'partials/base.html' %}
+
+{% load static %}
+{% load permission_tags%}
+{% block head_title %}{% endblock head_title %}
+{% block extra_head %}{% endblock extra_head %}
+{% block content %}
+<div class="container-fluid">
+    <section class="container text-white my-4">
+        <h1 class="h2">{{carmel.name}}</h1>
+        <div class="container my-4">
+            <p>
+                {{carmel.description}}
+            </p>
+              {% if user|can:'read_member' %}
+            <div class="py-2">
+              
+                Quantidade de Membros é <span class="h5">{{member_quantity}}</span>
+               
+            </div>
+             {% endif %}
+            <div>
+                Total de contribuições já registradas é <span class="h5">{{total_contribuition}}</span>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock content %}
+{% block extra_body %}{% endblock extra_body %} 
+

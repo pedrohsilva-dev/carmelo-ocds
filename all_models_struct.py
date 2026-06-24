@@ -1,0 +1,207 @@
+import os
+import json
+import django
+from django.apps import apps
+from django.db import models
+
+# Ajuste seu settings module aqui
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
+django.setup()
+
+
+OUTPUT_FILE = "django_ai_schema.json"
+
+
+def safe_str(value):
+    try:
+        return str(value)
+    except Exception:
+        return repr(value)
+
+
+def get_field_data(field):
+    data = {
+        "name": field.name,
+        "type": field.__class__.__name__,
+        "null": getattr(field, "null", None),
+        "blank": getattr(field, "blank", None),
+        "unique": getattr(field, "unique", None),
+        "editable": getattr(field, "editable", None),
+    }
+
+    # default
+    default = getattr(field, "default", None)
+    if default is not None and default != models.fields.NOT_PROVIDED:
+        data["default"] = safe_str(default)
+
+    # relations
+    if field.is_relation:
+        data["is_relation"] = True
+        data["relation_type"] = field.get_internal_type()
+        data["related_model"] = (
+            field.related_model.__name__ if field.related_model else None
+        )
+
+    # choices (ROBUSTO)
+    if getattr(field, "choices", None):
+        choices_list = []
+
+        for c in field.choices:
+            try:
+                # Django TextChoices / IntegerChoices
+                if hasattr(c, "value") and hasattr(c, "label"):
+                    choices_list.append(
+                        {
+                            "value": safe_str(c.value),
+                            "label": safe_str(c.label),
+                        }
+                    )
+
+                # tuple padrão
+                elif isinstance(c, (list, tuple)) and len(c) == 2:
+                    choices_list.append(
+                        {
+                            "value": safe_str(c[0]),
+                            "label": safe_str(c[1]),
+                        }
+                    )
+
+                else:
+                    choices_list.append(
+                        {
+                            "value": safe_str(c),
+                            "label": safe_str(c),
+                        }
+                    )
+
+            except Exception:
+                choices_list.append(
+                    {
+                        "value": safe_str(c),
+                        "label": safe_str(c),
+                        "error": "invalid_choice_format",
+                    }
+                )
+
+        data["choices"] = choices_list
+
+    return data
+
+
+def analyze_field_issues(field):
+    issues = []
+
+    # null + blank inconsistency
+    if getattr(field, "null", False) and not getattr(field, "blank", False):
+        issues.append("null=True mas blank=False (possível inconsistência em forms)")
+
+    # unique + null problem
+    if getattr(field, "unique", False) and getattr(field, "null", False):
+        issues.append("unique=True com null=True pode gerar múltiplos NULLs no banco")
+
+    # FK sem index (heurística)
+    if field.is_relation and not getattr(field, "db_index", False):
+        issues.append("ForeignKey sem db_index explícito (pode impactar performance)")
+
+    return issues
+
+
+def get_model_schema(model):
+    schema = {
+        "app": model._meta.app_label,
+        "model": model.__name__,
+        "table": model._meta.db_table,
+        "is_abstract": model._meta.abstract,
+        "is_proxy": model._meta.proxy,
+        "fields": [],
+        "relations": [],
+        "methods": [],
+        "meta": {
+            "ordering": list(model._meta.ordering) if model._meta.ordering else [],
+        },
+        "potential_issues": [],
+        "test_suggestions": [],
+    }
+
+    # fields
+    for field in model._meta.get_fields():
+        try:
+            # remove reverse relations pesadas
+            if field.auto_created and not field.concrete:
+                continue
+
+            field_data = get_field_data(field)
+            schema["fields"].append(field_data)
+
+            if field.is_relation:
+                schema["relations"].append(field.name)
+
+            schema["potential_issues"].extend(analyze_field_issues(field))
+
+        except Exception as e:
+            schema["potential_issues"].append(
+                f"Erro lendo field {safe_str(field)}: {safe_str(e)}"
+            )
+
+    # methods
+    for attr in dir(model):
+        if attr.startswith("_"):
+            continue
+        if attr in ["save", "clean", "delete"]:
+            schema["methods"].append(attr)
+
+    # test suggestions (IA-friendly)
+    schema["test_suggestions"] = [
+        {
+            "type": "create_valid_instance",
+            "model": model.__name__,
+        },
+        {
+            "type": "missing_required_fields_validation",
+            "model": model.__name__,
+        },
+        {
+            "type": "unique_constraint_test",
+            "model": model.__name__,
+        },
+        {
+            "type": "relation_integrity_test",
+            "model": model.__name__,
+        },
+    ]
+
+    return schema
+
+
+def main():
+    all_data = {
+        "project": "Django AI Schema Export",
+        "models_count": 0,
+        "models": [],
+    }
+
+    models_list = list(apps.get_models())
+
+    # opcional: filtrar Django interno (descomente se quiser)
+    models_list = [
+        m
+        for m in models_list
+        if not m._meta.app_label in ["admin", "auth", "contenttypes", "sessions"]
+    ]
+
+    all_data["models_count"] = len(models_list)
+
+    for model in models_list:
+        try:
+            all_data["models"].append(get_model_schema(model))
+        except Exception as e:
+            all_data["models"].append({"model": model.__name__, "error": safe_str(e)})
+
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+        json.dump(all_data, f, indent=2, ensure_ascii=False)
+
+    print(f"✔ Schema AI gerado com sucesso: {OUTPUT_FILE}")
+
+
+if __name__ == "__main__":
+    main()

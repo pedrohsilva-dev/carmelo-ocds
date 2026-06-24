@@ -1,0 +1,62 @@
+{% if form_update %}
+<div x-data="{ modalFormVote: true }">
+<form class="modal-custom" cloak x-show="modalFormVote">
+    {% csrf_token %}
+   <input type="hidden" name="user_current" value="{{user_current}}">
+   <div class="modal-dialog">
+    <div class="modal-content bg-carmel" x-data="{ 
+        type_vote: '{{form_update.type.value}}'
+    }">
+        <div class="modal-header bg-carmel-header border-none text-white">
+            <h5 class="modal-title" id="staticBackdropLabel">Editar Voto do Membro</h5>
+            <button type="button" href="#Fechado" class="close text-white" @click="modalFormVote = false" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body bg-carmel-body border-none">
+            {% if form_update.errors %}
+                <div class="alert alert-danger">
+                    {% for e in form_update.errors %}{{ e }}<br>{% endfor %}
+                </div>
+            {% endif %}
+
+             <div class="form-group text-white">
+                <label for="">Voto</label>
+                {{ form_update.votes_registration }}
+                {% for err in form_update.errors.votes_registration %}
+                    <div class="text-danger small">{{ err }}</div>
+                {% endfor %}
+            </div>
+            <div class="form-group text-white">
+                <label for="type_id">Grau do Voto</label>
+                {{ form_update.type }}
+                {% for err in form_update.errors.type %}
+                    <div class="text-danger small">{{ err }}</div>
+                {% endfor %}
+            </div>
+        <div class="row">
+            <div class="col-6 text-white">
+                <label for="">Data do Voto</label>
+                <input type="datetime-local" name="date" value="{{ form_update.date.value|date:'Y-m-d\\TH:i' }}" class="form-control">
+                {% for err in form_update.errors.date %}
+                    <div class="text-danger small">{{ err }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-6 text-white" x-show="type_vote == 'TEMP'" cloak x-transition>
+                <label for="">Duração do Voto</label>
+                {{form_update.year_duration}}
+                {% for err in form_update.errors.year_duration %}
+                    <div class="text-danger small">{{ err }}</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer border-none">
+        <button class="btn btn-success" hx-post="{% url 'update_vote_member' id=vote_id %}" hx-target="#response_votes" hx-trigger="click">Atualizar Voto</button>
+    </div>
+</div>
+   </div>
+</form>
+</div>
+{% endif %}
+    

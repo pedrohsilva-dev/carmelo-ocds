@@ -1,0 +1,20 @@
+{
+  "name": "project_carmel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@fullhuman/postcss-purgecss": "^8.0.0",
+    "bootstrap": "^5.3.8",
+    "postcss": "^8.5.13",
+    "postcss-cli": "^11.0.1",
+    "sass": "^1.99.0"
+  }
+}

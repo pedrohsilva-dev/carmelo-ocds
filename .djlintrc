@@ -1,0 +1,9 @@
+{
+    "indent": 4,
+    "blank_line_after_tag": "block,endblock",
+    "format_django_template_blocks": true,
+    "format_django_template_variables": true,
+    "format_text": true,
+    "preserve_newlines": true,
+    "profile": "django"
+}

@@ -1,35 +1,89 @@
-{% if months.count_missing != 0 %}
-    {% include 'contribution/register.html' %}
-{% endif %}
+
 <div class="d-flex justify-content-end mb-2 mx-2 my-2 align-items-center">
     <!-- centralizar os meses pagos e não pagos vertical cada items -->
-    <!-- classe para colocar do bootstrap nesse proximo paragrafo -->
-    <p class="text-white px-4">Data de Entrada: <span class="h6">{{ date_entry }}</span></p>
+    <!-- class para colocar do bootstrap nesse proximo paragrafo -->
+    <p class="text-white px-4">Data de Entrada: <span class="h6">{{ date_entry }}</span>
+
+    </p>
+
     <p class="bg-success text-white mx-1 px-3 py-1"><span class="font-weight-bold">Meses Pagos</span> <span class="badge bg-white text-dark h4">{{months.count_paid}}</span></p>
     <p class="bg-danger text-white mx-1 px-3 py-1"><span class="font-weight-bold">Meses Faltantes</span> <span class="badge bg-white text-dark h4">{{months.count_missing}}</span></p>
 </div>
-<div>
+<div class="container">
+
+    <p>Pagamentos Pendentes</p>
     {% for missing_month in months.missing_months %}
-        <p class="bg-warning text-dark mx-1 px-3 py-1">{{ missing_month }}</p>
+        <form class="d-flex px-2 py-1 alert-warning mb-1 justify-content-between align-items-center" x-data="{
+            date_pay_day: null,
+            price: '{{ price_default }}',
+            validate_pay_day(month, year){
+                const m = Number(month);
+                const y = Number(year);
+                let daysInMonth = 31;
+
+                if (m === 2) {
+                    const isLeap = (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0);
+                    daysInMonth = isLeap ? 29 : 28;
+                } else if ([4,6,9,11].includes(m)) {
+                    daysInMonth = 30;
+                }
+
+                if (this.date_pay_day > daysInMonth) this.date_pay_day = daysInMonth;
+                if (this.date_pay_day < 1) this.date_pay_day = null;
+            }
+        }">
+
+                {% csrf_token %}
+                <div>
+                   <div class="d-flex pr-2 align-items-center">
+
+                        <div>
+                            <span class="pr-1">No dia</span>
+                            <input type="number" placeholder="00" x-mask="99" min="1" max="31" name="pay_day" x-model.number="date_pay_day"
+                             @input="validate_pay_day({{ missing_month.month }}, {{ missing_month.year }})" required>
+                            {% for err in form_contribution.errors.date_pay %}
+                                <div class="text-danger small">{{ err }}</div>
+                            {% endfor %}
+                        </div>
+                        <div>
+                            <span class="pr-1">Valor</span>
+                            <input type="text" inputmode="decimal" name="price" x-model="price" style="width:120px;display:inline-block" @input="price = price.replace(/[^0-9,\.]/g,'')" required>
+                        {% for err in form_contribution.errors.price %}
+                            <div class="text-danger small">{{ err }}</div>
+                        {% endfor %}
+                        </div>
+                   </div>
+
+                </div>
+                <input type="hidden" name="date_pay" :value="date_pay_day ? `{{missing_month.year}}-{{missing_month.month}}-${date_pay_day.toString().padStart(2, '0')}` : ''" required>
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <button type="button" class="btn btn-success" @click="price = (price||'').replace(',','.')" hx-post="{% url 'register_contribution' user=user_current %}" hx-target="#list-contribution" hx-trigger="click">Pagar Mes {{ missing_month.date_formatted }}</button>
+                </div>
+
+            </form>
     {% endfor %}
 </div>
-{% for contribution in contributions %}
+
     <div class="container ">
+        <p>Pagamentos Feitos</p>
+{% for contribution in contributions %}
+
         <!-- Deixar qauntidade de meses pagos e não pagos bonitos com bootstrap-->
-       
+
         <ul class="list-group list-group-numbered">
             <li class="list-group-item bg-carmel mb-1 text-white d-flex justify-content-between align-items-center">
                 <div>
                     <div>{{contribution.price}}</div>
-                    <div>{{contribution.date_pay}}</div>    
+                    <div>{{contribution.date_pay}}</div>
                 </div>
                 <div>
                     <button class="btn btn-danger" hx-get="{% url 'delete_contribution' id=contribution.id user=user_current %}" hx-confirm="Deseja Deletar Mesmo?" hx-target="#list-contribution" hx-trigger="click">Deletar</button>
                 </div>
             </li>
         </ul>
-    </div>
-{% empty %} 
+
+{% empty %}
     <div
         class="alert alert-warning mx-2"
         role="alert"
@@ -37,3 +91,4 @@
         <strong>Não existe nenhuma Contribuição</strong>
     </div>
 {% endfor %}
+    </div>

@@ -1,36 +1,17 @@
-{% extends 'partials/base.html' %}
-
+{% extends "partials/base.html" %}
 {% load static %}
-
 {% load permission_tags %}
-
-{% block head_title %}
-    Membros do Carmelo
-{% endblock %}
-
-{% block title_navbar %}
-    Membros do Carmelo
-{% endblock %}
-    
 {% block content %}
 
     <form class="px-2">
         {% csrf_token %}
-        <input
-            type="text"
-            hx-post="{% url 'list_filter_members' %}"
-            hx-trigger="keyup"
-            hx-target="#list_members"
-            class="form form-control my-2"
-            placeholder="Insira seu filtro por nome do membro"
-            name="filter_name"
-        >
-
+        <input type="text"
+               hx-post="{% url 'list_filter_members' %}"
+               hx-trigger="keyup"
+               hx-target="#list_members"
+               class="form form-control my-2"
+               placeholder="Insira seu filtro por nome do membro"
+               name="filter_name">
     </form>
-
-    <div id="list_members">
-
-        {% include "members/components/list_filter_members.html" %}
-    </div>
-{% endblock %}
-
+    <div id="list_members">{% include "members/components/list_filter_members.html" %}</div>
+{% endblock content %}

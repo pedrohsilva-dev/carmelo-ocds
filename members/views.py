@@ -1,21 +1,15 @@
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.auth import login
-from django.contrib.auth.decorators import login_required
-from django.urls import reverse
-
-from .forms import MemberForm, MemberChangeForm
-
-from members.models import Member, Phone
 from datetime import date
 
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from rolepermissions.decorators import has_permission_decorator
 
-from rolepermissions.decorators import (
-    has_role_decorator,
-    has_role,
-    has_permission_decorator,
-)
+from members.models import Member, Phone
+
+from .forms import MemberChangeForm, MemberForm
+
 
 # Create your views here.
 
@@ -28,13 +22,12 @@ from rolepermissions.decorators import (
 
 # FUNCTIONS
 
-
-def filter_member_object(id):
+def filter_member_object(member_id):
     return (
         Member.objects.filter(is_superuser=False, is_staff=False, is_active=True)
         .order_by("name")
         .all()
-        .exclude(id=id)
+        .exclude(id=member_id)
     )
 
 
@@ -69,7 +62,6 @@ def members_aLL(request):
 @login_required
 @has_permission_decorator("list_members")
 def filter_members(request):
-
     name_filter = request.POST.get("filter_name")
 
     if name_filter or date:
@@ -80,14 +72,15 @@ def filter_members(request):
         members = filter_member_object(request.user.id).all()
 
     return render(
-        request, "members/components/list_filter_members.html", {"members": members}
+        request,
+        "members/components/list_filter_members.html",
+        {"members": members},
     )
 
 
 @login_required
 @has_permission_decorator("read_member")
 def show_member(request, slug):
-
     member = get_object_or_404(Member, slug=slug)
 
     phones = member.phones()
@@ -137,5 +130,7 @@ def delete_member(request, id: int):
     members = filter_member_object(request.user.id).all()
 
     return render(
-        request, "members/components/list_filter_members.html", {"members": members}
+        request,
+        "members/components/list_filter_members.html",
+        {"members": members},
     )

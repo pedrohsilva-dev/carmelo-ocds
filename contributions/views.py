@@ -1,21 +1,17 @@
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render
+from datetime import date
+
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
+from django.db import transaction
+from django.shortcuts import get_object_or_404, render
 from django.utils.dates import MONTHS
+from rolepermissions.decorators import has_permission_decorator
 
 from carmel.models import Carmel
 from contributions.forms import ContributionForm
 from contributions.models import Contribution
 from members.models import Member
-from django.contrib import messages
-from django.core.exceptions import ValidationError
-
-
-from django.db import transaction
-
-from datetime import date
-
-from rolepermissions.decorators import has_permission_decorator
 
 # 'create_Contribute': True,
 # 'read_contribute': True,
@@ -28,7 +24,6 @@ from rolepermissions.decorators import has_permission_decorator
 @login_required
 @has_permission_decorator("create_Contribute")
 def register_contribution(request, user):
-
     member = get_object_or_404(Member, slug=user)
 
     carmel: Carmel = request.user.carmel
@@ -39,12 +34,11 @@ def register_contribution(request, user):
     date_now = date.today()
 
     if request.method == "POST" and form.is_valid():
-
         date_pay = form.cleaned_data["date_pay"]
+        price = form.cleaned_data["price"]
 
         # Não permitir contribuições antes da entrada
         if date_pay < date_entry:
-
             messages.error(
                 request,
                 "Não é permitido registrar contribuições antes da entrada do membro.",
@@ -52,20 +46,22 @@ def register_contribution(request, user):
 
         # Não permitir contribuições futuras
         elif date_pay > date_now:
-
             messages.error(request, "Não é permitido registrar contribuições futuras.")
 
         else:
-
             try:
-
                 with transaction.atomic():
-
                     contrib: Contribution = form.save(commit=False)
 
                     contrib.member = member
+                    if price:
+                        contrib.price = price
+                    else:
+                        contrib.price = carmel.price_contribution_default
 
-                    contrib.price = carmel.price_contribution_default
+                        messages.info(
+                            request, "Foi cadastrado com valor padrão do carmelo."
+                        )
 
                     # Executa as validações do model
                     contrib.full_clean()
@@ -76,15 +72,13 @@ def register_contribution(request, user):
 
                     form = ContributionForm()
 
-            except ValidationError as e:
-
-                for error in e.messages:
-
+            except ValidationError as exc:
+                for error in exc.messages:
                     messages.error(request, error)
 
     contributions = Contribution.objects.filter(member=member).order_by("date_pay")
 
-    # Utiliza sua função
+    # Utilize sua função
     month_data = month_empty(member)
 
     return render(
@@ -105,13 +99,12 @@ def register_contribution(request, user):
 @login_required
 @has_permission_decorator("edit_contribute")
 def update_contribution(request):
-    return HttpResponse()
+    return render(request, "contribution/list.html", {})
 
 
 @login_required
 @has_permission_decorator("delete_contribute")
 def delete_contribution(request, user, id):
-
     contribution = get_object_or_404(Contribution, id=id)
 
     contribution.delete()
@@ -144,7 +137,6 @@ def delete_contribution(request, user, id):
 
 
 def month_empty(member):
-
     date_entry = member.entry_date
     date_now = date.today()
 
@@ -162,7 +154,6 @@ def month_empty(member):
     month = date_entry.month
 
     while (year, month) <= (date_now.year, date_now.month):
-
         expected_months.add((year, month))
 
         month += 1
@@ -180,10 +171,11 @@ def month_empty(member):
     missing_months_formatted = []
 
     for year, month in missing_months:
-
         month_name = MONTHS[month]
 
-        missing_months_formatted.append(f"{month_name} de {year}")
+        missing_months_formatted.append(
+            {"date_formatted": f"{month_name} de {year}", "month": month, "year": year}
+        )
 
     return {
         "count_paid": payments.count(),

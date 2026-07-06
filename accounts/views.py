@@ -1,35 +1,23 @@
-import datetime
-
-from django.core.mail import send_mail
-
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
-
-from accounts.forms import AddressForm, LoginForm
-
-from django.urls import reverse
-from django.db import transaction
-
-from django.contrib.auth import authenticate, get_user
-from django.contrib.auth import login as login_auth
-from django.contrib.auth import logout as logout_auth
-
-from django.utils import timezone
 from datetime import datetime
 
+from django.contrib import messages
+from django.contrib.auth import authenticate, login as login_auth
+from django.contrib.auth import logout as logout_auth
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.db import transaction
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.utils import timezone
 
+from accounts.forms import AddressForm, LoginForm
 from accounts.models import ResetPasswordAccess
-from members.models import Address, Member, Phone
 from contributions.models import Contribution
+from members.models import Address, Member, Phone
 from votes.models import Vote
 
 
-from django.contrib import messages
-from django.shortcuts import get_object_or_404, resolve_url
-
 # Create your views here.
-
 
 def login(request):
     form_login = LoginForm()
@@ -37,7 +25,6 @@ def login(request):
     if request.method == "POST":
         form_login = LoginForm(request.POST)
         if form_login.is_valid():
-
             user = authenticate(
                 request,
                 username=form_login.cleaned_data["email"],
@@ -68,7 +55,7 @@ def profile(request):
     try:
         address = request.user.address
         address_form = AddressForm(instance=address)
-    except:
+    except AttributeError:
         address = None
         address_form = AddressForm()
 
@@ -87,14 +74,14 @@ def profile(request):
 
 @login_required
 def register_phone(request):
-
     name_field = request.POST.get("name")
     phone_field = request.POST.get("phone")
 
-    phone_exist = Phone.objects.filter(member=request.user, number=phone_field).first()
+    phone_exist = Phone.objects.filter(
+        member=request.user, number=phone_field
+    ).first()
 
     if not phone_exist:
-
         with transaction.atomic():
             phone = Phone()
 
@@ -115,7 +102,6 @@ def register_phone(request):
 @login_required
 def delete_phone(request, id):
     with transaction.atomic():
-
         phone = Phone.objects.filter(id=id, member=request.user).first()
         if phone:
             phone.delete()
@@ -127,7 +113,6 @@ def delete_phone(request, id):
 
 @login_required
 def register_address(request):
-
     user: Member = request.user
 
     form = AddressForm(request.POST)
@@ -174,11 +159,9 @@ def edit_address(request):
 
 @login_required
 def delete_address(request):
-
     form = AddressForm()
 
-    with transaction.atomic() as response_atomic:
-
+    with transaction.atomic():
         request.user.address.delete()
         address = None
         messages.success(request, "Endereço deletado com sucesso!")
@@ -203,25 +186,35 @@ def forgot_password(request):
                         access.delete()
                     else:
                         print("Token ainda valido")
-                        send_mail("Reset de senha", f"http://localhost:8000/accounts/reset_password/{access.token}", member.email, ["pedrohenriquedasilva204@gmail.com"])  # type: ignore
+                        send_mail(
+                            "Reset de senha",
+                            f"http://localhost:8000/accounts/reset_password/{access.token}",
+                            member.email,
+                            ["pedrohenriquedasilva204@gmail.com"],
+                        )  # type: ignore
                         return render(
-                            request, "forgot_password.html", {"message": message}
+                            request,
+                            "forgot_password.html",
+                            {"message": message},
                         )
 
             try:
-
                 reset_password = ResetPasswordAccess()
                 reset_password.member = member
                 reset_password.save()
-                send_mail("Reset de senha", f"http://localhost:8000/accounts/reset_password/{reset_password.token}", member.email, ["pedrohenriquedasilva204@gmail.com"])  # type: ignore
-            except:
+                send_mail(
+                    "Reset de senha",
+                    f"http://localhost:8000/accounts/reset_password/{reset_password.token}",
+                    member.email,
+                    ["pedrohenriquedasilva204@gmail.com"],
+                )  # type: ignore
+            except Exception:
                 ...
 
     return render(request, "forgot_password.html", {"message": message})
 
 
 def reset_password(request, token):
-
     access = get_object_or_404(ResetPasswordAccess, token=token)
 
     if access.expired_at:

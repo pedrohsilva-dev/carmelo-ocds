@@ -1,16 +1,11 @@
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-
-from votes.forms import VoteForm, VoteRegisterForm
-from django.utils import timezone
-from members.models import Member
-from votes.models import Vote, VotesRegistration
-
 from django.contrib import messages
-
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render
-
 from rolepermissions.decorators import has_permission_decorator
+
+from members.models import Member
+from votes.forms import VoteForm, VoteRegisterForm
+from votes.models import Vote, VotesRegistration
 
 # 'create_vote': True,
 # 'read_vote': True,
@@ -51,7 +46,11 @@ def register_vote(request):
     return render(
         request,
         "votes/components_votes/list_votes.html",
-        {"votes": votes, "user_current": user_current, "form_vote": form_vote},
+        {
+            "votes": votes,
+            "user_current": user_current,
+            "form_vote": form_vote,
+        },
     )
 
 
@@ -120,6 +119,7 @@ def update_vote_member(request, id):
             "votes": votes,
             "vote_id": id,
             "form_update": form_update,
+            "form": VoteForm(),
             "user_current": user_current,
         },
     )
@@ -143,7 +143,11 @@ def delete_vote(request, id: int):
     return render(
         request,
         "votes/components_votes/list_votes.html",
-        {"votes": votes, "user_current": user_current, "form_vote": form_vote},
+        {
+            "votes": votes,
+            "user_current": user_current,
+            "form_vote": form_vote,
+        },
     )
 
 
@@ -175,7 +179,6 @@ def votes_member(request, slug):
 @login_required
 @has_permission_decorator("list_votes_registration")
 def votes_registration(request):
-
     form = VoteRegisterForm()
     votes_registration = VotesRegistration.objects.all()
 
@@ -189,7 +192,6 @@ def votes_registration(request):
 @login_required
 @has_permission_decorator("create_votes_registration")
 def register_votes_registration(request):
-
     form = VoteRegisterForm(request.POST)
     exists = VotesRegistration.objects.filter(name=form.data.get("name")).exists()
 
@@ -208,6 +210,50 @@ def register_votes_registration(request):
         request,
         "votes/components_votes/list_votes_registration.html",
         {"votes_registration": votes_registration, "form": form},
+    )
+
+
+@login_required
+@has_permission_decorator("edit_vote_registration")
+def edit_vote_registration(request, id):
+    if request.method == "GET":
+        vote = VotesRegistration.objects.get(id=id)
+        form = VoteRegisterForm(instance=vote)
+
+    return render(
+        request,
+        "votes/components_votes/form_edit_vote_registration.html",
+        {"form_update": form, "vote_id": id},
+    )
+
+
+@login_required
+@has_permission_decorator("edit_votes_registration")
+def update_vote_registration(request, id):
+    form_update = VoteRegisterForm(request.POST)
+    if form_update.is_valid():
+        vote_registration = VotesRegistration.objects.filter(id=id).first()
+
+        if vote_registration:
+            vote_registration.name = form_update.cleaned_data.get("name")  # type: ignore
+            vote_registration.description = form_update.cleaned_data.get("description")  # type: ignore
+            vote_registration.save()
+
+            form_update = None
+
+            messages.success(request, "Registro de voto atualizado com sucesso! ")
+
+    # atualizando a lista de registros de votos
+    votes_registration = VotesRegistration.objects.all()
+    # renderizando a lista de registros de votos atualizada
+    return render(
+        request,
+        "votes/components_votes/list_votes_registration.html",
+        {
+            "votes_registration": votes_registration,
+            "form_update": form_update,
+            "form": VoteRegisterForm(),
+        },
     )
 
 

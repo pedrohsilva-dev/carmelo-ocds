@@ -10,6 +10,7 @@ class ContributionForm(forms.ModelForm):
 
         fields = [
             "date_pay",
+            "price",
         ]
 
         widgets = {

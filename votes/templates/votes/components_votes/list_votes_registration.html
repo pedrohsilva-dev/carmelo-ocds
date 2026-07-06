@@ -8,7 +8,7 @@ class="d-flex justify-content-end my-2"
 
 >
     <button class="btn btn-success" type="button" @click="modalFormVote = true">Cadastrar novo nome do Voto</button>
-    <div x-show="modalFormVote" class="modal-custom" cloak>
+    <div x-show="modalFormVote" class="modal-custom" x-cloak>
         <form class="modal-dialog ">
             <div class="modal-content bg-carmel">
                 <div class="modal-header bg-carmel-header border-none text-white" >
@@ -42,6 +42,9 @@ class="d-flex justify-content-end my-2"
         </form>
     </div>
 </div>
+<div id="edit_vote_registration">
+    {% include 'votes/components_votes/form_edit_vote_registration.html' %}
+</div>
 <ul class="list-group">
     {% for vote_registration in votes_registration %}
         <li class="list-group-item d-flex justify-content-between align-items-center my-1 bg-carmel text-white">
@@ -50,6 +53,9 @@ class="d-flex justify-content-end my-2"
                 <span class="text-wrap">{{vote_registration.description}}</span>
             </div>
             <div class="d-flex flex-column">
+
+                <button type="button" hx-get="{% url 'edit_vote_registration' id=vote_registration.id %}"
+                class="btn btn-warning mx-1 px-5" hx-trigger="click" hx-target="#edit_vote_registration">Alterar</button>
                 <button class="btn btn-danger" hx-get="{% url 'delete_votes_registration' id=vote_registration.id %}" hx-confirm="Deletar mesmo esse nome de voto?" hx-target="#list-votes-registration" hx-trigger="click">Excluir</button>
             </div>
         </li>

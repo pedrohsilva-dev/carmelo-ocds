@@ -140,6 +140,8 @@ footer{
 
 </style>
 
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
 {% endblock extra_head %}
 
 {% block content %}
@@ -149,18 +151,21 @@ footer{
 
 <div class="row align-items-center gy-5">
 
-    <div class="col-lg-6">
+    <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1000">
 
-        <img
+<div class="text-center text-lg-start">
+            <img
             src="{% static 'assets/top_login.png' %}"
             width="130"
             class="mb-4"
         >
-
-        <h1 class="hero-title">
+                <h1 class="hero-title">
             Ordem dos Carmelitas
             Descalços Seculares
         </h1>
+</div>
+
+
 
         <p class="hero-subtitle">
             Comunidade Alegria da Sagrada Face
@@ -180,7 +185,7 @@ footer{
 
     </div>
 
-    <div class="col-lg-6">
+    <div class="col-lg-6" data-aos="zoom-in" data-aos-duration="1000">
 
         <img
             src="{% static 'logo.png' %}"
@@ -198,7 +203,7 @@ footer{
 <section class="container py-5">
 
 
-<div class="glass-card">
+<div class="glass-card" data-aos="fade-up" data-aos-duration="900">
 
     <h2 class="section-title">
         Quem Somos
@@ -226,7 +231,7 @@ footer{
 
 <div class="row align-items-center gy-4">
 
-    <div class="col-lg-5">
+    <div class="col-lg-5" data-aos="fade-right" data-aos-duration="900">
 
         <img
             src="{% static 'assets/home/photo1.png' %}"
@@ -235,7 +240,7 @@ footer{
 
     </div>
 
-    <div class="col-lg-7">
+    <div class="col-lg-7" data-aos="fade-left" data-aos-duration="900">
 
         <h2 class="section-title">
             Nossa História
@@ -274,7 +279,7 @@ footer{
 
 <div class="row g-4">
 
-    <div class="col-md-4">
+    <div class="col-md-4" data-aos="fade-right" data-aos-duration="1000">
 
         <div class="glass-card saint-card">
 
@@ -288,7 +293,7 @@ footer{
 
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-4" data-aos="zoom-in" data-aos-duration="900">
 
         <div class="glass-card saint-card">
 
@@ -302,7 +307,7 @@ footer{
 
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-4" data-aos="fade-left" data-aos-duration="1000">
 
         <div class="glass-card saint-card">
 
@@ -326,7 +331,7 @@ footer{
 
 <div class="row align-items-center gy-4">
 
-    <div class="col-lg-7">
+    <div class="col-lg-7" data-aos="fade-right" data-aos-duration="900">
 
         <h2 class="section-title">
             Formação OCDS
@@ -350,7 +355,7 @@ footer{
 
     </div>
 
-    <div class="col-lg-5">
+    <div class="col-lg-5" data-aos="fade-left" data-aos-duration="900">
 
         <img
             src="{% static 'assets/home/photo2.png' %}"
@@ -369,7 +374,7 @@ footer{
 
 <div class="row align-items-center gy-4">
 
-    <div class="col-lg-5">
+    <div class="col-lg-5" data-aos="fade-left" data-aos-duration="900">
 
         <img
             src="{% static 'assets/home/photo3.png' %}"
@@ -378,7 +383,7 @@ footer{
 
     </div>
 
-    <div class="col-lg-7">
+    <div class="col-lg-7" data-aos="fade-right" data-aos-duration="900" data-aos-once="true">
 
         <h2 class="section-title">
             Apostolado e Missão
@@ -474,7 +479,7 @@ footer{
 
 </section>
 
-<footer class="container py-5 text-center">
+<footer class="container py-5 text-center" data-aos="fade-up" data-aos-duration="900">
 
 
 <img
@@ -495,3 +500,15 @@ footer{
 </footer>
 
 {% endblock content %}
+
+{% block extra_body %}
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      once: false,
+      duration: 800,
+      easing: 'ease-in-out',
+      anchorPlacement: 'top-bottom'
+    });
+  </script>
+{% endblock extra_body %}

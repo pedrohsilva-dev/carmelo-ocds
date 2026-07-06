@@ -1,0 +1,45 @@
+{% if form_update %}
+<div x-data="{ modalFormVote: true }">
+<form class="modal-custom" cloak x-show="modalFormVote">
+    {% csrf_token %}
+   <input type="hidden" name="user_current" value="{{user_current}}">
+   <div class="modal-dialog">
+    <div class="modal-content bg-carmel" x-data="{
+        type_vote: '{{form_update.type.value}}'
+    }">
+        <div class="modal-header bg-carmel-header border-none text-white">
+            <h5 class="modal-title" id="staticBackdropLabel">Editar Registro de Voto</h5>
+            <button type="button" href="#Fechado" class="close text-white" @click="modalFormVote = false" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body bg-carmel-body border-none">
+            {% if form_update.errors %}
+                <div class="alert alert-danger">
+                    {% for e in form_update.errors %}{{ e }}<br>{% endfor %}
+                </div>
+            {% endif %}
+
+             <div class="form-group text-white">
+                <label for="">Nome do voto</label>
+                {{ form_update.name }}
+                {% for err in form_update.errors.votes_registration %}
+                    <div class="text-danger small">{{ err }}</div>
+                {% endfor %}
+            </div>
+            <div class="form-group text-white">
+                <label for="type_id">Grau do Voto</label>
+                {{ form_update.description }}
+                {% for err in form_update.errors.type %}
+                    <div class="text-danger small">{{ err }}</div>
+                {% endfor %}
+            </div>
+    </div>
+    <div class="modal-footer border-none">
+        <button class="btn btn-success" hx-post="{% url 'update_vote_registration' id=vote_id %}" hx-target="#list-votes-registration" hx-trigger="click">Atualizar Registro de Voto</button>
+    </div>
+</div>
+   </div>
+</form>
+</div>
+{% endif %}

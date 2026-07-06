@@ -6,7 +6,29 @@
 {% block extra_head %}{% endblock extra_head %}
 {% block content %}
 <div class="container-fluid">
-    <section class="container text-white my-4">
+    <section class="container text-white my-4" x-data="{ editCarmel: false }">
+        <div x-show="editCarmel" class="modal-custom" x-cloak>
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content bg-dark text-white bg-carmel">
+                    <div class="modal-header bg-carmel-header">
+                        <h5 class="modal-title">Editar Carmel</h5>
+                        <button type="button" @click="editCarmel = false" class="btn">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="{% url 'edit_carmel' %}">
+                            {% csrf_token %}
+                            {{ form }}
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" @click="editCarmel = false">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Salvar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
         <h1 class="h2">{{carmel.name}}</h1>
         <div class="container my-4">
             <p>
@@ -14,17 +36,19 @@
             </p>
               {% if user|can:'read_member' %}
             <div class="py-2">
-              
+
                 Quantidade de Membros é <span class="h5">{{member_quantity}}</span>
-               
+
             </div>
              {% endif %}
             <div>
-                Total de contribuições já registradas é <span class="h5">{{total_contribuition}}</span>
+                Total de contribuições já registradas é <span class="h5">{{total_contribution}}</span>
+<button class="btn btn-primary" @click="editCarmel = true">Editar</button>
+
             </div>
         </div>
     </section>
 </div>
 {% endblock content %}
-{% block extra_body %}{% endblock extra_body %} 
+{% block extra_body %}{% endblock extra_body %}
 

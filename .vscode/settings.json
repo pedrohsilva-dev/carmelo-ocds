@@ -1,8 +1,76 @@
 {
-    "bootstrapIntelliSense": {
-        "enable": true,
-        "bsVersion": "5.3.8",
-        "showSuggestions": true,
-        "autoComplete": true
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+  "python.terminal.activateEnvironment": true,
+  "python.analysis.languageServerMode": "default",
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.diagnosticMode": "workspace",
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.completeFunctionParens": true,
+  "python.analysis.autoSearchPaths": true,
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}"
+  ],
+  "python.analysis.djangoSettingsModule": "core.settings",
+  "python.languageServer": "Pylance",
+  "python.analysis.indexing": true,
+  "django.enabled": true,
+  "bootstrapIntelliSense": {
+    "enable": true,
+    "bsVersion": "5.3.8",
+    "showSuggestions": true,
+    "autoComplete": true
+  },
+  "files.associations": {
+    "*.html": "html",
+    "*.django": "django-html",
+    "*.jinja": "django-html",
+    "*.jinja2": "django-html",
+    "*.djhtml": "django-html",
+    "*.css": "css",
+    "*.scss": "scss",
+    "*.js": "javascript",
+    "*.jsx": "javascriptreact"
+  },
+  "emmet.includeLanguages": {
+    "django-html": "html",
+    "javascript": "javascriptreact"
+  },
+  "css.validate": true,
+  "css.completion.triggerPropertyValueCompletion": true,
+  "css.completion.completePropertyWithSemicolons": true,
+  "html.validate.scripts": true,
+  "html.validate.styles": true,
+  "html.suggest.html5": true,
+  "javascript.suggest.completeFunctionCalls": true,
+  "javascript.suggest.names": true,
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": true,
+    "strings": true
+  },
+  "editor.tabSize": 4,
+  "editor.insertSpaces": true,
+  "editor.wordWrap": "on",
+  "editor.formatOnSave": true,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "vscode.css-language-features"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "[django-html]": {
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": true,
+      "strings": true
     }
+  }
 }

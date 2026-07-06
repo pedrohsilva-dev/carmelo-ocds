@@ -25,6 +25,16 @@ urlpatterns = [
         name="register_votes_registration",
     ),
     path(
+        "edit_vote_registration/pk/<int:id>",
+        views.edit_vote_registration,
+        name="edit_vote_registration",
+    ),
+    path(
+        "update_vote_registration/pk/<int:id>",
+        views.update_vote_registration,
+        name="update_vote_registration",
+    ),
+    path(
         "delete_votes_registration/pk/<int:id>",
         views.delete_votes_registration,
         name="delete_votes_registration",

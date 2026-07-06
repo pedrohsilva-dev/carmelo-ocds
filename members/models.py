@@ -123,6 +123,8 @@ class Member(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
 
     entry_date = models.DateField(
         verbose_name="Data de Entrada",
+        null=True,
+        blank=True,
     )
 
     carmel = models.ForeignKey(

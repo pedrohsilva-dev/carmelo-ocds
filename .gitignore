@@ -20,6 +20,9 @@ all_models_struct.py
 all_models.png
 arquivo.png
 cep.py
+
+all_models_struct.py
+
 coverage.xml
 django_ai_schema_1.json
 django_ai_schema_2.json
@@ -42,6 +45,8 @@ TODO.md
 .vscode/launch.json
 
 tests/
+requirements-test.txt
+
 ### Django.Python Stack ###
 # Byte-compiled / optimized / DLL files
 *.py[cod]

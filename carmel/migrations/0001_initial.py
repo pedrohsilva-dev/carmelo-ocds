@@ -24,11 +24,11 @@ class Migration(migrations.Migration):
                 ),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("updated_at", models.DateTimeField(auto_now=True)),
-                ("name", models.CharField()),
+                ("name", models.CharField(max_length=100)),
                 ("description", models.TextField(max_length=255)),
                 (
                     "price_contribution_default",
-                    models.DecimalField(decimal_places=2, max_digits=2),
+                    models.DecimalField(decimal_places=2, max_digits=10),
                 ),
                 ("pay_day_contribution_default", models.DateField()),
             ],

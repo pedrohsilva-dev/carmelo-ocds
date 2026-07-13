@@ -9,10 +9,10 @@ from . import views
 
 urlpatterns = [
     path("", views.home, name="home"),
-    path("admin/", admin.site.urls),
-    path("accounts/", include("accounts.urls")),
-    path("members/", include("members.urls")),
-    path("carmel/", include("carmel.urls")),
+    path("administrador/", admin.site.urls),
+    path("contas/", include("accounts.urls")),
+    path("membros/", include("members.urls")),
+    path("carmelo/", include("carmel.urls")),
 ]
 
 urlpatterns += static(

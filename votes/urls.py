@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
     # VOTES MEMBER
-    path("list/<slug:slug>/", views.votes_member, name="votes_members"),
+    path("listagem/<slug:slug>/", views.votes_member, name="votes_members"),
     path("register_vote/", views.register_vote, name="register_vote"),
     path("vote_member/<str:user>/pk/<int:id>", views.vote_member, name="vote_member"),
     path(
@@ -18,7 +18,7 @@ urlpatterns = [
     ),
     path("delete_vote/<int:id>", views.delete_vote, name="delete_vote"),
     # REGISTER VOTES DEFAULT
-    path("votes_registration/", views.votes_registration, name="votes_registration"),
+    path("votos_do_carmelo/", views.votes_registration, name="votes_registration"),
     path(
         "register_votes_registration/",
         views.register_votes_registration,

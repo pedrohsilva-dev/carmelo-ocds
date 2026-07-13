@@ -9,9 +9,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
 django.setup()
 
 
-OUTPUT_FILE = "django_ai_schema.json"
-
-
 def safe_str(value):
     try:
         return str(value)
@@ -173,7 +170,7 @@ def get_model_schema(model):
     return schema
 
 
-def main():
+def main(OUTPUT_FILE="django_ai_schema.json"):
     all_data = {
         "project": "Django AI Schema Export",
         "models_count": 0,
@@ -204,4 +201,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(OUTPUT_FILE="django_ai_schema_1.json")
+    main(OUTPUT_FILE="django_ai_schema_2.json")

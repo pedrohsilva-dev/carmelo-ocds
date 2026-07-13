@@ -19,7 +19,12 @@ class Contribution(TimeStampedModel):
 
     date_pay = models.DateField(verbose_name="Data do Pagamento")
 
-    member = models.ForeignKey(Member, on_delete=models.CASCADE)
+    member = models.ForeignKey(
+        Member,
+        on_delete=models.CASCADE,
+        related_name="contributions",
+        verbose_name="Membro",
+    )
 
     class Meta:
         verbose_name = "Contribuição"

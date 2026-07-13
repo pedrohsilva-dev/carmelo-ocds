@@ -18,6 +18,10 @@ from votes.models import Vote, VotesRegistration
 @login_required
 @has_permission_decorator("create_vote")
 def register_vote(request):
+    """Registra um novo voto para um membro.
+
+    Valida se o membro já possui esse voto; se não, cria o registro.
+    """
     user_current = request.POST.get("user_current")
     user = Member.objects.filter(slug=user_current).first()
 
@@ -25,6 +29,7 @@ def register_vote(request):
         form_vote = VoteForm(request.POST)
 
         if form_vote.is_valid():
+            # MANUTENÇÃO: Usar .exists() em vez de .exists() para apenas verificar existência
             vote_exists = Vote.objects.filter(
                 member=user,
                 votes_registration__name=form_vote.cleaned_data.get(
@@ -57,6 +62,11 @@ def register_vote(request):
 @login_required
 @has_permission_decorator("list_vote")
 def vote_member(request, user, id):
+    """Lista todas as opções de voto disponíveis para seleção.
+
+    Renderiza as opções de voto para associar a um membro.
+    """
+    # MANUTENÇÃO: Parâmetros 'user' e 'id' não são utilizados
     votes = VotesRegistration.objects.select_related("votes_registration").all()
 
     return render(
@@ -69,7 +79,12 @@ def vote_member(request, user, id):
 @login_required
 @has_permission_decorator("edit_vote")
 def edit_vote_member(request, user, id):
+    """Carrega o formulário de edição de um voto específico.
+
+    Renderiza o formulário preenchido com os dados do voto.
+    """
     if request.method == "GET":
+        # MANUTENÇÃO: Usar get_object_or_404 em vez de .first() para melhor tratamento de erro
         vote = (
             Vote.objects.filter(member__slug=user, id=id)
             .select_related("votes_registration")
@@ -87,11 +102,16 @@ def edit_vote_member(request, user, id):
 @login_required
 @has_permission_decorator("edit_vote")
 def update_vote_member(request, id):
+    """Atualiza um voto existente com novos dados.
+
+    Processa a submissão do formulário e atualiza o voto no banco.
+    """
     form_update = VoteForm(request.POST)
     if form_update.is_valid():
         vote = Vote.objects.filter(id=id).first()
 
         if vote:
+            # MANUTENÇÃO: Refatorar para usar form.save()
             vote.date = form_update.cleaned_data.get("date")  # type: ignore
             vote.type = form_update.cleaned_data.get("type")  # type: ignore
             vote.votes_registration_id = form_update.cleaned_data.get("votes_registration")  # type: ignore
@@ -128,9 +148,14 @@ def update_vote_member(request, id):
 @login_required
 @has_permission_decorator("delete_vote")
 def delete_vote(request, id: int):
+    """Deleta um voto de um membro.
+
+    Remove o voto e renderiza a lista de votos atualizada.
+    """
     form_vote = VoteForm()
     user_current = request.POST.get("user_current")
 
+    # MANUTENÇÃO: Usar get_object_or_404 em vez de .first()
     vote = Vote.objects.filter(id=id).first()
 
     if vote:
@@ -154,6 +179,10 @@ def delete_vote(request, id: int):
 @login_required
 @has_permission_decorator("list_vote")
 def votes_member(request, slug):
+    """Lista todos os votos de um membro específico.
+
+    Exibe o histórico de votos do membro com opção de adicionar novos.
+    """
     votes = (
         Vote.objects.filter(member__slug=slug)
         .prefetch_related("votes_registration")
@@ -179,6 +208,10 @@ def votes_member(request, slug):
 @login_required
 @has_permission_decorator("list_votes_registration")
 def votes_registration(request):
+    """Lista todas as opções de voto disponíveis no sistema.
+
+    Exibe as opções registradas e permite criar novas.
+    """
     form = VoteRegisterForm()
     votes_registration = VotesRegistration.objects.all()
 
@@ -192,7 +225,12 @@ def votes_registration(request):
 @login_required
 @has_permission_decorator("create_votes_registration")
 def register_votes_registration(request):
+    """Registra uma nova opção de voto no sistema.
+
+    Valida se não existe duplicata e salva o novo tipo de voto.
+    """
     form = VoteRegisterForm(request.POST)
+    # MANUTENÇÃO: Usar form.data.get() pode falhar - melhor usar form.cleaned_data após validar
     exists = VotesRegistration.objects.filter(name=form.data.get("name")).exists()
 
     if exists:
@@ -203,6 +241,7 @@ def register_votes_registration(request):
         form.save()
         form = VoteRegisterForm(initial={})
 
+    # MANUTENÇÃO: Lógica confusa - sempre executa se not exists, mesmo se form não foi válido
     if not exists:
         votes_registration = VotesRegistration.objects.all()
 
@@ -216,7 +255,12 @@ def register_votes_registration(request):
 @login_required
 @has_permission_decorator("edit_vote_registration")
 def edit_vote_registration(request, id):
+    """Carrega o formulário de edição de uma opção de voto.
+
+    Renderiza o formulário preenchido com os dados da opção.
+    """
     if request.method == "GET":
+        # MANUTENÇÃO: Usar get_object_or_404 para melhor tratamento de erro
         vote = VotesRegistration.objects.get(id=id)
         form = VoteRegisterForm(instance=vote)
 
@@ -230,8 +274,13 @@ def edit_vote_registration(request, id):
 @login_required
 @has_permission_decorator("edit_votes_registration")
 def update_vote_registration(request, id):
+    """Atualiza uma opção de voto existente.
+
+    Processa a submissão do formulário e atualiza os dados da opção.
+    """
     form_update = VoteRegisterForm(request.POST)
     if form_update.is_valid():
+        # MANUTENÇÃO: Usar get_object_or_404 e form.save() para simplificar
         vote_registration = VotesRegistration.objects.filter(id=id).first()
 
         if vote_registration:
@@ -260,6 +309,11 @@ def update_vote_registration(request, id):
 @login_required
 @has_permission_decorator("delete_votes_registration")
 def delete_votes_registration(request, id):
+    """Deleta uma opção de voto do sistema.
+
+    Remove o tipo de voto e renderiza a lista atualizada.
+    """
+    # MANUTENÇÃO: Validar se a deleção foi bem-sucedida de forma melhor
     is_votes_registration_deleted = get_object_or_404(
         VotesRegistration, id=id
     ).delete()[0]

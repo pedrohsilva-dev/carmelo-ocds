@@ -9,9 +9,9 @@
 {% block title_navbar %}
     Perfil do Membro {{user.name}}
 {% endblock %}
-    
+
 {% block content %}
-  
+
     <div class="profile container my-2">
         <div class="d-flex justify-content-center ">
             <div class="d-flex flex-wrap">
@@ -36,7 +36,7 @@
                     <div x-data="{
                         show_create_number: false
                     }">
-                        <form>   
+                        <form>
                             <div
                                 class="modal-custom fade rounded "
                                 style="opacity: 100;"
@@ -89,10 +89,14 @@
                     {% include 'list_contacts.html' %}
 
                     <!-- List Last Contribuition -->
-                    <div class="d-flex justify-content-between my-2">
+                    {% comment %} <div class="d-flex justify-content-between my-2">
                         <p class="h6 text-white align-self-center">Última Contribuição </p>
                         <p class="h6 text-white align-self-center">{{ contributions.price }} - {{ contributions.date_pay }}</p>
-                    </div>
+                    </div> {% endcomment %}
+
+                    {% for contribute in contributions %}
+{{contribute}}
+                    {% endfor %}
 
                     <!-- List Votes -->
                     <div class="d-flex flex-column my-2">
@@ -111,15 +115,15 @@
                             {% endfor %}
                         </div>
                     </div>
-                    
+
 
 
                 </div>
-            </div> 
+            </div>
         </div>
-             
+
     </div>
-    
+
 {% endblock %}
 
 
@@ -167,9 +171,9 @@
         document.querySelector('div#message_cep_result').innerText = "Campo CEP não Preenchido corretamente"
     }
 
-    
+
 }
     </script>
 {% endblock extra_body %}
-    
+
 

@@ -4,6 +4,7 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -43,8 +44,36 @@ INSTALLED_APPS = [
 LANGUAGE_CODE = "pt-br"
 USE_I18N = True
 
+AUTH_USER_MODEL = "members.Member"
+
+MIDDLEWARE = [
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "base.middlewares.PrefetchUserPermissionsMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "base.middlewares.HtmxMessagesMiddleware",
+]
+
+LOGIN_REDIRECT_URL = "/accounts/login"
+
+ROOT_URLCONF = "core.urls"
+
 if DEBUG:
-    DEVBAR = {"ENABLE_DEVTOOLS_DATA": True}
+    idx = MIDDLEWARE.index("django.middleware.security.SecurityMiddleware")
+    MIDDLEWARE.insert(idx + 1, "django_devbar.DevBarMiddleware")
+
+if DEBUG:
+    DEVBAR = {
+        "POSITION": "bottom-right",  # bottom-right (default), bottom-left, top-right, top-left
+        "SHOW_BAR": None,  # follows DEBUG; set True/False to override
+        "ENABLE_DEVTOOLS_DATA": None,  # follows DEBUG; set True/False to override
+        "DEVTOOLS_HEADER_MAX_BYTES": 6144,  # max bytes for DevBar-Data header payload
+        "DEVTOOLS_MAX_QUERIES": None,  # optional hard cap for q/dup entries sent to DevTools
+    }
     GRAPH_MODELS = {
         "group_models": True,
         "inheritance": True,
@@ -58,22 +87,6 @@ if DEBUG:
         ],
     }
 
-AUTH_USER_MODEL = "members.Member"
-
-MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "base.middlewares.HtmxMessagesMiddleware",
-]
-
-LOGIN_REDIRECT_URL = "/accounts/login"
-
-ROOT_URLCONF = "core.urls"
 
 TEMPLATES = [
     {
@@ -114,12 +127,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "OPTIONS": {
+            "min_length": 10,
+        },
     },
     {
         "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
+    {
+        "NAME": "core.password_validators.StrongPasswordValidator",
     },
 ]
 

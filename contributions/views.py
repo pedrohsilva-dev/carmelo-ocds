@@ -4,7 +4,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.db import transaction
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.dates import MONTHS
 from rolepermissions.decorators import has_permission_decorator
 
@@ -24,6 +25,11 @@ from members.models import Member
 @login_required
 @has_permission_decorator("create_Contribute")
 def register_contribution(request, user):
+    """Registra uma nova contribuição para um membro.
+
+    Valida se a data de contribuição é válida (entre entrada e hoje),
+    define o valor padrão ou customizado e salva a contribuição.
+    """
     member = get_object_or_404(Member, slug=user)
 
     carmel: Carmel = request.user.carmel
@@ -72,6 +78,7 @@ def register_contribution(request, user):
 
                     form = ContributionForm()
 
+            # MANUTENÇÃO: Considerar logar os erros de validação
             except ValidationError as exc:
                 for error in exc.messages:
                     messages.error(request, error)
@@ -99,12 +106,20 @@ def register_contribution(request, user):
 @login_required
 @has_permission_decorator("edit_contribute")
 def update_contribution(request):
+    """Atualiza uma contribuição existente.
+
+    [MANUTENÇÃO: Esta função está incompatével - não implementa lógica de atualização]
+    """
     return render(request, "contribution/list.html", {})
 
 
 @login_required
 @has_permission_decorator("delete_contribute")
 def delete_contribution(request, user, id):
+    """Deleta uma contribuição de um membro.
+
+    Remove a contribuição e renderiza a lista de contribuições atualizada.
+    """
     contribution = get_object_or_404(Contribution, id=id)
 
     contribution.delete()
@@ -117,6 +132,7 @@ def delete_contribution(request, user, id):
 
     form = ContributionForm()
 
+    # MANUTENÇÃO: Usar select_related para otimizar queries
     contributions = Contribution.objects.filter(member=member).order_by("date_pay")
 
     month_data = month_empty(member)
@@ -187,6 +203,10 @@ def month_empty(member):
 @login_required
 @has_permission_decorator("list_contribute")
 def contribution_member(request, slug):
+    """Lista todas as contribuições de um membro específico.
+
+    Exibe o histórico de contribuições, meses faltantes e permite registrar novas contribuições.
+    """
     form = ContributionForm()
 
     carmel: Carmel = request.user.carmel
@@ -195,13 +215,19 @@ def contribution_member(request, slug):
 
     months = month_empty(member)
 
+    # MANUTENÇÃO: Query duplicada - remover segunda chamada
     member = get_object_or_404(Member, slug=slug)
 
     date_entry = member.entry_date  # Data que entrou
 
     if not carmel:
         messages.error(request, "Nenhum carmelo no Membro que está cadatrando")
+        # o problema é que está usando a resposta para o htmx
+        # e um redirect iria preencher o conteudo o htmx com uma pagina
+        messages.info(request, "Sem carmelo relacionado")
+        return redirect(reverse("list_member"))
 
+    # MANUTENÇÃO: Usar select_related para otimizar queries\n
     contributions = (
         Contribution.objects.filter(member__slug=slug).order_by("date_pay").all()
     )

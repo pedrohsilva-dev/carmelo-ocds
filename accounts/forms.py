@@ -13,6 +13,7 @@ class LoginForm(forms.Form):
 
     password = forms.CharField(
         widget=forms.PasswordInput(
+            
             attrs={
                 "class": "form-control w-full",
                 ":type": "hide_password ? 'password' : 'text'",

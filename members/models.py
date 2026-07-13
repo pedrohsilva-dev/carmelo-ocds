@@ -10,6 +10,8 @@ from django.contrib.auth.models import (
 from base.models import TimeStampedModel
 from carmel.models import Carmel
 
+from django.core.validators import validate_email
+
 # =========================
 # CONSTANTES
 # =========================
@@ -77,7 +79,11 @@ class Address(models.Model):
     zipcode = models.CharField(max_length=10, verbose_name="CEP")
 
     member = models.OneToOneField(
-        "Member", on_delete=models.CASCADE, blank=True, null=True
+        "Member",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="location",
     )
 
     class Meta:
@@ -95,7 +101,7 @@ class Phone(models.Model):
     number = models.CharField(max_length=15, verbose_name="Número")
 
     member = models.ForeignKey(
-        "Member", on_delete=models.CASCADE, blank=True, null=True
+        "Member", on_delete=models.CASCADE, related_name="phones", blank=True, null=True
     )
 
     class Meta:
@@ -115,23 +121,27 @@ class Member(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
 
     username = None
 
-    name = models.CharField(max_length=35, verbose_name="Nome do Membro")
+    name = models.CharField(max_length=100, verbose_name="Nome do Membro", unique=True)
 
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, validators=[validate_email])
 
-    church = models.CharField(max_length=100, verbose_name="Igreja que Participa")
+    church = models.CharField(
+        max_length=100,
+        verbose_name="Igreja que Participa",
+        default="",
+    )
 
     entry_date = models.DateField(
         verbose_name="Data de Entrada",
-        null=True,
-        blank=True,
     )
 
     carmel = models.ForeignKey(
         Carmel,
         blank=True,
         null=True,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
+        related_name="members",
+        db_index=True,
     )
 
     roles = models.CharField(
@@ -159,11 +169,14 @@ class Member(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
         return self.name
 
     def save(self, *args, **kwargs):
+        if not self.entry_date:
+            self.entry_date = date.today()
+
         if not self.slug:
             base_slug = slugify(self.name)
             slug = base_slug
             counter = 1
-
+            # Generate a unique slug using UUID
             while Member.objects.filter(slug=slug).exists():
                 slug = f"{base_slug}-{counter}"
                 counter += 1
@@ -172,8 +185,8 @@ class Member(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
 
         super().save(*args, **kwargs)
 
-    def phones(self):
-        return Phone.objects.filter(member=self).all()
+    # def phones(self):
+    #     return Phone.objects.filter(member=self).all()
 
-    def location(self):
-        return Address.objects.filter(member=self).first()
+    # def location(self):
+    #     return Address.objects.filter(member=self).first()

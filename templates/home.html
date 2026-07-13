@@ -9,16 +9,23 @@ Página Inicial
 
 <style>
 
-:root{
-    --gold:#C9A96E;
-    --gold-dark:#8E6933;
-    --bg:#0f1217;
-    --bg-light:#171c23;
-    --text:#F5F1EA;
-}
-
 body{
+
+    min-height:100vh;
+
     background:
+        radial-gradient(
+            circle at top right,
+            rgba(201,169,110,.15),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at bottom left,
+            rgba(201,169,110,.08),
+            transparent 25%
+        ),
+
         linear-gradient(
             135deg,
             #0f1217,
@@ -26,29 +33,62 @@ body{
             #0b0e13
         );
 
-    color:var(--text);
-
     overflow-x:hidden;
 }
 
+/* Renda Mariana */
+
 body::before{
+
     content:"";
 
     position:fixed;
 
     inset:0;
 
-    background-image:url("{% static 'images/renda_carmo.png' %}");
+    background-image:
+        url("{% static 'images/renda_carmo.png' %}");
 
-    background-repeat:repeat;
+    background-repeat:
+        repeat;
 
-    background-size:280px;
+    background-size:
+        280px;
 
-    opacity:.03;
+    opacity:
+        .03;
 
     pointer-events:none;
 
-    z-index:-1;
+    z-index:-2;
+}
+
+/* brilho dourado */
+
+
+
+body::after{
+
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
+    pointer-events:none;
+
+    z-index:0;
+
+    background:
+        radial-gradient(
+            220px circle at
+            var(--mouse-x,50%)
+            var(--mouse-y,50%),
+
+            rgba(201,169,110,.15) 0%,
+            rgba(201,169,110,.08) 35%,
+            transparent 70%
+        );
 }
 
 .hero-section{
@@ -58,7 +98,7 @@ body::before{
 
     align-items:center;
 
-    padding:80px 0;
+    padding:20px 0px 40px 0;
 }
 
 .hero-title{
@@ -149,7 +189,7 @@ footer{
 <section class="hero-section container">
 
 
-<div class="row align-items-center gy-5">
+<div class="row align-items-center gy-2">
 
     <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1000">
 
@@ -510,5 +550,40 @@ footer{
       easing: 'ease-in-out',
       anchorPlacement: 'top-bottom'
     });
+
+
+// Animação de Grow
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+
+let currentX = mouseX;
+let currentY = mouseY;
+
+document.addEventListener('mousemove', e => {
+
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+
+});
+
+function animate() {
+
+    currentX += (mouseX - currentX) * 0.08;
+    currentY += (mouseY - currentY) * 0.08;
+
+    document.body.style.setProperty(
+        '--mouse-x',
+        `${currentX}px`
+    );
+
+    document.body.style.setProperty(
+        '--mouse-y',
+        `${currentY}px`
+    );
+
+    requestAnimationFrame(animate);
+}
+
+animate();
   </script>
 {% endblock extra_body %}

@@ -1,6 +1,11 @@
-{% extends 'partials/base.html' %} {% load static %} {% comment %} {% block
+{% extends 'partials/base.html' %}
+{% load static %}
+{% comment %} {% block
 title %} Cadastro de Membro {% endblock %} {% block title_navbar %} Cadastro de
-Membros {% endblock %} {% endcomment %} {% comment %} {% block list_navbar %}
+Membros {% endblock %} {% endcomment %}
+
+{% comment %}
+{% block list_navbar %}
 <li>
   <a
     href="{% url 'list_member' %}"
@@ -9,10 +14,10 @@ Membros {% endblock %} {% endcomment %} {% comment %} {% block list_navbar %}
     >Listar Membros</a
   >
 </li>
-{% endblock %} {% endcomment %} 
+{% endblock %}
+{% endcomment %}
 {% block content %}
 <div class="container d-flex flex-column align-items-center my-3 ">
-    <div>{{form.errors.as_ul}}</div>
   <div class="card card-carmel" style="max-width: 600px;">
     <div class="card-header card-header-color">
       <h1 class="h3">Cadastro de Membro</h1>
@@ -24,20 +29,67 @@ Membros {% endblock %} {% endcomment %} {% comment %} {% block list_navbar %}
           <div class="col-6 flex flex-col text-white">
             <label for="">Nome</label>
             {{form.name}}
+              {% for err in form.errors.name %}
+                <div class="text-danger small">{{ err }}</div>
+              {% endfor %}
           </div>
           <div class="col-6 flex flex-col text-white">
             <label for="">Email</label>
             {{form.email}}
+              {% for err in form.errors.email %}
+                <div class="text-danger small">{{ err }}</div>
+              {% endfor %}
           </div>
        </div>
        <div class="row">
           <div class="col-12 col-md-6 flex flex-col text-white">
             <label for="">Senha</label>
-            {{form.password}}
+            <div x-data="{ hide_password: true }" class="position-relative">
+              {{form.password}}
+              <span
+                  class="position-absolute password-toggle"
+                  style="right:12px;top:10px;"
+                  @click="hide_password=!hide_password"
+              >
+
+                  <span x-show="hide_password">
+                        <i class="bi bi-eye-slash" aria-hidden="true"></i>
+                  </span>
+
+                  <span x-show="!hide_password">
+                      <i class="bi bi-eye" aria-hidden="true"></i>
+                  </span>
+
+              </span>
+            </div>
+            {% for err in form.errors.password2 %}
+                <div class="text-danger small">{{ err }}</div>
+              {% endfor %}
           </div>
           <div class=" col-12 col-md-6 flex flex-col text-white">
             <label for="">Senha Novamente</label>
-            {{form.password2}}
+            <div x-data="{ hide_password: true }" class="position-relative">
+              {{form.password2}}
+              <span
+                  class="position-absolute password-toggle"
+                  style="right:12px;top:10px;"
+                  @click="hide_password=!hide_password"
+              >
+
+                  <span x-show="hide_password">
+                        <i class="bi bi-eye-slash" aria-hidden="true"></i>
+                  </span>
+
+                  <span x-show="!hide_password">
+                      <i class="bi bi-eye" aria-hidden="true"></i>
+                  </span>
+
+              </span>
+            </div>
+
+                 {% for err in form.errors.password2 %}
+                <div class="text-danger small">{{ err }}</div>
+              {% endfor %}
           </div>
        </div>
        <div class="row">
@@ -45,6 +97,9 @@ Membros {% endblock %} {% endcomment %} {% comment %} {% block list_navbar %}
             <div class="flex flex-col text-white">
             <label for="">Comunidade</label>
             {{form.church}}
+                 {% for err in form.errors.church %}
+                <div class="text-danger small">{{ err }}</div>
+              {% endfor %}
             </div>
           </div>
        </div>
@@ -54,16 +109,22 @@ Membros {% endblock %} {% endcomment %} {% comment %} {% block list_navbar %}
           <div class="flex flex-col text-white">
             <label for="">Tipo de Membro</label>
             {{form.roles}}
+            {% for err in form.errors.roles %}
+                <div class="text-danger small">{{ err }}</div>
+              {% endfor %}
           </div>
         </div>
         <div class="col-6 flex flex-row justify-between gap-5">
           <div class="flex flex-col text-white">
             <label for="">Data de Entrada</label>
             {{form.entry_date}}
+              {% for err in form.errors.entry_date %}
+                <div class="text-danger small">{{ err }}</div>
+              {% endfor %}
           </div>
         </div>
       </div>
-        
+
 
         <div class="d-flex justify-content-end mt-4 mb-1">
           <button

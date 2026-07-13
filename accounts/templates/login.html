@@ -226,7 +226,7 @@ body::after{
         padding-top:20px;
          max-width: 90% !important;
          margin: 1px auto;
-        
+
     }
 
     #nsc-slider{
@@ -270,7 +270,7 @@ body::after{
                           background-image: url({% static 'assets/background_nsc.png' %});
                         background-size: cover;
                     `"
-                    
+
                 >
                     <img
                         class="img-fluid"
@@ -291,11 +291,11 @@ body::after{
                         transition:.6s ease;
                         background-image: url({% static 'assets/background_nsc.png' %});
                         background-size: cover;
-                      
+
                     `
-                    
+
                     "
-                    
+
                 >
                     <img
                         class="img-fluid"
@@ -323,12 +323,14 @@ body::after{
 
         <!-- LOGIN -->
 
-        <div class="col-12 col-md-6" x-data="{ show_forgot_password: false }">
+        <div class="col-12 col-md-6"
+         {% comment %} x-data="{ show_forgot_password: false }" {% endcomment %}
+         >
 
             <div class="card card-carmel login-form">
 
                 <div class="card-header text-center h4 d-flex flex-column align-items-center">
-                  
+
                     <span>
                         Login do Sistema
                     </span>
@@ -348,7 +350,7 @@ body::after{
                         {% csrf_token %}
 
                         <div>
-                            {% for message in messages %}
+                            {% comment %} {% for message in messages %}
                                 {% if message.tags == "error" %}
                                     <div
                                         class="alert alert-danger"
@@ -356,7 +358,7 @@ body::after{
                                     >
                                         <strong>{{message}}</strong>
                                     </div>
-                                    
+
                                 {% elif message.tags == "success" %}
                                 <div
                                         class="alert alert-success"
@@ -365,7 +367,7 @@ body::after{
                                     <strong>{{message}}</strong>
                                 </div>
                                 {% endif %}
-                            {% endfor %}
+                            {% endfor %} {% endcomment %}
                         </div>
 
                         <div class="mb-3">
@@ -409,7 +411,7 @@ body::after{
                                     <span x-show="hide_password">
                                          <i class="bi bi-eye-slash" aria-hidden="true"></i>
                                     </span>
-                                        
+
                                     <span x-show="!hide_password">
                                         <i class="bi bi-eye" aria-hidden="true"></i>
                                     </span>
@@ -418,16 +420,16 @@ body::after{
 
                             </div>
 
-                        </div> 
+                        </div>
 
-                        <div class="text-end">
+                        {% comment %} <div class="text-end">
 
                             <a type="button" @click="show_forgot_password = true" class="text-decoration-none text-white" style="font-size: 14px;">
                                 Esqueceu sua senha?
                             </a>
 
-                        </div>
-                        
+                        </div> {% endcomment %}
+
 
                         <div class=" mt-5">
 
@@ -442,14 +444,14 @@ body::after{
                     </div>
                             <p class="text-center my-2" style="font-size: 8px;">"Que nada te perturbe, Nada te Espante, Tudo passa,<br>Deus não muda, A paciência tudo alcança;<br>Quem a Deus tem, Nada lhe falta: Só Deus basta."</p>
                         </div>
-                        
+
 
                     </form>
-                    
+
                 </div>
-                
+
             </div>
-            {% include "forgot_password.html" %}
+            {% comment %} {% include "forgot_password.html" %} {% endcomment %}
 
             </div>
         </div>

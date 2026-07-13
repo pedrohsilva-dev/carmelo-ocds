@@ -10,6 +10,7 @@ class FinanceMember(AbstractUserRole):
         "login": True,
         "home": True,
         "profile": True,
+        "view_carmel": True,
         "see_total_money": True,
         "show_money": True,
         "carmel_dashboard": True,
@@ -30,6 +31,8 @@ class ManagerMember(AbstractUserRole):
         "profile": True,
         "carmel_dashboard": True,
         "view_carmel": True,
+        "edit_carmel": True,
+        "transfer_carmel": True,
         "see_total_money": True,
         "show_money": True,
         # MEMBER

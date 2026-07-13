@@ -29,3 +29,25 @@ class HtmxMessagesMiddleware:
                 response["HX-Trigger"] = json.dumps({"django-messages": msgs})
 
         return response
+
+
+from django.contrib.auth import get_user_model
+
+
+class PrefetchUserPermissionsMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+
+        if request.user.is_authenticated:
+            User = get_user_model()
+
+            request.user = User.objects.prefetch_related(
+                "groups__permissions",
+                "user_permissions",
+            ).get(pk=request.user.pk)
+
+        response = self.get_response(request)
+
+        return response

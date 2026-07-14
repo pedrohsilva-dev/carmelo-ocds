@@ -46,6 +46,9 @@ def register_member(request):
     form = MemberForm(request.POST or None)
     if request.method == "POST":
         if form.is_valid():
+
+            form.clean_email()
+
             entry_date: date | None = form.cleaned_data.get("entry_date")
             if entry_date:
                 if entry_date > date.today():
@@ -53,8 +56,7 @@ def register_member(request):
                         request, "O usuario não pode cadastrar em datas futuras"
                     )
                     return render(request, "members/register.html", {"form": form})
-            form.clean_email()
-            form.clean()
+
 
             member = form.save(commit=False)
 

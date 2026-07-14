@@ -73,12 +73,11 @@ class MemberForm(forms.ModelForm):
         password = cleaned_data.get("password")
         password2 = cleaned_data.get("password2")
 
-        if password and password2 and password != password2:
+        if password and password2:
             if not password:
                 self.add_error("password", "Preencha o campo 1 de senha.")
             if not password2:
                 self.add_error("password2", "Preencha o campo 2 de senha.")
-            raise forms.ValidationError("As senhas não coincidem")
 
         return cleaned_data
 

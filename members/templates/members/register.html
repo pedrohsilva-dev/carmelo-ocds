@@ -61,10 +61,11 @@ Membros {% endblock %} {% endcomment %}
                   </span>
 
               </span>
-            </div>
-            {% for err in form.errors.password2 %}
+               {% for err in form.errors.password %}
                 <div class="text-danger small">{{ err }}</div>
               {% endfor %}
+            </div>
+
           </div>
           <div class=" col-12 col-md-6 flex flex-col text-white">
             <label for="">Senha Novamente</label>
@@ -85,11 +86,12 @@ Membros {% endblock %} {% endcomment %}
                   </span>
 
               </span>
-            </div>
-
-                 {% for err in form.errors.password2 %}
+               {% for err in form.errors.password2 %}
                 <div class="text-danger small">{{ err }}</div>
               {% endfor %}
+            </div>
+
+
           </div>
        </div>
        <div class="row">

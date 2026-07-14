@@ -53,70 +53,79 @@
     <style>
 
 
-     .sidebar{
-    width:260px;
+
+.sidebar{
     position:fixed;
-    top:0;
-    bottom:0;
-    left:0;
-    z-index:1040;
+    inset:0;
+    width:100vw;
+    height:100dvh;
+    z-index:1055;
+
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+
     transform:translateX(-100%);
-    transition:.3s ease;
+    transition:transform .30s ease;
+
+    overscroll-behavior:contain;
 }
-
-
 
 .sidebar.show{
     transform:translateX(0);
 }
 
-
 .sidebar-header{
-    height:70px;
+    min-height:70px;
     display:flex;
     align-items:center;
     justify-content:space-between;
     padding:15px;
+    border-bottom:1px solid rgba(255,255,255,.08);
 }
-
 
 .sidebar-content{
     padding:15px;
 }
 
-
-
 .sidebar-link{
     display:flex;
     align-items:center;
     gap:12px;
-    color:white;
+    color:#fff;
     text-decoration:none;
-    padding:12px;
-    border-radius:8px;
+    padding:14px;
+    border-radius:10px;
     transition:.2s;
 }
 
-
 .sidebar-link:hover{
-    background:rgba(255,255,255,.15);
+    background:rgba(255,255,255,.12);
 }
-
-
 
 .sidebar-overlay{
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,.5);
-    z-index:1039;
+    background:rgba(0,0,0,.65);
+    backdrop-filter:blur(2px);
+    z-index:1050;
 }
 
+body.menu-open{
+    overflow:hidden;
+    touch-action:none;
+}
 
-
-@media(min-width:992px){
+@media (min-width:992px){
 
     .sidebar{
+        width:260px;
+        height:100vh;
+        inset:0 auto 0 0;
         transform:translateX(0);
+    }
+
+    .sidebar-overlay{
+        display:none!important;
     }
 
     main{
@@ -134,168 +143,223 @@
     <!-- =====================================================
      NAVBAR
 ===================================================== -->
-    {% block navbar %}
+{% block navbar %}
 
-        {% if not user.is_authenticated %}
-<header x-data="{ sidebar: false }">
- <a href="/" class="navbar-brand d-flex align-items-center">
-            <img
-                src="{% static 'assets/brand_gold.png' %}"
-                width="40"
-                height="40"
-                alt="OCDS"
-            />
+<header
+    x-data="{
+        sidebar:false,
 
-            <span class="text-white ms-2 fw-bold">
-                OCDS
-            </span>
-        </a>
+        toggle(){
+            this.sidebar = !this.sidebar;
+            document.body.classList.toggle('menu-open', this.sidebar);
+        },
 
-        {% endif %}
-{% if user.is_authenticated %}
+        close(){
+            this.sidebar = false;
+            document.body.classList.remove('menu-open');
+        }
+    }">
 
+    <!-- =====================================================
+        NAVBAR DESLOGADO
+    ===================================================== -->
 
-<!-- Navbar Mobile -->
-<nav class="navbar shadow-sm d-lg-none">
-    <div class="container-fluid">
+    {% if not user.is_authenticated %}
 
-        <button
-            class="btn border-0"
-            @click="sidebar = true"
-            aria-label="Abrir menu"
-        >
-            <i class="bi bi-list text-white fs-2"></i>
-        </button>
+    <nav class="navbar navbar-expand-lg bg-nav-carmel shadow-sm">
 
+        <div class="container-fluid">
 
+            <a
+                href="/"
+                class="navbar-brand d-flex align-items-center">
 
-    </div>
-</nav>
+               <div>
+                 <img
+                    src="{% static 'assets/brand_gold.png' %}"
+                    width="40"
+                    height="40"
+                    alt="OCDS">
+               </div>
 
+                <span class="text-white fw-bold fs-4 pt-2 pl-2">
+                    OCDS
+                </span>
 
+            </a>
 
-<!-- Overlay Mobile -->
-<div
-    x-show="sidebar"
-    x-transition.opacity
-    @click="sidebar=false"
-    class="sidebar-overlay d-lg-none"
-></div>
+        </div>
 
+    </nav>
 
+    {% endif %}
 
-<!-- Sidebar -->
-<aside
-    class="sidebar bg-nav-carmel"
-    :class="sidebar ? 'show' : ''"
->
-
-
-    <!-- Logo -->
-    <div class="sidebar-header">
-
-        <a href="/" class="d-flex align-items-center text-decoration-none">
-
-            <img
-                src="{% static 'assets/brand_gold.png' %}"
-                width="45"
-                height="45"
-            >
-
-            <span class="text-white fw-bold ms-2 fs-5">
-                OCDS
-            </span>
-
-        </a>
-
-
-        <button
-            class="btn text-white d-lg-none"
-            @click="sidebar=false"
-        >
-            <i class="bi bi-x-lg"></i>
-        </button>
-
-    </div>
-
+    <!-- =====================================================
+        NAVBAR LOGADO
+    ===================================================== -->
 
     {% if user.is_authenticated %}
-    <div class="sidebar-content">
 
+    <!-- Navbar Mobile -->
 
+    <nav class="navbar bg-nav-carmel shadow-sm d-lg-none">
 
+        <div class="container-fluid">
 
-        <ul class="nav flex-column gap-2">
+            <button
+                type="button"
+                class="btn border-0"
+                @click="toggle()"
+                aria-label="Abrir menu">
 
+                <i class="bi bi-list text-white fs-2"></i>
 
-        {% if user|can:'list_members' %}
-        <li>
-            <a class="sidebar-link"
-               href="{% url 'list_member' %}">
-                <i class="bi bi-people"></i>
-                <span>Membros</span>
-            </a>
-        </li>
-        {% endif %}
+            </button>
 
+        </div>
 
+    </nav>
 
-        {% if user|can:'read_votes_registration' %}
-        <li>
-            <a class="sidebar-link"
-               href="{% url 'votes_registration' %}">
-                <i class="bi bi-check2-square"></i>
-                <span>Votos</span>
-            </a>
-        </li>
-        {% endif %}
+    <!-- Overlay -->
 
-
-
-        {% if user|can:'carmel_dashboard' %}
-        <li>
-            <a class="sidebar-link"
-               href="{% url 'carmel_profile' %}">
-                <i class="bi bi-info-circle"></i>
-                <span>Carmelo</span>
-            </a>
-        </li>
-        {% endif %}
-
-
-        <hr class="text-white">
-
-
-        <li>
-            <a class="sidebar-link"
-               href="{% url 'profile' %}">
-                <i class="bi bi-person"></i>
-                <span>Perfil</span>
-            </a>
-        </li>
-
-
-        <li>
-            <a class="btn btn-danger w-100 mt-2"
-               href="{% url 'logout' %}">
-                <i class="bi bi-box-arrow-right"></i>
-                Sair
-            </a>
-        </li>
-
-
-        </ul>
-
-
-
-
-
+    <div
+        x-cloak
+        x-show="sidebar"
+        x-transition.opacity
+        @click="close()"
+        class="sidebar-overlay">
     </div>
+
+    <!-- Sidebar -->
+
+    <aside
+        class="sidebar bg-nav-carmel"
+        :class="{ 'show': sidebar }">
+
+        <!-- Header -->
+
+        <div class="sidebar-header">
+
+            <a
+                href="/"
+                class="d-flex align-items-center text-decoration-none">
+
+                <img
+                    src="{% static 'assets/brand_gold.png' %}"
+                    width="45"
+                    height="45"
+                    alt="OCDS">
+
+                <span class="text-white fw-bold ms-2 fs-5">
+                    OCDS
+                </span>
+
+            </a>
+
+            <button
+                class="btn text-white d-lg-none"
+                @click="close()">
+
+                <i class="bi bi-x-lg"></i>
+
+            </button>
+
+        </div>
+
+        <!-- Conteúdo -->
+
+        <div class="sidebar-content">
+
+            <ul class="nav flex-column gap-2">
+
+                {% if user|can:'list_members' %}
+                <li>
+
+                    <a
+                        class="sidebar-link"
+                        href="{% url 'list_member' %}"
+                        @click="close()">
+
+                        <i class="bi bi-people"></i>
+                        <span>Membros</span>
+
+                    </a>
+
+                </li>
+                {% endif %}
+
+                {% if user|can:'read_votes_registration' %}
+                <li>
+
+                    <a
+                        class="sidebar-link"
+                        href="{% url 'votes_registration' %}"
+                        @click="close()">
+
+                        <i class="bi bi-check2-square"></i>
+                        <span>Votos</span>
+
+                    </a>
+
+                </li>
+                {% endif %}
+
+                {% if user|can:'carmel_dashboard' %}
+                <li>
+
+                    <a
+                        class="sidebar-link"
+                        href="{% url 'carmel_profile' %}"
+                        @click="close()">
+
+                        <i class="bi bi-info-circle"></i>
+                        <span>Carmelo</span>
+
+                    </a>
+
+                </li>
+                {% endif %}
+
+                <hr class="text-white">
+
+                <li>
+
+                    <a
+                        class="sidebar-link"
+                        href="{% url 'profile' %}"
+                        @click="close()">
+
+                        <i class="bi bi-person"></i>
+                        <span>Perfil</span>
+
+                    </a>
+
+                </li>
+
+                <li class="mt-2">
+
+                    <a
+                        class="btn btn-danger w-100"
+                        href="{% url 'logout' %}">
+
+                        <i class="bi bi-box-arrow-right"></i>
+                        Sair
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+    </aside>
+
     {% endif %}
-</aside>
-{% endif %}
+
 </header>
-    {% endblock navbar %}
+
+{% endblock navbar %}
 
     <!-- =====================================================
         TOASTS DJANGO

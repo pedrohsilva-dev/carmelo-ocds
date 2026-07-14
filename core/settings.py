@@ -62,30 +62,30 @@ LOGIN_REDIRECT_URL = "/accounts/login"
 
 ROOT_URLCONF = "core.urls"
 
-if DEBUG:
-    idx = MIDDLEWARE.index("django.middleware.security.SecurityMiddleware")
-    MIDDLEWARE.insert(idx + 1, "django_devbar.DevBarMiddleware")
+# if DEBUG:
+#     idx = MIDDLEWARE.index("django.middleware.security.SecurityMiddleware")
+#     MIDDLEWARE.insert(idx + 1, "django_devbar.DevBarMiddleware")
 
-if DEBUG:
-    DEVBAR = {
-        "POSITION": "bottom-right",  # bottom-right (default), bottom-left, top-right, top-left
-        "SHOW_BAR": None,  # follows DEBUG; set True/False to override
-        "ENABLE_DEVTOOLS_DATA": None,  # follows DEBUG; set True/False to override
-        "DEVTOOLS_HEADER_MAX_BYTES": 6144,  # max bytes for DevBar-Data header payload
-        "DEVTOOLS_MAX_QUERIES": None,  # optional hard cap for q/dup entries sent to DevTools
-    }
-    GRAPH_MODELS = {
-        "group_models": True,
-        "inheritance": True,
-        "app_labels": [
-            "base",
-            "carmel",
-            "members",
-            "votes",
-            "contributions",
-            "accounts",
-        ],
-    }
+# if DEBUG:
+#     DEVBAR = {
+#         "POSITION": "bottom-right",  # bottom-right (default), bottom-left, top-right, top-left
+#         "SHOW_BAR": None,  # follows DEBUG; set True/False to override
+#         "ENABLE_DEVTOOLS_DATA": None,  # follows DEBUG; set True/False to override
+#         "DEVTOOLS_HEADER_MAX_BYTES": 6144,  # max bytes for DevBar-Data header payload
+#         "DEVTOOLS_MAX_QUERIES": None,  # optional hard cap for q/dup entries sent to DevTools
+#     }
+#     GRAPH_MODELS = {
+#         "group_models": True,
+#         "inheritance": True,
+#         "app_labels": [
+#             "base",
+#             "carmel",
+#             "members",
+#             "votes",
+#             "contributions",
+#             "accounts",
+#         ],
+#     }
 
 
 TEMPLATES = [

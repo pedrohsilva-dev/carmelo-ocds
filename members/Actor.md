@@ -1,0 +1,23 @@
+Actor.png
+all_models_struct.py
+all_models.png
+arquivo.png
+cep.py
+coverage.xml
+django_ai_schema_1.json
+django_ai_schema_2.json
+django_ai_schema.json
+docs.excalidraw
+INDEX_TESTES.md
+install_test_deps.py
+INSTALL_TROUBLESHOOTING.md
+models.png my_project.dot
+package-lock.json
+package.json
+postcss.config.js
+pytest.ini
+QUICK_START_TESTS.md
+run_tests.sh
+teste.models
+TESTS_README.md
+TODO.md

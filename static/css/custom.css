@@ -13,7 +13,6 @@
    Autor: Pedro Henrique
    ========================================================== */
 
-
 /* ==========================================================
    VARIÁVEIS GLOBAIS
    ========================================================== */
@@ -49,13 +48,13 @@
 
     /* Sombras */
     --shadow-sm:
-        0 5px 15px rgba(0,0,0,.25);
+        0 5px 15px rgba(0, 0, 0, .25);
 
     --shadow-md:
-        0 15px 35px rgba(0,0,0,.35);
+        0 15px 35px rgba(0, 0, 0, .35);
 
     --shadow-lg:
-        0 25px 60px rgba(0,0,0,.50);
+        0 25px 60px rgba(0, 0, 0, .50);
 
     /* Radius */
     --radius-sm: 8px;
@@ -72,37 +71,41 @@
    BODY
    ========================================================== */
 
+
+
+html,
 body {
+
+    width: 100%;
+
+    max-width: 100%;
 
     min-height: 100vh;
 
+    overflow-x: hidden;
+}
+
+
+body {
+
     background:
-        radial-gradient(
-            circle at top right,
+        radial-gradient(circle at top right,
             #c9a96e1f,
-            transparent 35%
-        ),
+            transparent 35%),
 
-        radial-gradient(
-            circle at bottom left,
-            rgba(201,169,110,.08),
-            transparent 30%
-        ),
+        radial-gradient(circle at bottom left,
+            rgba(201, 169, 110, .08),
+            transparent 30%),
 
-        linear-gradient(
-            135deg,
+        linear-gradient(135deg,
             var(--carmel-bg),
-            var(--carmel-bg-soft)
-        );
+            var(--carmel-bg-soft));
 
     color:
         var(--carmel-white);
 
     position:
         relative;
-
-    overflow-x:
-        hidden;
 }
 
 
@@ -117,6 +120,10 @@ body::before {
     position: fixed;
 
     inset: 0;
+
+    width: 100%;
+
+    max-width: 100%;
 
     background-image:
         url("../images/renda-mariana.png");
@@ -171,11 +178,9 @@ body::before {
 .bg-carmel-header {
 
     background:
-        linear-gradient(
-            90deg,
+        linear-gradient(90deg,
             var(--carmel-gold-dark),
-            var(--carmel-gold)
-        ) !important;
+            var(--carmel-gold)) !important;
 
     color:
         white;
@@ -184,24 +189,29 @@ body::before {
 .bg-carmel-body {
 
     background:
-        rgba(20,25,32,.88) !important;
+        rgba(20, 25, 32, .88) !important;
 }
 
 .bg-nav-carmel {
 
     background:
-        linear-gradient(to bottom, #000000 #c9a96e00);
+        linear-gradient(to bottom,
+            #000000,
+            #c9a96e00);
 
     backdrop-filter:
         blur(12px);
-    
-    background-image: url('/static/renda_dourada.png');
-    background-size: 180px 25px;
-    background-repeat: repeat-x;
-    
 
-    /* border-bottom:
-        1px solid var(--border-color); */
+    background-image:
+        url('/static/renda_dourada.png');
+
+    background-size:
+        180px 25px;
+
+    background-repeat:
+        repeat-x;
+
+    max-width: 100%;
 }
 
 
@@ -229,7 +239,7 @@ body::before {
 .card-carmel {
 
     background:
-        rgba(20,25,32,.80);
+        rgba(20, 25, 32, .80);
 
     backdrop-filter:
         blur(14px);
@@ -250,7 +260,7 @@ body::before {
 .card-member {
 
     background:
-        rgba(20,25,32,.75);
+        rgba(20, 25, 32, .75);
 
     border:
         1px solid var(--border-color);
@@ -262,11 +272,9 @@ body::before {
 .card-header-color {
 
     background:
-        linear-gradient(
-            90deg,
+        linear-gradient(90deg,
             var(--carmel-gold-dark),
-            var(--carmel-gold)
-        ) !important;
+            var(--carmel-gold)) !important;
 
     color:
         white;
@@ -281,7 +289,7 @@ body::before {
 .card-body-color {
 
     background:
-        rgba(20,25,32,.88) !important;
+        rgba(20, 25, 32, .88) !important;
 }
 
 
@@ -292,10 +300,10 @@ body::before {
 .form-control {
 
     background:
-        rgba(255,255,255,.03);
+        rgba(255, 255, 255, .03);
 
     border:
-        1px solid rgba(255,255,255,.08);
+        1px solid rgba(255, 255, 255, .08);
 
     color:
         var(--carmel-white);
@@ -310,7 +318,7 @@ body::before {
 .form-control:focus {
 
     background:
-        rgba(255,255,255,.05);
+        rgba(255, 255, 255, .05);
 
     border-color:
         var(--carmel-gold);
@@ -319,7 +327,7 @@ body::before {
         white;
 
     box-shadow:
-        0 0 0 4px rgba(201,169,110,.15);
+        0 0 0 4px rgba(201, 169, 110, .15);
 }
 
 .form-label {
@@ -484,7 +492,7 @@ a:hover {
 .modal {
 
     background:
-        rgba(0,0,0,.25);
+        rgba(0, 0, 0, .25);
 }
 
 .modal-custom {
@@ -499,7 +507,7 @@ a:hover {
         1050;
 
     background:
-        rgba(0,0,0,.55);
+        rgba(0, 0, 0, .55);
 
     backdrop-filter:
         blur(8px);
@@ -548,13 +556,13 @@ a:hover {
 .list-group-item {
 
     background:
-        rgba(20,25,32,.75);
+        rgba(20, 25, 32, .75);
 
     color:
         var(--carmel-white);
 
     border:
-        1px solid rgba(255,255,255,.05);
+        1px solid rgba(255, 255, 255, .05);
 }
 
 
@@ -624,13 +632,13 @@ a:hover {
 }
 
 .img-size {
-    border: none; 
+    border: none;
     width:
         250px;
     max-width: 249px;
     height: 361px;
     max-width: 360px;
-     padding-top: 95px !important;
+    padding-top: 95px !important;
 }
 
 .img-size img {
@@ -638,13 +646,13 @@ a:hover {
     width:
         100%;
     border: none !important;
-   
+
     transition:
         transform .5s ease;
 }
 
 option {
-    color: black !important; 
+    color: black !important;
 }
 
 .img-size:hover {

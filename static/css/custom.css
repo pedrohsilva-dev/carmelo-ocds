@@ -1,20 +1,20 @@
 /* ==========================================================
-   SISTEMA O.C.D.S. - ORDEM DOS CARMELITAS DESCALÇOS
+   SISTEMA O.C.D.S. - ORDEM DOS CARMELITAS DESCALÃ‡OS
 
    Tema:
    - Dourado Carmelita
    - Fundo Escuro Elegante
    - Glassmorphism Suave
    - Renda Mariana
-   - Compatível com Bootstrap
-   - Compatível com HTMX
-   - Compatível com Alpine.js
+   - CompatÃ­vel com Bootstrap
+   - CompatÃ­vel com HTMX
+   - CompatÃ­vel com Alpine.js
 
    Autor: Pedro Henrique
    ========================================================== */
 
 /* ==========================================================
-   VARIÁVEIS GLOBAIS
+   VARIÃVEIS GLOBAIS
    ========================================================== */
 
 :root {
@@ -61,7 +61,7 @@
     --radius-md: 14px;
     --radius-lg: 24px;
 
-    /* Transição */
+    /* TransiÃ§Ã£o */
     --transition:
         all .3s ease;
 }
@@ -146,7 +146,7 @@ body::before {
 
 
 /* ==========================================================
-   UTILITÁRIOS
+   UTILITÃRIOS
    ========================================================== */
 
 [x-cloak] {
@@ -294,7 +294,7 @@ body::before {
 
 
 /* ==========================================================
-   FORMULÁRIOS
+   FORMULÃRIOS
    ========================================================== */
 
 .form-control {
@@ -400,7 +400,7 @@ a:hover {
 
 
 /* ==========================================================
-   BOTÕES
+   BOTÃ•ES
    ========================================================== */
 
 .btn-item {

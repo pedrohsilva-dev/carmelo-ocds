@@ -1,4 +1,6 @@
-{% load static %} {% load compress %} {% load permission_tags %}
+{% load static %}
+{% load compress %}
+{% load permission_tags %}
 <!doctype html>
 <html lang="pt-BR" data-bs-theme="dark">
   <head>
@@ -30,10 +32,11 @@
      CSS
 ===================================================== -->
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
-    <script
-      defer
-      src="https://cdn.jsdelivr.net/npm/@alpinejs/mask@3.x.x/dist/cdn.min.js"
-    ></script>
+
+            <!-- =====================================================
+        ALPINE
+        ===================================================== -->
+    <script defer src="{% static 'js/alpine.js' %}"></script>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
@@ -409,16 +412,14 @@ body.menu-open{
     <footer class="text-center py-3">
       <small class="text-muted">© {% now "Y" %} OCDS</small>
     </footer>
+
     {% endblock footer %}
 
     <!-- =====================================================
         BOOTSTRAP
         ===================================================== -->
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <!-- =====================================================
-        ALPINE
-        ===================================================== -->
-    <script src="{% static 'js/alpine.js' %}" defer></script>
+
     <!-- =====================================================
         TOAST SYSTEM
         ===================================================== -->
@@ -493,6 +494,7 @@ body.menu-open{
         };
       }
     </script>
+
     <!-- =====================================================
         EXTRA BODY
         ===================================================== -->

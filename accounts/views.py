@@ -17,6 +17,7 @@ from accounts.forms import AddressForm, LoginForm
 
 # from accounts.models import ResetPasswordAccess
 from contributions.models import Contribution
+from contributions.views import month_empty
 from members.models import Address, Member, Phone
 from votes.models import Vote
 
@@ -72,7 +73,7 @@ def profile(request):
     votes = Vote.objects.filter(member=request.user).all()
     contribution = Contribution.objects.filter(member=request.user).last()
 
-    contributions = request.user.contributions.all()
+    contributions = month_empty(request.user)
 
     # MOSTRAR CONTRIBUIÇÕES NÃO PAGAS
 

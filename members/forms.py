@@ -73,11 +73,16 @@ class MemberForm(forms.ModelForm):
         password = cleaned_data.get("password")
         password2 = cleaned_data.get("password2")
 
+        if not password:
+            self.add_error("password", "A senha é obrigatória.")
+
+        if not password2:
+            self.add_error("password2", "Confirme sua senha.")
+
         if password and password2:
-            if not password:
-                self.add_error("password", "Preencha o campo 1 de senha.")
-            if not password2:
-                self.add_error("password2", "Preencha o campo 2 de senha.")
+
+            if password != password2:
+                self.add_error("password2", "As senhas não coincidem.")
 
         return cleaned_data
 

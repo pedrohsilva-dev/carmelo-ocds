@@ -19,6 +19,13 @@ class Contribution(TimeStampedModel):
 
     date_pay = models.DateField(verbose_name="Data do Pagamento")
 
+    carmel = models.ForeignKey(
+        "carmel.Carmel",
+        on_delete=models.PROTECT,  # impede apagar um Carmel que já tem histórico de contribuições
+        null=True,  # fica opcional pra não quebrar dado antigo
+        blank=True,
+    )
+
     member = models.ForeignKey(
         Member,
         on_delete=models.CASCADE,
@@ -37,12 +44,16 @@ class Contribution(TimeStampedModel):
         ]
 
     def clean(self):
+        super().clean()
 
-        if not self.member_id:  # type: ignore
+        if not self.member_id:
+            return
+
+        if not self.date_pay:
             return
 
         exists = Contribution.objects.filter(
-            member_id=self.member_id,  # type: ignore
+            member_id=self.member_id,
             date_pay__year=self.date_pay.year,
             date_pay__month=self.date_pay.month,
         )
@@ -51,7 +62,7 @@ class Contribution(TimeStampedModel):
             exists = exists.exclude(pk=self.pk)
 
         if exists.exists():
-            raise ValidationError("Já existe uma contribuição neste mês.")
+            raise ValidationError({"date_pay": "Já existe uma contribuição neste mês."})
 
     def __str__(self):
         return f"{self.member} - {self.price}"

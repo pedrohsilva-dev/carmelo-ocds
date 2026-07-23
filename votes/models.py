@@ -21,9 +21,7 @@ class VotesRegistration(models.Model):
 
 class Vote(TimeStampedModel):
 
-    votes_registration = models.ForeignKey(
-        VotesRegistration, on_delete=models.CASCADE, null=True
-    )
+    votes_registration = models.ForeignKey(VotesRegistration, on_delete=models.CASCADE)
 
     date = models.DateTimeField(verbose_name="Data e Hora do Voto")
 

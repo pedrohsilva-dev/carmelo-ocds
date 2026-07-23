@@ -13,6 +13,8 @@ class Carmel(TimeStampedModel):
     pay_day_contribution_default = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(31)]
     )
+    diocese = models.CharField(max_length=255)
+    city = models.CharField(max_length=255)
 
     class Meta:
         verbose_name = "Carmelo"

@@ -33,19 +33,31 @@ ROLES_CARMEL = (
 
 class MemberManager(BaseUserManager):
 
-    def create_user(self, email, name, password=None, password2=None):
+    def create_user(
+        self,
+        email,
+        name,
+        password=None,
+        password2=None,
+        **extra_fields,
+    ):
         if not email:
             raise ValueError("Email é obrigatório")
 
-        if password != password2:
+        if password2 is not None and password != password2:
             raise ValueError("As senhas não coincidem")
 
         email = self.normalize_email(email)
 
-        user = self.model(email=email, name=name)
+        user = self.model(
+            name=name,
+            email=email,
+            **extra_fields,
+        )
 
         user.set_password(password)
         user.save(using=self._db)
+
         return user
 
     def create_superuser(self, email, name, password):
@@ -81,8 +93,6 @@ class Address(models.Model):
     member = models.OneToOneField(
         "Member",
         on_delete=models.CASCADE,
-        blank=True,
-        null=True,
         related_name="location",
     )
 
@@ -101,7 +111,9 @@ class Phone(models.Model):
     number = models.CharField(max_length=15, verbose_name="Número")
 
     member = models.ForeignKey(
-        "Member", on_delete=models.CASCADE, related_name="phones", blank=True, null=True
+        "Member",
+        on_delete=models.CASCADE,
+        related_name="phones",
     )
 
     class Meta:
@@ -128,7 +140,6 @@ class Member(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
     church = models.CharField(
         max_length=100,
         verbose_name="Igreja que Participa",
-        default="",
     )
 
     entry_date = models.DateField(

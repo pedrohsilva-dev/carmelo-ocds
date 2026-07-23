@@ -69,6 +69,8 @@ def register_contribution(request, user):
                             request, "Foi cadastrado com valor padrão do carmelo."
                         )
 
+                    contrib.carmel = request.user.carmel
+
                     # Executa as validações do model
                     contrib.full_clean()
 

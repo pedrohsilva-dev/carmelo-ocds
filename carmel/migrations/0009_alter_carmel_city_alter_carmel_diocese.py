@@ -12,11 +12,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="carmel",
             name="city",
-            field=models.CharField(max_length=255),
+            field=models.CharField(max_length=255, default=""),
         ),
         migrations.AlterField(
             model_name="carmel",
             name="diocese",
-            field=models.CharField(max_length=255),
+            field=models.CharField(max_length=255, default=""),
         ),
     ]

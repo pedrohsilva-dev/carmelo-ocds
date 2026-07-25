@@ -13,6 +13,7 @@ urlpatterns = [
     path("contas/", include("accounts.urls")),
     path("membros/", include("members.urls")),
     path("carmelo/", include("carmel.urls")),
+    path("contatos/", include("contacts.urls")),
 ]
 
 urlpatterns += static(

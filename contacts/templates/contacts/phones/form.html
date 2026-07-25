@@ -1,0 +1,129 @@
+<div x-data="{ open_phone:false }">
+
+    <div class="d-flex justify-content-between align-items-center mb-3 bg-carmel-header card-header">
+
+        <h5 class="text-white mb-0 ">
+
+            <i class="bi bi-telephone-fill me-2"></i>
+
+            Telefones
+
+        </h5>
+
+        <button
+            type="button"
+            class="btn btn-primary"
+            @click="open_phone = true">
+
+            <i class="bi bi-plus-circle me-2"></i>
+
+            Novo Telefone
+
+        </button>
+
+    </div>
+
+    <!-- Modal -->
+
+    <div
+        class="modal-custom fade"
+        x-show="open_phone"
+        x-cloak
+        style="opacity:100%;">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content bg-carmel border-0">
+
+                <div class="modal-header bg-carmel-header">
+
+                    <h5 class="modal-title text-white">
+
+                        <i class="bi bi-telephone-plus me-2"></i>
+
+                        Adicionar Telefone
+
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close btn-close-white"
+                        @click="open_phone=false">
+                    </button>
+
+                </div>
+
+                <form
+                    method="post"
+                    hx-post="{% url 'contacts:register_phone' member_slug=member.slug %}"
+                    hx-target="#response_tel"
+                    hx-swap="outerHTML"
+                    @htmx:after-request="if($event.detail.successful){ open_phone=false; this.reset(); }">
+
+                    {% csrf_token %}
+
+                    <div class="modal-body bg-carmel-body text-white">
+
+                        <div class="mb-3">
+
+                            {{ form_phone.name.label_tag }}
+
+                            {{ form_phone.name }}
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label
+                                class="form-label"
+                                for="{{ form_phone.number.id_for_label }}">
+
+                                Número
+
+                            </label>
+
+                            <input
+                                type="tel"
+                                id="{{ form_phone.number.id_for_label }}"
+                                name="number"
+                                class="form-control"
+                                placeholder="(00) 00000-0000"
+                                x-mask="(99) 99999-9999"
+                                autocomplete="off">
+
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer bg-carmel">
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            @click="open_phone=false">
+
+                            Cancelar
+
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="btn btn-success">
+
+                            <i class="bi bi-check-circle me-2"></i>
+
+                            Salvar
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

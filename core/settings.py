@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "votes",
     "contributions",
     "accounts",
+    "contacts",
 ]
 
 

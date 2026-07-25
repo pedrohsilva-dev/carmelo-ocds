@@ -78,7 +78,7 @@ def profile(request):
     # MOSTRAR CONTRIBUIÇÕES NÃO PAGAS
 
     try:
-        address = request.user.location
+        address = request.user.address
         address_form = AddressForm(instance=address)
     except AttributeError:
         address = None
@@ -156,7 +156,7 @@ def register_address(request):
     user: Member = request.user
 
     form = AddressForm(request.POST)
-    address = None
+    address = None  # type: ignore
     if form.is_valid():
         with transaction.atomic():
             address: Address = form.save(commit=False)
@@ -185,7 +185,7 @@ def edit_address(request):
     Recupera o endereço existente e permite edição via formulário.
     """
     # MANUTENÇÃO: Validar se address existe antes de usar
-    address = request.user.location
+    address = request.user.address
     form = AddressForm(instance=address)
 
     if request.method == "POST":
@@ -212,7 +212,7 @@ def delete_address(request):
 
     with transaction.atomic():
         # MANUTENÇÃO: Verificar se address existe antes de deletar para evitar erro
-        request.user.location.delete()
+        request.user.address.delete()
         address = None
         messages.success(request, "Endereço deletado com sucesso!")
 

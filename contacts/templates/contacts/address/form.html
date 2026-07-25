@@ -1,0 +1,187 @@
+<div
+    x-show="open_address"
+    x-cloak
+    class="modal-custom fade"
+    style="opacity:100%;"
+>
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content bg-carmel border-0">
+
+            <div class="modal-header bg-carmel-header">
+
+                <h5 class="modal-title text-white">
+
+                    {% if address %}
+                        <i class="bi bi-pencil-square me-2"></i>
+                        Atualizar Endereço
+                    {% else %}
+                        <i class="bi bi-geo-alt-fill me-2"></i>
+                        Novo Endereço
+                    {% endif %}
+
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    @click="open_address=false">
+                </button>
+
+            </div>
+
+            <form
+                id="form-address"
+                hx-post="{% if address %}{% url 'contacts:edit_address' member.slug %}{% else %}{% url 'contacts:register_address' member.slug %}{% endif %}"
+                hx-target="#response_address"
+                hx-swap="outerHTML">
+
+                {% csrf_token %}
+
+                <div class="modal-body bg-carmel-body text-white">
+
+                    {% if form_address.non_field_errors %}
+
+                        <div class="alert alert-danger">
+
+                            {% for error in form_address.non_field_errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                    <div class="row g-3">
+
+                        <div class="col-md-8">
+
+                            {{ form_address.street.label_tag }}
+
+                            {{ form_address.street }}
+
+                            {% for error in form_address.street.errors %}
+                                <div class="text-warning small mt-1">{{ error }}</div>
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            {{ form_address.number.label_tag }}
+
+                            {{ form_address.number }}
+
+                            {% for error in form_address.number.errors %}
+                                <div class="text-warning small mt-1">{{ error }}</div>
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            {{ form_address.neighborhood.label_tag }}
+
+                            {{ form_address.neighborhood }}
+
+                            {% for error in form_address.neighborhood.errors %}
+                                <div class="text-warning small mt-1">{{ error }}</div>
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            {{ form_address.city.label_tag }}
+
+                            {{ form_address.city }}
+
+                            {% for error in form_address.city.errors %}
+                                <div class="text-warning small mt-1">{{ error }}</div>
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            {{ form_address.state.label_tag }}
+
+                            {{ form_address.state }}
+
+                            {% for error in form_address.state.errors %}
+                                <div class="text-warning small mt-1">{{ error }}</div>
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            {{ form_address.zipcode.label_tag }}
+
+                            {{ form_address.zipcode }}
+
+                            {% for error in form_address.zipcode.errors %}
+                                <div class="text-warning small mt-1">{{ error }}</div>
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="col-md-4 d-flex align-items-end">
+
+                            <button
+                                type="button"
+                                class="btn btn-outline-warning w-100"
+                                onclick="getCEP()">
+
+                                <i class="bi bi-search me-2"></i>
+
+                                Buscar CEP
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        id="message_cep_result"
+                        class="text-warning text-center mt-3">
+                    </div>
+
+                </div>
+
+                <div class="modal-footer bg-carmel">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        @click="open_address=false">
+
+                        Cancelar
+
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-success">
+
+                        {% if address %}
+                            <i class="bi bi-check-circle me-2"></i>
+                            Salvar Alterações
+                        {% else %}
+                            <i class="bi bi-plus-circle me-2"></i>
+                            Cadastrar Endereço
+                        {% endif %}
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>

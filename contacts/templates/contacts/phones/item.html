@@ -1,0 +1,60 @@
+<div class="card bg-carmel-body border-0 shadow-sm h-100">
+
+    <div class="card-body text-white">
+
+        <div class="d-flex justify-content-between align-items-start">
+
+            <div>
+
+                {% if phone.name %}
+
+                    <span class="badge bg-primary mb-2">
+
+                        <i class="bi bi-person-fill me-1"></i>
+
+                        {{ phone.name }}
+
+                    </span>
+
+                {% endif %}
+
+                <h5 class="mb-0">
+
+                    <i class="bi bi-telephone-fill me-2 text-warning"></i>
+
+                    {{ phone.number }}
+
+                </h5>
+
+            </div>
+
+            <div>
+
+                <form
+                    method="post"
+                    hx-post="{% url 'contacts:delete_phone' id=phone.id %}"
+                    hx-target="#response_tel"
+                    hx-swap="outerHTML"
+                    hx-confirm="Deseja remover este telefone?"
+                >
+
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="btn btn-outline-danger btn-sm"
+                    >
+
+                        <i class="bi bi-trash"></i>
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

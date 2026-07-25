@@ -1,0 +1,85 @@
+<div id="response_address" x-data="{open_address: false}">
+
+    <div class="card bg-carmel shadow-sm border-0">
+
+        <div class="card-header bg-carmel-header d-flex justify-content-between align-items-center">
+
+            <h5 class="mb-0 text-white">
+
+                <i class="bi bi-geo-alt-fill me-2"></i>
+
+                Endereço
+
+            </h5>
+
+<div class="d-flex">
+                <button
+                type="button"
+                class="btn btn-primary"
+                @click="open_address = true">
+
+                {% if address %}
+
+                    <i class="bi bi-pencil-square me-2"></i>
+
+                    Editar
+
+
+                {% else %}
+
+                    <i class="bi bi-plus-circle me-2"></i>
+
+                    Adicionar
+
+                {% endif %}
+
+            </button>
+             {% if address %}
+                <form
+                    method="post"
+                    hx-post="{% url 'contacts:delete_address' member_slug=member.slug %}"
+                    hx-target="#response_address"
+                    hx-swap="outerHTML"
+                    hx-confirm="Deseja realmente remover este endereço?">
+
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger">
+
+                        <i class="bi bi-trash"></i>
+                        Excluir
+                    </button>
+
+                </form>
+             {% endif %}
+</div>
+
+        </div>
+
+        <div class="card-body bg-carmel-body">
+
+            {% if address %}
+
+                {% include "contacts/address/item.html" %}
+
+            {% else %}
+
+                <div class="alert alert-warning mb-0">
+
+                    <i class="bi bi-exclamation-circle me-2"></i>
+
+                    Nenhum endereço cadastrado.
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    {% include "contacts/address/form.html" %}
+
+</div>

@@ -93,7 +93,7 @@ class Address(models.Model):
     member = models.OneToOneField(
         "Member",
         on_delete=models.CASCADE,
-        related_name="location",
+        related_name="address",
     )
 
     class Meta:

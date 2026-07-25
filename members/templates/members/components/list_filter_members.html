@@ -18,10 +18,12 @@
                         {% if user|can:'read_vote' %}
                             <a class="card-link" href="{% url 'votes_members' slug=member.slug %}">Votos</a>
                         {% endif %}
+                         <a class="card-link py-1 text-center" href="{% url 'contacts:index' member.slug %}">Contato</a>
             </div>
             <div class="d-flex flex-column">
                 {% if user|can:'read_member' %}
                 <a class="card-link py-1 text-center" href="{% url 'show_member' member.slug %}">Dados do Membro</a>
+
                 <div class="py-2">
                     {% if user|can:'edit_member' %}
                         <a class="btn btn-warning text-white mx-2" href="{% url 'update_member' id=member.id %}">Atualizar</a>

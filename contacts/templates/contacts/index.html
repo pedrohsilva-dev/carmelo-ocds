@@ -1,0 +1,112 @@
+{% extends "partials/base.html" %}
+
+{% load static %}
+
+{% block head_title %}
+    Contatos
+{% endblock head_title %}
+
+{% block title_navbar %}
+    Contatos
+{% endblock title_navbar %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <!-- Cabeçalho -->
+    <div class="card bg-carmel shadow-sm border-0 mb-4">
+        <div>
+
+                    <h3 class="mb-0">
+
+                        <i class="bi bi-person-vcard-fill me-2"></i>
+
+                        {{ member.name }}
+
+                    </h3>
+
+                    <small class="text-light">
+
+                        {{ member.email }}
+
+                    </small>
+
+                </div>
+    </div>
+
+    <!-- Localização -->
+
+    <div
+        id="response_address"
+        class="mb-4">
+
+        {% include "./address/index.html" %}
+
+    </div>
+
+    <!-- Telefones -->
+
+    <div
+        id="response_tel">
+
+        {% include "./phones/index.html" %}
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_body %}
+
+<script>
+
+function getCEP(){
+
+    const zipcode = document.querySelector("#id_zipcode")
+
+    if(!zipcode){
+        return
+    }
+
+    const cep = zipcode.value.trim()
+
+    if(cep.length != 9){
+
+        document.querySelector("#message_cep_result").innerText =
+        "CEP inválido"
+
+        return
+
+    }
+
+    fetch(`https://viacep.com.br/ws/${cep}/json/`)
+
+    .then(response => response.json())
+
+    .then(data=>{
+
+        if(data.erro){
+
+            document.querySelector("#message_cep_result").innerText =
+            "CEP não encontrado"
+
+            return
+
+        }
+
+        document.querySelector("#id_street").value=data.logradouro
+        document.querySelector("#id_neighborhood").value=data.bairro
+        document.querySelector("#id_city").value=data.localidade
+        document.querySelector("#id_state").value=data.uf
+
+        document.querySelector("#message_cep_result").innerHTML=""
+
+    })
+
+}
+
+</script>
+
+{% endblock %}

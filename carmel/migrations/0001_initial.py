@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                     "price_contribution_default",
                     models.IntegerField(),
                 ),
-                ("pay_day_contribution_default", models.DateField()),
+                ("pay_day_contribution_default", models.IntegerField()),
             ],
             options={
                 "abstract": False,

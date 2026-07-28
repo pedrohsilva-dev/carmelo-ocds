@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
                 ("description", models.TextField(max_length=255)),
                 (
                     "price_contribution_default",
-                    models.DecimalField(decimal_places=2, max_digits=10),
+                    models.IntegerField(),
                 ),
                 ("pay_day_contribution_default", models.DateField()),
             ],

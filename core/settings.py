@@ -188,7 +188,11 @@ STATICFILES_FINDERS = [
 ]
 
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    }
+}
 
 # ==============================
 # SECURITY PRODUCTION

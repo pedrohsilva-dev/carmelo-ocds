@@ -1,12 +1,10 @@
 from datetime import date
 
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from base.models import TimeStampedModel
 from members.models import Member
-from django.core.exceptions import ValidationError
-
-# Create your models here.
 
 
 class Contribution(TimeStampedModel):
@@ -21,8 +19,8 @@ class Contribution(TimeStampedModel):
 
     carmel = models.ForeignKey(
         "carmel.Carmel",
-        on_delete=models.PROTECT,  # impede apagar um Carmel que já tem histórico de contribuições
-        null=True,  # fica opcional pra não quebrar dado antigo
+        on_delete=models.PROTECT,
+        null=True,
         blank=True,
     )
 
@@ -39,30 +37,37 @@ class Contribution(TimeStampedModel):
 
         constraints = [
             models.UniqueConstraint(
-                fields=["member", "date_pay"], name="unique_member_contribution_date"
+                fields=["member", "date_pay"],
+                name="unique_member_contribution_date",
             )
         ]
 
     def clean(self):
         super().clean()
 
-        if not self.member_id:
+        if not self.member_id or not self.date_pay:
             return
 
-        if not self.date_pay:
-            return
-
-        exists = Contribution.objects.filter(
-            member_id=self.member_id,
-            date_pay__year=self.date_pay.year,
-            date_pay__month=self.date_pay.month,
+        # Verifica se já existe contribuição no mesmo mês
+        exists = (
+            Contribution.objects.filter(
+                member_id=self.member_id,
+                date_pay__year=self.date_pay.year,
+                date_pay__month=self.date_pay.month,
+            )
+            .exclude(pk=self.pk)
+            .exists()
         )
 
-        if self.pk:
-            exists = exists.exclude(pk=self.pk)
-
-        if exists.exists():
-            raise ValidationError({"date_pay": "Já existe uma contribuição neste mês."})
+        if exists:
+            raise ValidationError(
+                {
+                    "date_pay": (
+                        "Este membro já possui uma contribuição "
+                        "registrada neste mês."
+                    )
+                }
+            )
 
     def __str__(self):
         return f"{self.member} - {self.price}"

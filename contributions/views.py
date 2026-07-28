@@ -110,7 +110,7 @@ def register_contribution(request, user):
 def update_contribution(request):
     """Atualiza uma contribuição existente.
 
-    [MANUTENÇÃO: Esta função está incompatével - não implementa lógica de atualização]
+    [MANUTENÇÃO: Esta função - não implementa lógica de atualização]
     """
     return render(request, "contribution/list.html", {})
 

@@ -1,24 +1,31 @@
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+load_dotenv(BASE_DIR / ".env")
+
+
+# ==============================
+# BASIC CONFIG
+# ==============================
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+
+
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-lm#u=3l65fm-zwh7tc!)iho4b0r@lor-q2iy8550$1c4mckh)="
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ["*"]
-
-
-# Application definition
+# ==============================
+# APPS
+# ==============================
 
 INSTALLED_APPS = [
     "jazzmin",
@@ -28,10 +35,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # Third party
     "rolepermissions",
-    "compressor",
-    "django_extensions",
-    # MYAPPS
+    # "django_extensions",
+    # Local apps
     "base",
     "carmel",
     "members",
@@ -42,13 +49,16 @@ INSTALLED_APPS = [
 ]
 
 
-LANGUAGE_CODE = "pt-br"
-USE_I18N = True
-
 AUTH_USER_MODEL = "members.Member"
+
+
+# ==============================
+# MIDDLEWARE
+# ==============================
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -59,40 +69,27 @@ MIDDLEWARE = [
     "base.middlewares.HtmxMessagesMiddleware",
 ]
 
-LOGIN_REDIRECT_URL = "/accounts/login"
+
+# ==============================
+# URL
+# ==============================
 
 ROOT_URLCONF = "core.urls"
 
-# if DEBUG:
-#     idx = MIDDLEWARE.index("django.middleware.security.SecurityMiddleware")
-#     MIDDLEWARE.insert(idx + 1, "django_devbar.DevBarMiddleware")
+WSGI_APPLICATION = "core.wsgi.application"
 
-# if DEBUG:
-#     DEVBAR = {
-#         "POSITION": "bottom-right",  # bottom-right (default), bottom-left, top-right, top-left
-#         "SHOW_BAR": None,  # follows DEBUG; set True/False to override
-#         "ENABLE_DEVTOOLS_DATA": None,  # follows DEBUG; set True/False to override
-#         "DEVTOOLS_HEADER_MAX_BYTES": 6144,  # max bytes for DevBar-Data header payload
-#         "DEVTOOLS_MAX_QUERIES": None,  # optional hard cap for q/dup entries sent to DevTools
-#     }
-#     GRAPH_MODELS = {
-#         "group_models": True,
-#         "inheritance": True,
-#         "app_labels": [
-#             "base",
-#             "carmel",
-#             "members",
-#             "votes",
-#             "contributions",
-#             "accounts",
-#         ],
-#     }
 
+LOGIN_REDIRECT_URL = os.getenv("LOGIN_REDIRECT_URL", "/")
+
+
+# ==============================
+# TEMPLATES
+# ==============================
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, "templates")],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -105,22 +102,27 @@ TEMPLATES = [
 ]
 
 
-WSGI_APPLICATION = "core.wsgi.application"
+# ==============================
+# DATABASE
+# ==============================
 
-
-# Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": os.getenv("DB_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": os.getenv("DB_NAME"),
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "HOST": os.getenv("DB_HOST"),
+        "PORT": os.getenv("DB_PORT"),
+        "CONN_MAX_AGE": int(os.getenv("DB_TIME_CONNECTION", 60)),
     }
 }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
+# ==============================
+# PASSWORD VALIDATION
+# ==============================
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -143,32 +145,39 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# AUTHENTICATION_BACKENDS = [
-#     'members.backends.EmailBackend',
-# ]
 
-# Internationalization
-# https://docs.djangoproject.com/en/6.0/topics/i18n/
+# ==============================
+# LANGUAGE
+# ==============================
 
-LANGUAGE_CODE = "pt-BR"
+LANGUAGE_CODE = os.getenv("LANGUAGE_CODE", "pt-BR")
 
-TIME_ZONE = "America/Sao_Paulo"
 
-USE_I18N = True
+TIME_ZONE = os.getenv("TIME_ZONE", "America/Sao_Paulo")
 
-USE_TZ = True
+
+USE_I18N = os.getenv("USE_I18N", "True").lower() == "true"
+
+
+USE_TZ = os.getenv("USE_TZ", "True").lower() == "true"
+
+
+# ==============================
+# ROLES
+# ==============================
 
 ROLEPERMISSIONS_MODULE = "core.roles"
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
+
+# ==============================
+# STATIC FILES
+# ==============================
 
 STATIC_URL = "/static/"
 
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
@@ -176,15 +185,32 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-    "compressor.finders.CompressorFinder",
 ]
 
-# Compressor
-COMPRESS_ENABLED = True
-COMPRESS_OFFLINE = True
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# ==============================
+# SECURITY PRODUCTION
+# ==============================
+
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
+    if origin.strip()
+]
 
 
-COMPRESS_PRECOMPILERS = (("text/x-scss", "django_libsass.SassCompiler"),)
+SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "False").lower() == "true"
 
-if DEBUG:
-    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+CSRF_COOKIE_SECURE = os.getenv("CSRF_COOKIE_SECURE", "False").lower() == "true"
+
+
+# ==============================
+# EMAIL
+# ==============================
+
+EMAIL_BACKEND = os.getenv(
+    "EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend"
+)

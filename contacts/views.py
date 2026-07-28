@@ -7,6 +7,8 @@ from members.models import Address, Member, Phone
 
 from .forms import AddressForm, PhoneForm
 
+from rolepermissions.decorators import has_permission_decorator
+
 # ==========================================================
 # HELPERS
 # ==========================================================
@@ -34,6 +36,7 @@ def get_contact_context(member):
 
 
 @login_required
+@has_permission_decorator("access_contacts")
 def contacts(request, member_slug):
     member = get_object_or_404(Member, slug=member_slug)
     return render(
@@ -49,6 +52,7 @@ def contacts(request, member_slug):
 
 
 @login_required
+@has_permission_decorator("access_contacts")
 def register_phone(request, member_slug):
 
     member = get_object_or_404(
@@ -96,6 +100,7 @@ def register_phone(request, member_slug):
 
 
 @login_required
+@has_permission_decorator("access_contacts")
 def delete_phone(request, id):
 
     phone = get_object_or_404(
@@ -126,6 +131,7 @@ def delete_phone(request, id):
 
 
 @login_required
+@has_permission_decorator("access_contacts")
 def register_address(request, member_slug):
 
     member = get_object_or_404(
@@ -163,6 +169,7 @@ def register_address(request, member_slug):
 
 
 @login_required
+@has_permission_decorator("access_contacts")
 def edit_address(request, member_slug):
 
     member = get_object_or_404(
@@ -200,6 +207,7 @@ def edit_address(request, member_slug):
 
 
 @login_required
+@has_permission_decorator("access_contacts")
 def delete_address(request, member_slug):
 
     member = get_object_or_404(Member, slug=member_slug)

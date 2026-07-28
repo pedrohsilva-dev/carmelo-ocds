@@ -35,6 +35,7 @@ class ManagerMember(AbstractUserRole):
         "transfer_carmel": True,
         "see_total_money": True,
         "show_money": True,
+        "access_contacts": True,
         # MEMBER
         "create_member": True,
         "read_member": True,

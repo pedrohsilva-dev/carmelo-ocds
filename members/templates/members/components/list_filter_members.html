@@ -1,46 +1,80 @@
 {% load static %}
 {% load permission_tags %}
 <div class="container">
-{% if user|can:'create_member' %}
-    <div class="d-flex justify-content-end my-2">
-        <a class="btn btn-success" href="{% url 'register_member' %}">Cadastrar Novo Membro <i class="bi bi-user" aria-hidden="true"></i></a>
-    </div>
-{% endif %}
-{%for member in members %}
-
-    <div class="member-{{ member.id }}  card card-member my-1">
-        <div class="card-body d-flex justify-content-between px-3">
-            <div>
-                <h5 class="card-title text-white">{{member.name|default:"-"}}</h5>
-                        <h6 class="card-subtitle mb-2 text-white">Entrada: {{member.entry_date|default:"-"}}</h6>
-
-                        <a class="card-link" href="{% url 'contribution_member' slug=member.slug %}">Contribuições</a>
-                        {% if user|can:'read_vote' %}
-                            <a class="card-link" href="{% url 'votes_members' slug=member.slug %}">Votos</a>
+{% for member in members %}
+    <div class="member-{{ member.id }} card card-member my-2 shadow-sm bg-card-body">
+        <div class="card-body d-flex flex-column flex-md-row justify-content-between gap-3 px-3 py-3">
+            <div class="flex-grow-1">
+                <div class="d-flex align-items-start justify-content-between gap-3">
+                    <div>
+                        <h5 class="card-title text-carmel mb-1">{{ member.name|default:"-" }}</h5>
+                        <p class="text-carmel-muted mb-1">Entrada: {{ member.entry_date|default:"-" }}</p>
+                        <p class="mb-0 small text-carmel-muted">Função: {{ member.get_roles_display|default:"Sem função" }}</p>
+                    </div>
+                    <div class="text-end">
+                        {% if member.has_pending %}
+                        <span class="badge bg-danger">
+                            {{ member.pending_count }} pendências
+                        </span>
                         {% endif %}
-                         <a class="card-link py-1 text-center" href="{% url 'contacts:index' member.slug %}">Contato</a>
+                    </div>
+                </div>
+                <div class="mt-3 d-flex flex-wrap gap-2">
+                    <a class="btn btn-outline-carmel btn-sm" href="{% url 'contribution_member' slug=member.slug %}">Contribuições</a>
+                    {% if user|can:'read_vote' %}
+                        <a class="btn btn-outline-carmel btn-sm" href="{% url 'votes_members' slug=member.slug %}">Votos</a>
+                    {% endif %}
+                    {% if user|can:'access_contacts' %}
+                        <a class="btn btn-outline-carmel btn-sm" href="{% url 'contacts:index' member.slug %}">Contato</a>
+                    {% endif %}
+                </div>
             </div>
-            <div class="d-flex flex-column">
+            <div class="d-flex flex-column justify-content-between align-items-end gap-2">
                 {% if user|can:'read_member' %}
-                <a class="card-link py-1 text-center" href="{% url 'show_member' member.slug %}">Dados do Membro</a>
-
-                <div class="py-2">
+                <a class="btn btn-link text-carmel" href="{% url 'show_member' member.slug %}">Dados do Membro</a>
+                <div>
                     {% if user|can:'edit_member' %}
-                        <a class="btn btn-warning text-white mx-2" href="{% url 'update_member' id=member.id %}">Atualizar</a>
+                        <a class="btn btn-warning btn-sm me-1" href="{% url 'update_member' id=member.id %}">Atualizar</a>
                     {% endif %}
                     {% if user|can:'delete_member' %}
-                    <a class="btn btn-danger text-white mx-2" hx-get="{% url 'delete_member' id=member.id %}" hx-confirm="Deseja confirmar?" hx-target="#list_members">Deletar</a>
+                        <a class="btn btn-danger btn-sm" hx-get="{% url 'delete_member' id=member.id %}" hx-confirm="Deseja confirmar?" hx-target="#list_members">Deletar</a>
                     {% endif %}
                 </div>
                 {% endif %}
             </div>
         </div>
-
     </div>
-
-    {% empty %}
+{% empty %}
         <div class="alert alert-danger" role="alert">
             Não foi encontrado nenhum Membro
         </div>
-    {% endfor %}
+{% endfor %}
+
+{% if page_obj and page_obj.has_other_pages %}
+<div class="d-flex justify-content-center mt-4">
+    <nav aria-label="Navegação de páginas">
+        <ul class="pagination pagination-sm">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" hx-get="{% url 'list_filter_members' %}?page={{ page_obj.previous_page_number }}&filter_name={{ filter_name }}&filter_role={{ filter_role }}&filter_active={{ filter_active }}&filter_pending={{ filter_pending }}" hx-target="#list_members">Anterior</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                    <a class="page-link" hx-get="{% url 'list_filter_members' %}?page={{ num }}&filter_name={{ filter_name }}&filter_role={{ filter_role }}&filter_active={{ filter_active }}&filter_pending={{ filter_pending }}" hx-target="#list_members">{{ num }}</a>
+                </li>
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" hx-get="{% url 'list_filter_members' %}?page={{ page_obj.next_page_number }}&filter_name={{ filter_name }}&filter_role={{ filter_role }}&filter_active={{ filter_active }}&filter_pending={{ filter_pending }}" hx-target="#list_members">Próxima</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Próxima</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endif %}
 </div>

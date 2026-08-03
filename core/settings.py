@@ -107,17 +107,25 @@ TEMPLATES = [
 # ==============================
 
 
-DATABASES = {
-    "default": {
-        "ENGINE": os.getenv("DB_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": os.getenv("DB_NAME"),
-        "USER": os.getenv("DB_USER"),
-        "PASSWORD": os.getenv("DB_PASSWORD"),
-        "HOST": os.getenv("DB_HOST"),
-        "PORT": os.getenv("DB_PORT"),
-        "CONN_MAX_AGE": int(os.getenv("DB_TIME_CONNECTION", 60)),
+if DEBUG == False:
+    DATABASES = {
+        "default": {
+            "ENGINE": os.getenv("DB_ENGINE", "django.db.backends.sqlite3"),
+            "NAME": os.getenv("DB_NAME"),
+            "USER": os.getenv("DB_USER"),
+            "PASSWORD": os.getenv("DB_PASSWORD"),
+            "HOST": os.getenv("DB_HOST"),
+            "PORT": os.getenv("DB_PORT"),
+            "CONN_MAX_AGE": int(os.getenv("DB_TIME_CONNECTION", 60)),
+        }
     }
-}
+if DEBUG == True:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 
 # ==============================
@@ -197,39 +205,38 @@ STORAGES = {
 # ==============================
 # SECURITY PRODUCTION
 # ==============================
+if DEBUG == False:
+    SECURE_SSL_REDIRECT = True
 
-SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
 
-SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
-CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
 
-SECURE_HSTS_SECONDS = 31536000
+    X_FRAME_OPTIONS = "DENY"
 
-X_FRAME_OPTIONS = "DENY"
+    CSP_DEFAULT_SRC = ("'self'",)
+    CSP_SCRIPT_SRC = ("'self'",)
 
-CSP_DEFAULT_SRC = ("'self'",)
-CSP_SCRIPT_SRC = ("'self'",)
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    CSRF_TRUSTED_ORIGINS = [
+        origin.strip()
+        for origin in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
+        if origin.strip()
+    ]
 
-CSRF_TRUSTED_ORIGINS = [
-    origin.strip()
-    for origin in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
-    if origin.strip()
-]
+    SESSION_COOKIE_SECURE = (
+        os.getenv("SESSION_COOKIE_SECURE", "False").lower() == "true"
+    )
 
+    CSRF_COOKIE_SECURE = os.getenv("CSRF_COOKIE_SECURE", "False").lower() == "true"
 
-SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "False").lower() == "true"
+    # ==============================
+    # EMAIL
+    # ==============================
 
-
-CSRF_COOKIE_SECURE = os.getenv("CSRF_COOKIE_SECURE", "False").lower() == "true"
-
-
-# ==============================
-# EMAIL
-# ==============================
-
-EMAIL_BACKEND = os.getenv(
-    "EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend"
-)
+    EMAIL_BACKEND = os.getenv(
+        "EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend"
+    )

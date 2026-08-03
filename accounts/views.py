@@ -68,9 +68,10 @@ def profile(request):
 
     Obtém e renderiza: telefones, votos, última contribuição e endereço do usuário.
     """
-    # MANUTENÇÃO: Usar select_related/prefetch_related para otimizar queries
     phones = Phone.objects.filter(member=request.user)
-    votes = Vote.objects.filter(member=request.user).all()
+    votes = Vote.objects.filter(member=request.user).select_related(
+        "votes_registration"
+    )
     contribution = Contribution.objects.filter(member=request.user).last()
 
     contributions = month_empty(request.user)

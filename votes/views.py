@@ -23,7 +23,7 @@ def register_vote(request):
     Valida se o membro já possui esse voto; se não, cria o registro.
     """
     user_current = request.POST.get("user_current")
-    user = Member.objects.filter(slug=user_current).first()
+    user = Member.objects.filter(slug=user_current, carmel=request.user.carmel).first()
 
     if request.method == "POST":
         form_vote = VoteForm(request.POST)
@@ -67,7 +67,7 @@ def vote_member(request, user, id):
     Renderiza as opções de voto para associar a um membro.
     """
     # MANUTENÇÃO: Parâmetros 'user' e 'id' não são utilizados
-    votes = VotesRegistration.objects.select_related("votes_registration").all()
+    votes = VotesRegistration.objects.all()
 
     return render(
         request,
@@ -86,7 +86,9 @@ def edit_vote_member(request, user, id):
     if request.method == "GET":
         # MANUTENÇÃO: Usar get_object_or_404 em vez de .first() para melhor tratamento de erro
         vote = (
-            Vote.objects.filter(member__slug=user, id=id)
+            Vote.objects.filter(
+                member__slug=user, id=id, member__carmel=request.user.carmel
+            )
             .select_related("votes_registration")
             .first()
         )
@@ -108,7 +110,7 @@ def update_vote_member(request, id):
     """
     form_update = VoteForm(request.POST)
     if form_update.is_valid():
-        vote = Vote.objects.filter(id=id).first()
+        vote = Vote.objects.filter(id=id, member__carmel=request.user.carmel).first()
 
         if vote:
             # MANUTENÇÃO: Refatorar para usar form.save()
@@ -155,15 +157,16 @@ def delete_vote(request, id: int):
     form_vote = VoteForm()
     user_current = request.POST.get("user_current")
 
-    # MANUTENÇÃO: Usar get_object_or_404 em vez de .first()
-    vote = Vote.objects.filter(id=id).first()
+    vote = Vote.objects.filter(id=id, member__carmel=request.user.carmel).first()
 
     if vote:
         vote.delete()
 
         messages.success(request, "Voto deletado")
 
-        votes = Vote.objects.filter(member__slug=user_current).all()
+    votes = Vote.objects.filter(member__slug=user_current).select_related(
+        "votes_registration"
+    )
 
     return render(
         request,

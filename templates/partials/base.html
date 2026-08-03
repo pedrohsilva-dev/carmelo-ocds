@@ -15,9 +15,32 @@
       content="OCDS, gestão, associação, membros, contribuições, votos, administração"
     />
     <meta name="author" content="OCDS" />
-    <meta name="theme-color" content="#2F1304" />
+    <meta name="theme-color" content="#0B0E13" />
 
     <meta name="color-scheme" content="dark" />
+
+    <script>
+      (function() {
+        const themeKey = 'ocds-theme';
+        const defaultTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        const savedTheme = localStorage.getItem(themeKey);
+        const activeTheme = savedTheme || defaultTheme;
+
+        const setTheme = (theme) => {
+          document.documentElement.setAttribute('data-bs-theme', theme);
+          document.documentElement.style.colorScheme = theme;
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'dark' ? '#0B0E13' : '#fff8ef');
+          localStorage.setItem(themeKey, theme);
+        };
+
+        window.toggleTheme = () => {
+          const current = document.documentElement.getAttribute('data-bs-theme');
+          setTheme(current === 'dark' ? 'light' : 'dark');
+        };
+
+        setTheme(activeTheme);
+      })();
+    </script>
 
     <!-- =====================================================
         TITLE
@@ -31,6 +54,7 @@
      CSS
 ===================================================== -->
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
             <!-- =====================================================
         ALPINE
@@ -82,7 +106,6 @@
     align-items:center;
     justify-content:space-between;
     padding:15px;
-    border-bottom:1px solid rgba(255,255,255,.08);
 }
 
 .sidebar-content{
@@ -93,23 +116,10 @@
     display:flex;
     align-items:center;
     gap:12px;
-    color:#fff;
     text-decoration:none;
     padding:14px;
     border-radius:10px;
     transition:.2s;
-}
-
-.sidebar-link:hover{
-    background:rgba(255,255,255,.12);
-}
-
-.sidebar-overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.65);
-    backdrop-filter:blur(2px);
-    z-index:1050;
 }
 
 body.menu-open{
@@ -140,11 +150,6 @@ body.menu-open{
     </style>
 
     {% endif %}
-    <style>
-        [data-aos]{
-    overflow:hidden !important;
-}
-    </style>
   </head>
   <body>
     <!-- =====================================================
@@ -189,7 +194,7 @@ body.menu-open{
                     alt="OCDS">
                </div>
 
-                <span class="text-white fw-bold fs-4 pt-2 pl-2">
+                <span class="text-carmel fw-bold fs-4 pt-2 pl-2">
                     OCDS
                 </span>
 
@@ -215,11 +220,11 @@ body.menu-open{
 
             <button
                 type="button"
-                class="btn border-0"
+                class="btn border-1 btn-bar rounded-sm"
                 @click="toggle()"
                 aria-label="Abrir menu">
 
-                <i class="bi bi-list text-white fs-2"></i>
+                <i class="bi bi-list text-carmel fs-2"></i>
 
             </button>
 
@@ -257,14 +262,14 @@ body.menu-open{
                     height="45"
                     alt="OCDS">
 
-                <span class="text-white fw-bold ms-2 fs-5">
+                <span class="text-carmel fw-bold ms-2 fs-5">
                     OCDS
                 </span>
 
             </a>
 
             <button
-                class="btn text-white d-lg-none"
+                class="btn text-carmel d-lg-none"
                 @click="close()">
 
                 <i class="bi bi-x-lg"></i>
@@ -327,7 +332,7 @@ body.menu-open{
                 </li>
                 {% endif %}
 
-                <hr class="text-white">
+                <hr>
 
                 <li>
 
@@ -340,6 +345,20 @@ body.menu-open{
                         <span>Perfil</span>
 
                     </a>
+
+                </li>
+
+                <li>
+
+                    <button
+                        type="button"
+                        class="sidebar-link btn btn-outline-secondary w-100 text-start"
+                        onclick="toggleTheme()">
+
+                        <i class="bi bi-circle-half"></i>
+                        <span>Alternar tema</span>
+
+                    </button>
 
                 </li>
 
@@ -371,7 +390,7 @@ body.menu-open{
     <!-- =====================================================
         TOASTS DJANGO
         ===================================================== -->
-    <aside
+    <div
       class="toast-container position-fixed p-3"
       style="top: 0; right: 0; z-index: 9999"
       x-data="toastSystem()"
@@ -388,13 +407,13 @@ body.menu-open{
           <div class="d-flex">
             <div class="toast-body" x-text="toast.message"></div>
             <button
-              class="btn-close btn-close-white me-2 m-auto"
+              class="btn-close me-2 m-auto"
               @click="remove(toast.id)"
             ></button>
           </div>
         </div>
       </template>
-    </aside>
+    </div>
     <!-- =====================================================
      MAIN CONTENT
 ===================================================== -->
@@ -403,6 +422,17 @@ body.menu-open{
       class="mt-5"
     {% endif %}
     >{% block content %} {% endblock content %}</main>
+
+    {% if user.is_authenticated %}
+    <button
+        type="button"
+        class="btn btn-theme-toggle"
+        onclick="toggleTheme()"
+        aria-label="Alternar tema">
+        <i class="bi bi-circle-half"></i>
+    </button>
+    {% endif %}
+
     <!-- =====================================================
      FOOTER
 ===================================================== -->

@@ -16,16 +16,16 @@
         <div class="d-flex justify-content-center ">
             <div class="d-flex flex-wrap">
                 <div class="container">
-                    <p class="text-white d-flex justify-content-between">
+                    <p class=" d-flex justify-content-between">
                         <span class="align-self-center h6">Nome</span>
                         <span class="align-self-center">{{user.name}}</span>
                     </p>
-                    <p class="text-white d-flex justify-content-between">
+                    <p class=" d-flex justify-content-between">
                         <span class="align-self-center h6">Email</span>
                         <span class="align-self-center">{{user.email}}</span>
                     </p>
 
-                    <div class="d-flex justify-content-between text-white">
+                    <div class="d-flex justify-content-between">
                         <span class="align-self-center h6">Localização </span>
                         <div class="align-self-center">
                             {% include 'location.html' %}
@@ -46,14 +46,14 @@
                                 <div class="modal-dialog modal-dialog-centered ">
                                     <div class="modal-content bg-carmel border-none">
                                         <div class="modal-header bg-carmel-header border-none">
-                                            <h5 class="modal-title border-none text-white">
+                                            <h5 class="modal-title border-none">
                                                 Adicionar Telefones
                                             </h5>
-                                            <button type="button" @click="show_create_number = false" class="close text-white" aria-label="Close">
+                                            <button type="button" @click="show_create_number = false" class="close" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                        <div class="modal-body bg-carmel-body text-white border-none">
+                                        <div class="modal-body bg-carmel-body border-none">
                                             {% csrf_token %}
                                             <div class="d-flex flex-wrap container justify-content-around">
                                                 <div>
@@ -82,8 +82,8 @@
                         </form>
 
                         <div class="d-flex justify-content-between my-2">
-                            <p class="h6 text-white align-self-center">Telefones</p>
-                            <button @click="show_create_number = !show_create_number" class="btn bg-carmel-header text-white"><span class="mx-2">Adicionar  Contatos</span> <span>{% include "phones.svg" %}</span></button>
+                            <p class="h6 align-self-center">Telefones</p>
+                            <button @click="show_create_number = !show_create_number" class="btn bg-carmel-header"><span class="mx-2">Adicionar  Contatos</span> <span>{% include "phones.svg" %}</span></button>
                         </div>
                     </div>
                     {% include 'list_contacts.html' %}
@@ -91,7 +91,7 @@
 
                <!-- Situação das Contribuições -->
 <div class="card shadow-sm border-0 mt-4">
-    <div class="card-header bg-dark text-warning">
+    <div class="card-header   text-warning">
         <h6 class="mb-0">
             <i class="bi bi-wallet2 me-2"></i>
             Situação das Contribuições
@@ -157,18 +157,18 @@
 
                     <!-- List Votes -->
                     <div class="d-flex flex-column my-2">
-                        <p class="h6 text-white">Votos</p>
+                        <p class="h6">Votos</p>
                         <div class="list-group">
                             <!--FOR VOTES-->
                             {% for vote in votes %}
-                                <div class="list-group-item my-1 bg-carmel text-white">
+                                <div class="list-group-item my-1 bg-carmel">
                                     <div class="flex-column">
                                         <p>{{vote.votes_registration.name}}</p>
                                         <span class="text-wrap">{{vote.votes_registration.description}}</span>
                                     </div>
                                 </div>
                             {% empty %}
-                                <p class="text-white">Nenhum voto encontrado.</p>
+                                <p  >Nenhum voto encontrado.</p>
                             {% endfor %}
                         </div>
                     </div>

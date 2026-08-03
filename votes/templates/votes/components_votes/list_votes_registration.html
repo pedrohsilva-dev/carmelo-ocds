@@ -20,14 +20,14 @@ class="d-flex justify-content-end my-2"
                 <div class="modal-body">
                     {% csrf_token %}
                     <div class="form-group">
-                        <label for="id_name" class="text-white">Nome do Voto</label>
+                        <label for="id_name" >Nome do Voto</label>
                         {{form.name}}
                         {% for err in form.errors.name %}
                             <div class="text-danger small">{{ err }}</div>
                         {% endfor %}
                     </div>
                     <div class="form-group">
-                        <label for="id_description" class="text-white">Descrição do Voto</label>
+                        <label for="id_description" >Descrição do Voto</label>
                         {{form.description}}
                         {% for err in form.errors.description %}
                             <div class="text-danger small">{{ err }}</div>

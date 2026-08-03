@@ -1,17 +1,238 @@
 {% extends "partials/base.html" %}
 {% load static %}
 {% load permission_tags %}
+
 {% block content %}
 
-    <form class="px-2">
-        {% csrf_token %}
-        <input type="text"
-               hx-post="{% url 'list_filter_members' %}"
-               hx-trigger="keyup"
-               hx-target="#list_members"
-               class="form form-control my-2"
-               placeholder="Insira seu filtro por nome do membro"
-               name="filter_name">
-    </form>
-    <div id="list_members">{% include "members/components/list_filter_members.html" %}</div>
+<div class="container py-4">
+
+    <!-- Cabeçalho -->
+
+    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+
+        <div>
+
+            <h1 class="display-6 fw-bold mb-1">
+                <i class="bi bi-people-fill text-warning me-2"></i>
+                Lista de Membros
+            </h1>
+
+            <p class="text-body-secondary mb-0">
+                Gerencie os membros da comunidade OCDS.
+            </p>
+
+        </div>
+
+        <div class="d-flex align-items-center gap-2 flex-wrap justify-content-between mt-3">
+
+            {% if total_pending_members %}
+                {% if user|can:'show_money' or user|can:'see_total_money' %}
+                <span class="badge rounded-pill bg-warning text-dark px-3 py-2 fs-6">
+                    <i class="bi bi-exclamation-circle me-1"></i>
+                    {{ total_pending_members }} pendentes
+                </span>
+                {% endif %}
+            {% endif %}
+
+            {% if user|can:'create_member' %}
+            <a href="{% url 'register_member' %}" class="btn btn-item px-4">
+
+                <i class="bi bi-plus-circle me-2"></i>
+
+                Novo membro
+
+            </a>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <!-- Card de filtros -->
+
+    <div class="card card-filter mb-4" x-data="{ btnToggleFiltersMembers: false }">
+
+        <div class="card-header bg-transparent border-0 pb-0">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+
+                    <h2 class="h5 fw-bold mb-1">
+                        Filtros
+                    </h2>
+
+                    <small class="text-body-secondary">
+                        Pesquise rapidamente qualquer membro da comunidade.
+                    </small>
+
+
+
+                </div>
+                  <button class="btn btn-primary" @click="btnToggleFiltersMembers = !btnToggleFiltersMembers">
+                        <i class="bi bi-funnel"></i>
+                    </button>
+
+            </div>
+
+        </div>
+
+        <div class="card-body pt-4" x-show="btnToggleFiltersMembers" x-cloak>
+
+            <form
+                id="filter_members_form"
+                class="row g-4"
+                hx-get="{% url 'list_filter_members' %}"
+                hx-trigger="keyup changed delay:400ms, change"
+                hx-target="#list_members"
+                hx-include="#filter_members_form">
+
+                <!-- Nome -->
+
+                <div class="col-12 col-lg-6 col-xl-4">
+
+                    <label class="form-label fw-semibold">
+
+                        <i class="bi bi-search me-1"></i>
+
+                        Nome
+
+                    </label>
+
+                    <div class="input-group">
+
+                        <span class="input-group-text">
+
+                            <i class="bi bi-person"></i>
+
+                        </span>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="filter_name"
+                            placeholder="Digite o nome..."
+                            value="{{ filter_name }}">
+
+                    </div>
+
+                </div>
+
+                <!-- Função -->
+
+                <div class="col-12 col-lg-6 col-xl-3">
+
+                    <label class="form-label fw-semibold">
+
+                        <i class="bi bi-award me-1"></i>
+
+                        Função
+
+                    </label>
+
+                    <select
+                        class="form-select"
+                        name="filter_role">
+
+                        <option value="">
+                            Todas
+                        </option>
+
+                        {% for code,label in roles_choices %}
+
+                        <option
+                            value="{{ code }}"
+                            {% if filter_role == code %}selected{% endif %}>
+
+                            {{ label }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <!-- Status -->
+
+                <div class="col-12 col-lg-6 col-xl-2">
+
+                    <label class="form-label fw-semibold">
+
+                        <i class="bi bi-check-circle me-1"></i>
+
+                        Status
+
+                    </label>
+
+                    <select
+                        class="form-select"
+                        name="filter_active">
+
+                        <option value="active"
+                            {% if filter_active == "active" %}selected{% endif %}>
+                            Ativos
+                        </option>
+
+                        <option value="inactive"
+                            {% if filter_active == "inactive" %}selected{% endif %}>
+                            Inativos
+                        </option>
+
+                        <option value="all"
+                            {% if filter_active == "all" %}selected{% endif %}>
+                            Todos
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <!-- Pendências -->
+
+                <div class="col-12 col-lg-6 col-xl-3">
+
+                    <label class="form-label fw-semibold">
+
+                        <i class="bi bi-exclamation-triangle me-1"></i>
+
+                        Pendências
+
+                    </label>
+
+                    <select
+                        class="form-select"
+                        name="filter_pending">
+
+                        <option value=""
+                            {% if not filter_pending %}selected{% endif %}>
+                            Todos
+                        </option>
+
+                        <option value="yes"
+                            {% if filter_pending == "yes" %}selected{% endif %}>
+                            Apenas pendentes
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- Lista -->
+
+    <div id="list_members">
+
+        {% include "members/components/list_filter_members.html" %}
+
+    </div>
+
+</div>
+
 {% endblock content %}

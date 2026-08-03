@@ -6,188 +6,8 @@ Página Inicial
 {% endblock head_title %}
 
 {% block extra_head %}
-
-<style>
-
-    html, body {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-}
-
-body{
-    width: 100;
-    min-height:100vh;
-
-    background:
-        radial-gradient(
-            circle at top right,
-            rgba(201,169,110,.15),
-            transparent 30%
-        ),
-
-        radial-gradient(
-            circle at bottom left,
-            rgba(201,169,110,.08),
-            transparent 25%
-        ),
-
-        linear-gradient(
-            135deg,
-            #0f1217,
-            #171c23,
-            #0b0e13
-        );
-
-    overflow-x:hidden;
-}
-
-/* Renda Mariana */
-
-body::before{
-
-    content:"";
-
-    position:fixed;
-
-    inset:0;
-
-    background-image:
-        url("{% static 'images/renda_carmo.png' %}");
-
-    background-repeat:
-        repeat;
-
-    background-size:
-        280px;
-
-    opacity:
-        .03;
-
-    pointer-events:none;
-
-    z-index:-2;
-}
-
-/* brilho dourado */
-
-
-
-body::after{
-
-    content:"";
-
-    position:fixed;
-
-    inset:0;
-
-    pointer-events:none;
-
-    z-index:0;
-
-    background:
-        radial-gradient(
-            220px circle at
-            var(--mouse-x,50%)
-            var(--mouse-y,50%),
-
-            rgba(201,169,110,.15) 0%,
-            rgba(201,169,110,.08) 35%,
-            transparent 70%
-        );
-}
-
-.hero-section{
-    min-height:90vh;
-
-    display:flex;
-
-    align-items:center;
-
-    padding:20px 0px 40px 0;
-}
-
-.hero-title{
-    font-size:3rem;
-
-    font-weight:700;
-}
-
-.hero-subtitle{
-    color:var(--gold);
-
-    font-size:1.25rem;
-}
-
-.glass-card{
-    background:rgba(15,18,23,.75);
-
-    backdrop-filter:blur(16px);
-
-    border:1px solid rgba(201,169,110,.15);
-
-    border-radius:24px;
-
-    padding:2rem;
-
-    box-shadow:
-        0 20px 50px rgba(0,0,0,.35);
-}
-
-.section-title{
-    color:var(--gold);
-
-    font-weight:700;
-
-    margin-bottom:2rem;
-}
-
-.home-photo{
-    width:100%;
-
-    border-radius:24px;
-
-    border:1px solid rgba(201,169,110,.15);
-
-    transition:.4s;
-}
-
-.home-photo:hover{
-    transform:translateY(-5px);
-}
-
-.saint-card{
-    height:100%;
-}
-
-.saint-card h4{
-    color:var(--gold);
-}
-
-.contact-card{
-    text-align:center;
-}
-
-.contact-card h5{
-    color:var(--gold);
-}
-
-footer{
-    border-top:1px solid rgba(201,169,110,.1);
-}
-
-@media(max-width:768px){
-
-    .hero-title{
-        font-size:2rem;
-    }
-
-}
-
-</style>
-
-  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 {% endblock extra_head %}
 
 {% block content %}
@@ -197,7 +17,7 @@ footer{
 
 <div class="row align-items-center gy-2">
 
-    <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1000">
+    <div class="col-lg-6" data-sr="fade-right" data-sr-duration="1000">
 
 <div class="text-center text-lg-start">
             <img
@@ -231,7 +51,7 @@ footer{
 
     </div>
 
-    <div class="col-lg-6" data-aos="zoom-in" data-aos-duration="1000">
+    <div class="col-lg-6" data-sr="zoom-in" data-sr-duration="1000">
 
         <img
             src="{% static 'logo.png' %}"
@@ -249,7 +69,7 @@ footer{
 <section class="container py-5">
 
 
-<div class="glass-card" data-aos="fade-up" data-aos-duration="900">
+<div class="glass-card" data-sr="fade-up" data-sr-duration="900">
 
     <h2 class="section-title">
         Quem Somos
@@ -277,7 +97,7 @@ footer{
 
 <div class="row align-items-center gy-4">
 
-    <div class="col-lg-5" data-aos="fade-right" data-aos-duration="900">
+    <div class="col-lg-5" data-sr="fade-right" data-sr-duration="900">
 
         <img
             src="{% static 'assets/home/photo1.png' %}"
@@ -286,7 +106,7 @@ footer{
 
     </div>
 
-    <div class="col-lg-7" data-aos="fade-left" data-aos-duration="900">
+    <div class="col-lg-7" data-sr="fade-left" data-sr-duration="900">
 
         <h2 class="section-title">
             Nossa História
@@ -325,7 +145,7 @@ footer{
 
 <div class="row g-4">
 
-    <div class="col-md-4" data-aos="fade-right" data-aos-duration="1000">
+    <div class="col-md-4" data-sr="fade-right" data-sr-duration="1000">
 
         <div class="glass-card saint-card">
 
@@ -339,7 +159,7 @@ footer{
 
     </div>
 
-    <div class="col-md-4" data-aos="zoom-in" data-aos-duration="900">
+    <div class="col-md-4" data-sr="zoom-in" data-sr-duration="900">
 
         <div class="glass-card saint-card">
 
@@ -353,7 +173,7 @@ footer{
 
     </div>
 
-    <div class="col-md-4" data-aos="fade-left" data-aos-duration="1000">
+    <div class="col-md-4" data-sr="fade-left" data-sr-duration="1000">
 
         <div class="glass-card saint-card">
 
@@ -377,7 +197,7 @@ footer{
 
 <div class="row align-items-center gy-4">
 
-    <div class="col-lg-7" data-aos="fade-right" data-aos-duration="900">
+    <div class="col-lg-7" data-sr="fade-right" data-sr-duration="900">
 
         <h2 class="section-title">
             Formação OCDS
@@ -401,7 +221,7 @@ footer{
 
     </div>
 
-    <div class="col-lg-5" data-aos="fade-left" data-aos-duration="900">
+    <div class="col-lg-5" data-sr="fade-left" data-sr-duration="900">
 
         <img
             src="{% static 'assets/home/photo2.png' %}"
@@ -420,7 +240,7 @@ footer{
 
 <div class="row align-items-center gy-4">
 
-    <div class="col-lg-5" data-aos="fade-left" data-aos-duration="900">
+    <div class="col-lg-5" data-sr="fade-left" data-sr-duration="900">
 
         <img
             src="{% static 'assets/home/photo3.png' %}"
@@ -429,7 +249,7 @@ footer{
 
     </div>
 
-    <div class="col-lg-7" data-aos="fade-right" data-aos-duration="900" data-aos-once="true">
+    <div class="col-lg-7" data-sr="fade-right" data-sr-duration="900">
 
         <h2 class="section-title">
             Apostolado e Missão
@@ -525,7 +345,7 @@ footer{
 
 </section>
 
-<footer class="container py-5 text-center" data-aos="fade-up" data-aos-duration="900">
+<footer class="container py-5 text-center" data-sr="fade-down" data-sr-duration="900">
 
 
 <img
@@ -548,48 +368,64 @@ footer{
 {% endblock content %}
 
 {% block extra_body %}
-  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
   <script>
-    AOS.init({
-      once: false,
-      duration: 800,
-      easing: 'ease-in-out',
-      anchorPlacement: 'top-bottom'
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.utils.toArray('[data-sr]').forEach((el) => {
+      const animationType = el.dataset.sr || 'fade-up';
+      const duration = Number(el.dataset.srDuration) / 1000 || 0.9;
+      const vars = {
+        opacity: 0,
+        y: 30,
+        duration,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+          once: true
+        }
+      };
+
+      if (animationType === 'fade-left') {
+        vars.x = 50;
+        vars.y = 0;
+      } else if (animationType === 'fade-right') {
+        vars.x = -50;
+        vars.y = 0;
+      } else if (animationType === 'fade-down') {
+        vars.y = -50;
+        vars.x = 0;
+      } else if (animationType === 'zoom-in') {
+        vars.scale = 0.92;
+        vars.y = 0;
+      }
+
+      gsap.from(el, vars);
     });
 
+    // Animação de Grow
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
 
-// Animação de Grow
-let mouseX = window.innerWidth / 2;
-let mouseY = window.innerHeight / 2;
+    let currentX = mouseX;
+    let currentY = mouseY;
 
-let currentX = mouseX;
-let currentY = mouseY;
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
 
-document.addEventListener('mousemove', e => {
+    function animate() {
+      currentX += (mouseX - currentX) * 0.08;
+      currentY += (mouseY - currentY) * 0.08;
 
-    mouseX = e.clientX;
-    mouseY = e.clientY;
+      document.body.style.setProperty('--mouse-x', `${currentX}px`);
+      document.body.style.setProperty('--mouse-y', `${currentY}px`);
 
-});
+      requestAnimationFrame(animate);
+    }
 
-function animate() {
-
-    currentX += (mouseX - currentX) * 0.08;
-    currentY += (mouseY - currentY) * 0.08;
-
-    document.body.style.setProperty(
-        '--mouse-x',
-        `${currentX}px`
-    );
-
-    document.body.style.setProperty(
-        '--mouse-y',
-        `${currentY}px`
-    );
-
-    requestAnimationFrame(animate);
-}
-
-animate();
+    animate();
   </script>
 {% endblock extra_body %}

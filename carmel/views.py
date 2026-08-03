@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 
 from carmel.forms import CarmelForm
 from carmel.models import Carmel
+from carmel.services.carmel_stats import get_carmel_statistics
 from contributions.models import Contribution
 from members.models import Member
 
@@ -25,10 +26,14 @@ def edit_carmel(request):
     """
     user = request.user
 
-    if not user:
+    if not user or not user.carmel:
+        messages.error(
+            request,
+            "Usuário incompleto para criar novos membros, entre em contato com o administrador dp sistema",
+        )
         return redirect("/")
 
-    carmel = get_object_or_404(Carmel, member=user)
+    carmel = user.carmel
 
     if request.method == "POST":
         form = CarmelForm(request.POST, instance=carmel)
@@ -74,6 +79,8 @@ def carmel_profile(request):
         or 0
     )
 
+    carmel_stats = get_carmel_statistics(carmel)
+
     # edit carmel
     form = CarmelForm(instance=carmel)
 
@@ -83,13 +90,12 @@ def carmel_profile(request):
             form.save()
             return redirect("carmel_profile")
 
-    return render(
-        request,
-        "carmel_profile.html",
-        {
-            "carmel": carmel,
-            "member_quantity": quantity,
-            "total_contribution": total_contribution,
-            "form": form,
-        },
-    )
+    context = {
+        "carmel": carmel,
+        "member_quantity": quantity,
+        "total_contribution": total_contribution,
+        "form": form,
+        **carmel_stats,
+    }
+
+    return render(request, "carmel_profile.html", context)

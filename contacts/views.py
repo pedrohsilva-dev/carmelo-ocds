@@ -38,7 +38,7 @@ def get_contact_context(member):
 @login_required
 @has_permission_decorator("access_contacts")
 def contacts(request, member_slug):
-    member = get_object_or_404(Member, slug=member_slug)
+    member = get_object_or_404(Member, slug=member_slug, carmel=request.user.carmel)
     return render(
         request,
         "contacts/index.html",
@@ -58,6 +58,7 @@ def register_phone(request, member_slug):
     member = get_object_or_404(
         Member,
         slug=member_slug,
+        carmel=request.user.carmel,
     )
 
     form = PhoneForm(request.POST or None)
@@ -106,6 +107,7 @@ def delete_phone(request, id):
     phone = get_object_or_404(
         Phone,
         id=id,
+        member__carmel=request.user.carmel,
     )
 
     member = phone.member
@@ -137,6 +139,7 @@ def register_address(request, member_slug):
     member = get_object_or_404(
         Member,
         slug=member_slug,
+        carmel=request.user.carmel,
     )
 
     address = getattr(member, "address", None)
@@ -175,6 +178,7 @@ def edit_address(request, member_slug):
     member = get_object_or_404(
         Member,
         slug=member_slug,
+        carmel=request.user.carmel,
     )
 
     address = get_object_or_404(
@@ -210,7 +214,7 @@ def edit_address(request, member_slug):
 @has_permission_decorator("access_contacts")
 def delete_address(request, member_slug):
 
-    member = get_object_or_404(Member, slug=member_slug)
+    member = get_object_or_404(Member, slug=member_slug, carmel=request.user.carmel)
     address = getattr(member, "address", None)
 
     if address:

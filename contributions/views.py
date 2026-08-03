@@ -30,7 +30,7 @@ def register_contribution(request, user):
     Valida se a data de contribuição é válida (entre entrada e hoje),
     define o valor padrão ou customizado e salva a contribuição.
     """
-    member = get_object_or_404(Member, slug=user)
+    member = get_object_or_404(Member, slug=user, carmel=request.user.carmel)
 
     carmel: Carmel = request.user.carmel
 
@@ -122,19 +122,20 @@ def delete_contribution(request, user, id):
 
     Remove a contribuição e renderiza a lista de contribuições atualizada.
     """
-    contribution = get_object_or_404(Contribution, id=id)
+    contribution = get_object_or_404(
+        Contribution, id=id, member__carmel=request.user.carmel
+    )
 
     contribution.delete()
 
     messages.success(request, "Contribuição deletada com sucesso.")
 
-    member = get_object_or_404(Member, slug=user)
+    member = get_object_or_404(Member, slug=user, carmel=request.user.carmel)
 
     carmel: Carmel = request.user.carmel
 
     form = ContributionForm()
 
-    # MANUTENÇÃO: Usar select_related para otimizar queries
     contributions = Contribution.objects.filter(member=member).order_by("date_pay")
 
     month_data = month_empty(member)
@@ -213,12 +214,9 @@ def contribution_member(request, slug):
 
     carmel: Carmel = request.user.carmel
 
-    member = get_object_or_404(Member, slug=slug)
+    member = get_object_or_404(Member, slug=slug, carmel=request.user.carmel)
 
     months = month_empty(member)
-
-    # MANUTENÇÃO: Query duplicada - remover segunda chamada
-    member = get_object_or_404(Member, slug=slug)
 
     date_entry = member.entry_date  # Data que entrou
 

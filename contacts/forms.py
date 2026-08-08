@@ -45,27 +45,32 @@ class AddressForm(forms.ModelForm):
             "street": forms.TextInput(
                 attrs={
                     "class": "form-control",
+                    "placeholder": "Rua / Avenida / Logradouro",
                 }
             ),
             "number": forms.TextInput(
                 attrs={
                     "class": "form-control",
+                    "placeholder": "Número",
                 }
             ),
             "neighborhood": forms.TextInput(
                 attrs={
                     "class": "form-control",
+                    "placeholder": "Bairro",
                 }
             ),
             "city": forms.TextInput(
                 attrs={
                     "class": "form-control",
+                    "placeholder": "Cidade",
                 }
             ),
             "state": forms.TextInput(
                 attrs={
                     "class": "form-control",
                     "maxlength": "2",
+                    "placeholder": "UF (ex: SP)",
                 }
             ),
             "zipcode": forms.TextInput(

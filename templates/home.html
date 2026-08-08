@@ -2,430 +2,619 @@
 {% load static %}
 
 {% block head_title %}
-Página Inicial
+Página Inicial — OCDS Alegria da Sagrada Face
 {% endblock head_title %}
 
 {% block extra_head %}
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<style>
+    /* ============================================================
+       HOME — ESTILOS ESPECÍFICOS DA PÁGINA INICIAL
+       Responsivos, Carmelitanos, Premium
+       ============================================================ */
+
+    /* Hero */
+    .hero-section {
+        min-height: 88vh;
+        display: flex;
+        align-items: center;
+    }
+
+    .hero-title {
+        font-size: clamp(2rem, 5vw, 3.4rem);
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -.5px;
+        background: linear-gradient(135deg, var(--carmel-gold-light), var(--carmel-gold), var(--carmel-gold-dark));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .hero-subtitle {
+        font-size: clamp(1rem, 2.5vw, 1.25rem);
+        font-weight: 600;
+        color: var(--carmel-gold);
+        letter-spacing: .8px;
+        text-transform: uppercase;
+    }
+
+    .hero-lead {
+        color: var(--carmel-white-soft);
+        font-size: 1.08rem;
+        line-height: 1.7;
+        max-width: 480px;
+    }
+
+    [data-bs-theme="light"] .hero-lead {
+        color: #48342a;
+    }
+
+    .home-img-logo {
+        width: min(130px, 30vw);
+        filter: drop-shadow(0 8px 20px var(--carmel-gold-glow));
+    }
+
+    .home-photo {
+        border-radius: var(--radius-lg);
+        width: 100%;
+        object-fit: cover;
+        box-shadow: var(--shadow-lg);
+    }
+
+    /* Divisores de Seção */
+    .section-divider {
+        width: 60px;
+        height: 3px;
+        background: var(--gold-gradient);
+        border-radius: var(--radius-pill);
+        margin: 0 auto 1.5rem;
+    }
+
+    .text-start .section-divider {
+        margin-left: 0;
+    }
+
+    /* Section title */
+    .section-title {
+        font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+        font-weight: 800;
+        color: var(--carmel-white);
+        letter-spacing: -.3px;
+        margin-bottom: .4rem;
+    }
+
+    [data-bs-theme="light"] .section-title {
+        color: #241610 !important;
+    }
+
+    /* Glass cards na home */
+    .saint-card {
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-lg);
+        padding: 2rem 1.5rem;
+        background: var(--glass-bg-soft);
+        backdrop-filter: var(--glass-blur-soft);
+        transition: var(--transition);
+        text-align: center;
+        height: 100%;
+    }
+
+    .saint-card:hover {
+        border-color: var(--carmel-gold);
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-gold);
+    }
+
+    .saint-card .saint-icon {
+        font-size: 2.4rem;
+        margin-bottom: 1rem;
+        color: var(--carmel-gold);
+    }
+
+    .saint-card h4 {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--carmel-gold-light);
+        margin-bottom: .75rem;
+    }
+
+    .saint-card p {
+        color: var(--carmel-white-soft);
+        font-size: .95rem;
+        margin-bottom: 0;
+    }
+
+    [data-bs-theme="light"] .saint-card {
+        background: rgba(233, 220, 201, .82);
+        border-color: var(--border-color-strong);
+    }
+
+    [data-bs-theme="light"] .saint-card h4 {
+        color: #5a3c1a;
+    }
+
+    [data-bs-theme="light"] .saint-card p {
+        color: #48342a;
+    }
+
+    /* Pilares da Formação */
+    .pillar-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: .9rem 1.1rem;
+        border-radius: var(--radius-md);
+        background: var(--glass-bg-soft);
+        transition: var(--transition-slow);
+        border-left: 3px solid var(--carmel-gold);
+    }
+
+    .pillar-item:hover {
+        background: rgba(207, 168, 104, .10);
+        border-left-color: var(--carmel-gold-light);
+    }
+
+    .pillar-item i {
+        font-size: 1.4rem;
+        color: var(--carmel-gold);
+        flex-shrink: 0;
+        margin-top: .1rem;
+    }
+
+    .pillar-item strong {
+        display: block;
+        font-weight: 700;
+        font-size: .95rem;
+        color: var(--carmel-gold-light);
+    }
+
+    .pillar-item span {
+        font-size: .85rem;
+        color: var(--carmel-muted);
+    }
+
+    [data-bs-theme="light"] .pillar-item {
+        background: rgba(233, 220, 201, .75);
+        border-left-color: #966f2c;
+    }
+
+    [data-bs-theme="light"] .pillar-item strong {
+        color: #462b1f;
+    }
+
+    [data-bs-theme="light"] .pillar-item span {
+        color: #5a3c1a;
+    }
+
+    /* Contact cards */
+    .contact-card {
+        background: var(--glass-bg-soft);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-md);
+        padding: 1.5rem;
+        transition: var(--transition);
+    }
+
+    .contact-card:hover {
+        border-color: var(--carmel-gold);
+        box-shadow: var(--shadow-gold);
+        transform: translateY(-3px);
+    }
+
+    .contact-card .contact-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: var(--radius-pill);
+        background: var(--gold-gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #140d06;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .contact-card h5 {
+        font-weight: 700;
+        color: var(--carmel-gold-light);
+        margin-bottom: .3rem;
+    }
+
+    .contact-card p {
+        color: var(--carmel-muted);
+        font-size: .9rem;
+        margin-bottom: 0;
+    }
+
+    [data-bs-theme="light"] .contact-card {
+        background: rgba(233, 220, 201, .80);
+        border-color: var(--border-color-strong);
+    }
+
+    [data-bs-theme="light"] .contact-card h5 {
+        color: #5a3c1a;
+    }
+
+    [data-bs-theme="light"] .contact-card p {
+        color: #48342a;
+    }
+
+    /* Quote banner */
+    .quote-banner {
+        background: var(--gold-gradient);
+        border-radius: var(--radius-lg);
+        padding: 2rem 2.5rem;
+        text-align: center;
+        box-shadow: var(--shadow-gold);
+    }
+
+    .quote-banner blockquote {
+        margin: 0;
+        font-size: clamp(.9rem, 2.5vw, 1.1rem);
+        font-style: italic;
+        font-weight: 500;
+        color: #140d06;
+        line-height: 1.7;
+    }
+
+    .quote-banner cite {
+        font-size: .82rem;
+        font-weight: 700;
+        font-style: normal;
+        color: #3d260d;
+        display: block;
+        margin-top: .75rem;
+    }
+
+    /* Responsive ajustes */
+    @media (max-width: 767px) {
+        .hero-section {
+            min-height: auto;
+            padding: 3rem 0 2rem;
+        }
+
+        .saint-card {
+            padding: 1.5rem 1rem;
+        }
+
+        .hero-lead {
+            max-width: 100%;
+        }
+    }
+</style>
 {% endblock extra_head %}
 
 {% block content %}
 
-<section class="hero-section container">
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section class="hero-section container" data-sr="fade-down" data-sr-duration="1000">
+    <div class="row align-items-center gy-4">
 
+        <div class="col-lg-6 text-center text-lg-start">
 
-<div class="row align-items-center gy-2">
+            <img src="{% static 'assets/top_login.png' %}" class="home-img-logo mb-4" alt="Brasão OCDS">
 
-    <div class="col-lg-6" data-sr="fade-right" data-sr-duration="1000">
+            <h1 class="hero-title mb-2">
+                Ordem dos Carmelitas<br>Descalços Seculares
+            </h1>
 
-<div class="text-center text-lg-start">
-            <img
-            src="{% static 'assets/top_login.png' %}"
-            width="130"
-            class="mb-4"
-        >
-                <h1 class="hero-title">
-            Ordem dos Carmelitas
-            Descalços Seculares
-        </h1>
-</div>
+            <p class="hero-subtitle mb-3">Comunidade Alegria da Sagrada Face</p>
 
+            <div class="section-divider text-start mb-3"></div>
 
-
-        <p class="hero-subtitle">
-            Comunidade Alegria da Sagrada Face
-        </p>
-
-        <p class="lead">
-            Filhos e filhas de Nossa Senhora do Monte Carmelo,
-            vivendo o carisma teresiano no mundo.
-        </p>
-
-        <a
-            href="{% url 'login' %}"
-            class="btn btn-item mt-3"
-        >
-            Entrar no Sistema <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>
-        </a>
-
-    </div>
-
-    <div class="col-lg-6" data-sr="zoom-in" data-sr-duration="1000">
-
-        <img
-            src="{% static 'logo.png' %}"
-            class="home-photo border-none"
-            alt="OCDS"
-        >
-
-    </div>
-
-</div>
-
-
-</section>
-
-<section class="container py-5">
-
-
-<div class="glass-card" data-sr="fade-up" data-sr-duration="900">
-
-    <h2 class="section-title">
-        Quem Somos
-    </h2>
-
-    <p>
-        Os Carmelitas Seculares, em união com os Frades e as Monjas,
-        são filhos e filhas da Ordem de Nossa Senhora do Monte Carmelo
-        e de Santa Teresa de Jesus.
-    </p>
-
-    <p>
-        Compartilham o mesmo carisma, os mesmos bens espirituais,
-        a mesma vocação à santidade e a mesma missão apostólica,
-        vivendo sua vocação no mundo segundo seu estado de vida.
-    </p>
-
-</div>
-
-
-</section>
-
-<section class="container py-5">
-
-
-<div class="row align-items-center gy-4">
-
-    <div class="col-lg-5" data-sr="fade-right" data-sr-duration="900">
-
-        <img
-            src="{% static 'assets/home/photo1.png' %}"
-            class="home-photo"
-        >
-
-    </div>
-
-    <div class="col-lg-7" data-sr="fade-left" data-sr-duration="900">
-
-        <h2 class="section-title">
-            Nossa História
-        </h2>
-
-        <p>
-            A Comunidade Alegria da Sagrada Face nasceu em
-            Itapetininga através de leigos comprometidos com a Igreja,
-            desejosos de viver o carisma teresiano.
-        </p>
-
-        <p>
-            Após anos de retiros e formação, a comunidade foi
-            oficialmente estabelecida e recebeu a Ereção Canônica
-            em 1º de outubro de 2018, festa de Santa Teresinha.
-        </p>
-
-        <p>
-            Atualmente a comunidade continua sua missão de oração,
-            formação e apostolado junto à Igreja.
-        </p>
-
-    </div>
-
-</div>
-
-
-</section>
-
-<section class="container py-5">
-
-
-<h2 class="section-title text-center">
-    Espiritualidade Carmelita
-</h2>
-
-<div class="row g-4">
-
-    <div class="col-md-4" data-sr="fade-right" data-sr-duration="1000">
-
-        <div class="glass-card saint-card">
-
-            <h4>Santa Teresa de Jesus</h4>
-
-            <p>
-                Mestra da oração e reformadora do Carmelo.
+            <p class="hero-lead mb-4">
+                Filhos e filhas de Nossa Senhora do Monte Carmelo,<br>
+                vivendo o carisma teresiano no mundo,<br>
+                em oração, contemplação e apostolado.
             </p>
+
+            <a href="{% url 'login' %}" class="btn btn-item px-4 py-2">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Entrar no Sistema
+            </a>
 
         </div>
 
-    </div>
-
-    <div class="col-md-4" data-sr="zoom-in" data-sr-duration="900">
-
-        <div class="glass-card saint-card">
-
-            <h4>São João da Cruz</h4>
-
-            <p>
-                Doutor da Igreja e mestre da vida interior.
-            </p>
-
+        <div class="col-lg-6 d-flex justify-content-center" data-sr="zoom-in" data-sr-duration="1000">
+            <img src="{% static 'logo.png' %}" class="home-photo" alt="Logo OCDS"
+                style="max-height: 480px; object-fit: contain;">
         </div>
 
     </div>
+</section>
 
-    <div class="col-md-4" data-sr="fade-left" data-sr-duration="1000">
+<!-- ============================================================
+     QUEM SOMOS — VIDRO FOSCO
+     ============================================================ -->
+<section class="container py-5">
+    <div class="glass-card" data-sr="fade-up" data-sr-duration="900">
 
-        <div class="glass-card saint-card">
-
-            <h4>Santa Teresinha</h4>
-
-            <p>
-                Modelo de confiança e abandono em Deus.
-            </p>
-
+        <div class="text-center mb-4">
+            <h2 class="section-title">Quem Somos</h2>
+            <div class="section-divider"></div>
         </div>
 
-    </div>
-
-</div>
-
-
-</section>
-
-<section class="container py-5">
-
-
-<div class="row align-items-center gy-4">
-
-    <div class="col-lg-7" data-sr="fade-right" data-sr-duration="900">
-
-        <h2 class="section-title">
-            Formação OCDS
-        </h2>
-
-        <p>
-            A formação segue quatro dimensões fundamentais:
-        </p>
-
-        <ul>
-            <li>Formação Espiritual</li>
-            <li>Formação Carmelitana</li>
-            <li>Formação Doutrinal</li>
-            <li>Formação Humana</li>
-        </ul>
-
-        <p>
-            Os membros participam de encontros,
-            retiros de silêncio e da Escola Edith Stein.
-        </p>
-
-    </div>
-
-    <div class="col-lg-5" data-sr="fade-left" data-sr-duration="900">
-
-        <img
-            src="{% static 'assets/home/photo2.png' %}"
-            class="home-photo"
-        >
-
-    </div>
-
-</div>
-
-
-</section>
-
-<section class="container py-5">
-
-
-<div class="row align-items-center gy-4">
-
-    <div class="col-lg-5" data-sr="fade-left" data-sr-duration="900">
-
-        <img
-            src="{% static 'assets/home/photo3.png' %}"
-            class="home-photo"
-        >
-
-    </div>
-
-    <div class="col-lg-7" data-sr="fade-right" data-sr-duration="900">
-
-        <h2 class="section-title">
-            Apostolado e Missão
-        </h2>
-
-        <p>
-            A oração e o apostolado são inseparáveis.
-        </p>
-
-        <p>
-            A comunidade atua na evangelização,
-            formação de leigos, retiros espirituais,
-            orientação espiritual e colaboração com
-            as atividades paroquiais.
-        </p>
-
-    </div>
-
-</div>
-
-
-</section>
-
-<section class="container py-5">
-
-
-<h2 class="section-title text-center">
-    Nossa Comunidade
-</h2>
-
-<div class="row g-4">
-
-    <div class="col-md-4">
-        <img src="{% static 'assets/home/photo3.png' %}" class="home-photo">
-    </div>
-
-    <div class="col-md-4">
-        <img src="{% static 'assets/home/photo4.png' %}" class="home-photo">
-    </div>
-
-    <div class="col-md-4">
-        <img src="{% static 'assets/home/photo5.png' %}" class="home-photo">
-    </div>
-
-</div>
-
-
-</section>
-
-<section class="container py-5">
-
-
-<div class="glass-card">
-
-    <h2 class="section-title text-center">
-        Conheça a OCDS
-    </h2>
-
-    <div class="row">
-
-        <div class="col-md-6">
-
-            <div class="contact-card">
-
-                <h5>Comissão Vocacional</h5>
-
-                <p>
-                    vocacaoocds@gmail.com
+        <div class="row gy-3 align-items-center">
+            <div class="col-md-6">
+                <p class="mb-2">
+                    Os Carmelitas Seculares, em união com os Frades e as Monjas,
+                    são filhos e filhas da Ordem de Nossa Senhora do Monte Carmelo
+                    e de Santa Teresa de Jesus.
                 </p>
+            </div>
+            <div class="col-md-6">
+                <p class="mb-0">
+                    Compartilham o mesmo carisma, os mesmos bens espirituais,
+                    a mesma vocação à santidade e a mesma missão apostólica,
+                    vivendo sua vocação no mundo segundo seu estado de vida.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ============================================================
+     NOSSA HISTÓRIA
+     ============================================================ -->
+<section class="container py-5">
+    <div class="row align-items-center gy-4">
+
+        <div class="col-lg-5 d-none d-lg-block" data-sr="fade-right" data-sr-duration="900">
+            <img src="{% static 'assets/home/photo1.png' %}" class="home-photo" alt="Comunidade Carmelo">
+        </div>
+
+        <div class="col-lg-7" data-sr="fade-left" data-sr-duration="900">
+            <h2 class="section-title">Nossa História</h2>
+            <div class="section-divider text-start mb-3"></div>
+            <p class="mb-2">A Comunidade Alegria da Sagrada Face nasceu em Itapetininga
+                através de leigos comprometidos com a Igreja, desejosos de viver o carisma teresiano.</p>
+            <p class="mb-2">Após anos de retiros e formação, a comunidade foi
+                oficialmente estabelecida e recebeu a <strong>Ereção Canônica em 1º de outubro de 2018</strong>,
+                festa de Santa Teresinha.</p>
+            <p class="mb-0">Atualmente a comunidade continua sua missão de oração,
+                formação e apostolado junto à Igreja.</p>
+        </div>
+
+    </div>
+</section>
+
+<!-- ============================================================
+     SANTOS PATRONOS
+     ============================================================ -->
+<section class="container py-5">
+
+    <div class="text-center mb-4" data-sr="fade-down" data-sr-duration="900">
+        <h2 class="section-title">Espiritualidade Carmelita</h2>
+        <div class="section-divider"></div>
+        <p class="text-carmel opacity-75 mt-1">Nossos mestres e intercessores</p>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-sm-6 col-md-4" data-sr="fade-right" data-sr-duration="1000">
+            <div class="saint-card">
+                <div class="saint-icon"><i class="bi bi-book-fill"></i></div>
+                <h4>Santa Teresa de Jesus</h4>
+                <p>Mestra da oração e reformadora do Carmelo. Doutora da Igreja.</p>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-4" data-sr="zoom-in" data-sr-duration="900">
+            <div class="saint-card">
+                <div class="saint-icon"><i class="bi bi-stars"></i></div>
+                <h4>São João da Cruz</h4>
+                <p>Doutor da Igreja e mestre da vida interior. Poeta do amor divino.</p>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-4" data-sr="fade-left" data-sr-duration="1000">
+            <div class="saint-card">
+                <div class="saint-icon"><i class="bi bi-flower1"></i></div>
+                <h4>Santa Teresinha</h4>
+                <p>Modelo de confiança e abandono em Deus. Padroeira das missões.</p>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ============================================================
+     FORMAÇÃO OCDS
+     ============================================================ -->
+<section class="container py-5">
+    <div class="row align-items-center gy-4">
+
+        <div class="col-lg-7" data-sr="fade-right" data-sr-duration="900">
+            <h2 class="section-title">Formação OCDS</h2>
+            <div class="section-divider text-start mb-4"></div>
+            <p class="mb-4">A formação segue quatro dimensões fundamentais,
+                integrando a vida espiritual com a missão apostólica no mundo:</p>
+
+            <div class="d-flex flex-column gap-3">
+
+                <div class="pillar-item">
+                    <i class="bi bi-heart-fill"></i>
+                    <div>
+                        <strong>Formação Espiritual</strong>
+                        <span>Oração, contemplação e vida interior profunda</span>
+                    </div>
+                </div>
+
+                <div class="pillar-item">
+                    <i class="bi bi-shield-fill"></i>
+                    <div>
+                        <strong>Formação Carmelitana</strong>
+                        <span>Estudo da espiritualidade teresiana e do Carmelo</span>
+                    </div>
+                </div>
+
+                <div class="pillar-item">
+                    <i class="bi bi-journal-bookmark-fill"></i>
+                    <div>
+                        <strong>Formação Doutrinal</strong>
+                        <span>Conhecimento da fé e da doutrina da Igreja</span>
+                    </div>
+                </div>
+
+                <div class="pillar-item">
+                    <i class="bi bi-people-fill"></i>
+                    <div>
+                        <strong>Formação Humana</strong>
+                        <span>Crescimento pessoal e comunitário</span>
+                    </div>
+                </div>
 
             </div>
-
         </div>
 
-        <div class="col-md-6">
+        <div class="col-lg-5 d-none d-lg-block" data-sr="fade-left" data-sr-duration="900">
+            <img src="{% static 'assets/home/photo2.png' %}" class="home-photo" alt="Formação OCDS">
+        </div>
 
-            <div class="contact-card">
+    </div>
+</section>
 
-                <h5>Comissão Missionária</h5>
+<!-- ============================================================
+     APOSTOLADO E MISSÃO
+     ============================================================ -->
+<section class="container py-5">
+    <div class="row align-items-center gy-4">
 
-                <p>
-                    marciaocds@gmail.com
-                </p>
+        <div class="col-lg-5 d-none d-lg-block" data-sr="fade-left" data-sr-duration="900">
+            <img src="{% static 'assets/home/photo3.png' %}" class="home-photo" alt="Missão">
+        </div>
 
+        <div class="col-lg-7" data-sr="fade-right" data-sr-duration="900">
+            <h2 class="section-title">Apostolado e Missão</h2>
+            <div class="section-divider text-start mb-3"></div>
+            <p class="mb-2">A oração e o apostolado são inseparáveis no carisma carmelitano.</p>
+            <p class="mb-0">A comunidade atua na <strong>evangelização</strong>,
+                formação de leigos, <strong>retiros espirituais</strong>,
+                orientação espiritual e colaboração com as atividades paroquiais.</p>
+        </div>
+
+    </div>
+</section>
+
+<!-- ============================================================
+     NOSSA COMUNIDADE — GALERIA
+     ============================================================ -->
+<section class="container py-5">
+
+    <div class="text-center mb-4">
+        <h2 class="section-title">Nossa Comunidade</h2>
+        <div class="section-divider"></div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-sm-6 col-md-4" data-sr="fade-up" data-sr-duration="900">
+            <img src="{% static 'assets/home/photo3.png' %}" class="home-photo" alt="Comunidade OCDS">
+        </div>
+        <div class="col-sm-6 col-md-4" data-sr="fade-up" data-sr-duration="1000">
+            <img src="{% static 'assets/home/photo4.png' %}" class="home-photo" alt="Comunidade OCDS">
+        </div>
+        <div class="col-sm-12 col-md-4" data-sr="fade-up" data-sr-duration="1100">
+            <img src="{% static 'assets/home/photo5.png' %}" class="home-photo" alt="Comunidade OCDS">
+        </div>
+    </div>
+
+</section>
+
+<!-- ============================================================
+     CONHEÇA A OCDS — CONTATOS
+     ============================================================ -->
+<section class="container py-5">
+
+    <div class="glass-card" data-sr="fade-up" data-sr-duration="900">
+
+        <div class="text-center mb-4">
+            <h2 class="section-title">Conheça a OCDS</h2>
+            <div class="section-divider"></div>
+            <p class="text-carmel opacity-75 mt-1">Entre em contato com nossas comissões</p>
+        </div>
+
+        <div class="row g-3">
+
+            <div class="col-sm-6" data-sr="fade-right" data-sr-duration="900">
+                <div class="contact-card">
+                    <div class="contact-icon"><i class="bi bi-envelope-heart-fill"></i></div>
+                    <h5>Comissão Vocacional</h5>
+                    <p>vocacaoocds@gmail.com</p>
+                </div>
+            </div>
+
+            <div class="col-sm-6" data-sr="fade-left" data-sr-duration="900">
+                <div class="contact-card">
+                    <div class="contact-icon"><i class="bi bi-globe-americas"></i></div>
+                    <h5>Comissão Missionária</h5>
+                    <p>marciaocds@gmail.com</p>
+                </div>
             </div>
 
         </div>
 
     </div>
 
-</div>
-
-
 </section>
 
-<footer class="container py-5 text-center" data-sr="fade-down" data-sr-duration="900">
-
-
-<img
-    src="{% static 'assets/top_login.png' %}"
-    width="100"
-    class="mb-4"
->
-
-<p class="mb-0">
-    "Que nada te perturbe,
-    nada te espante,
-    tudo passa,
-    Deus não muda.
-    Só Deus basta."
-</p>
-
-
-</footer>
+<!-- ============================================================
+     CITAÇÃO — SANTA TERESA
+     ============================================================ -->
+<section class="container pb-5" data-sr="fade-down" data-sr-duration="900">
+    <div class="quote-banner">
+        <blockquote>
+            "Que nada te perturbe, nada te espante, tudo passa, Deus não muda.<br>
+            A paciência tudo alcança; quem a Deus tem, nada lhe falta:<br>
+            <strong>Só Deus basta.</strong>"
+        </blockquote>
+        <cite>— Santa Teresa de Jesus</cite>
+    </div>
+</section>
 
 {% endblock content %}
 
 {% block extra_body %}
-  <script>
+<script>
     gsap.registerPlugin(ScrollTrigger);
 
     gsap.utils.toArray('[data-sr]').forEach((el) => {
-      const animationType = el.dataset.sr || 'fade-up';
-      const duration = Number(el.dataset.srDuration) / 1000 || 0.9;
-      const vars = {
-        opacity: 0,
-        y: 30,
-        duration,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 85%',
-          toggleActions: 'play none none none',
-          once: true
-        }
-      };
+        const animationType = el.dataset.sr || 'fade-up';
+        const duration = Number(el.dataset.srDuration) / 1000 || 0.9;
+        const vars = {
+            opacity: 0,
+            y: 32,
+            duration,
+            ease: 'power3.out',
+            scrollTrigger: {
+                trigger: el,
+                start: 'top 88%',
+                toggleActions: 'play none none none',
+                once: true
+            }
+        };
 
-      if (animationType === 'fade-left') {
-        vars.x = 50;
-        vars.y = 0;
-      } else if (animationType === 'fade-right') {
-        vars.x = -50;
-        vars.y = 0;
-      } else if (animationType === 'fade-down') {
-        vars.y = -50;
-        vars.x = 0;
-      } else if (animationType === 'zoom-in') {
-        vars.scale = 0.92;
-        vars.y = 0;
-      }
+        if (animationType === 'fade-left') { vars.x = 55; vars.y = 0; }
+        if (animationType === 'fade-right') { vars.x = -55; vars.y = 0; }
+        if (animationType === 'fade-down') { vars.y = -40; vars.x = 0; }
+        if (animationType === 'zoom-in') { vars.scale = 0.93; vars.y = 0; }
 
-      gsap.from(el, vars);
+        gsap.from(el, vars);
     });
 
-    // Animação de Grow
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-
-    let currentX = mouseX;
-    let currentY = mouseY;
-
-    document.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
-
-    function animate() {
-      currentX += (mouseX - currentX) * 0.08;
-      currentY += (mouseY - currentY) * 0.08;
-
-      document.body.style.setProperty('--mouse-x', `${currentX}px`);
-      document.body.style.setProperty('--mouse-y', `${currentY}px`);
-
-      requestAnimationFrame(animate);
-    }
-
-    animate();
-  </script>
+    // Mouse glow
+    let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+    let cx = mx, cy = my;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    (function animate() {
+        cx += (mx - cx) * 0.08; cy += (my - cy) * 0.08;
+        document.body.style.setProperty('--mouse-x', `${cx}px`);
+        document.body.style.setProperty('--mouse-y', `${cy}px`);
+        requestAnimationFrame(animate);
+    })();
+</script>
 {% endblock extra_body %}

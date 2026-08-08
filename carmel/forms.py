@@ -11,9 +11,9 @@ class CarmelForm(forms.ModelForm):
             "price_contribution_default",
         ]
         widgets = {
-            "name": forms.TextInput(attrs={"class": "form-control"}),
-            "description": forms.Textarea(attrs={"class": "form-control"}),
+            "name": forms.TextInput(attrs={"class": "form-control", "placeholder": "Nome do Carmelo"}),
+            "description": forms.Textarea(attrs={"class": "form-control", "placeholder": "Descrição da comunidade Carmelita..."}),
             "price_contribution_default": forms.NumberInput(
-                attrs={"class": "form-control"}
+                attrs={"class": "form-control", "placeholder": "Valor padrão de contribuição (ex: 50.00)"}
             ),
         }

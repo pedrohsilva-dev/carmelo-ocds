@@ -30,11 +30,11 @@ class VoteForm(forms.ModelForm):
 
         widgets = {
             "date": forms.DateTimeInput(
-                attrs={"class": "form-control", "type": "datetime-local"}
+                attrs={"class": "form-control", "type": "datetime-local", "placeholder": "Data e hora do voto"}
             ),
             "type": forms.Select(
                 attrs={"class": "form-control", "x-model": "type_vote"}
             ),
-            "year_duration": forms.NumberInput(attrs={"class": "form-control"}),
+            "year_duration": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Duração em anos"}),
             "votes_registration": forms.Select(attrs={"class": "form-control"}),
         }

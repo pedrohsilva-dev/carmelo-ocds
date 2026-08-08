@@ -16,6 +16,7 @@ class MemberForm(forms.ModelForm):
             attrs={
                 "class": "form-control",
                 ":type": "hide_password ? 'password' : 'text'",
+                "placeholder": "Digite uma senha segura",
             }
         ),
         label="Senha",
@@ -26,6 +27,7 @@ class MemberForm(forms.ModelForm):
             attrs={
                 "class": "form-control",
                 ":type": "hide_password ? 'password' : 'text'",
+                "placeholder": "Confirme a senha",
             }
         ),
         label="Confirmar Senha",
@@ -36,11 +38,11 @@ class MemberForm(forms.ModelForm):
         fields = ["name", "email", "church", "entry_date", "roles"]
 
         widgets = {
-            "name": forms.TextInput(attrs={"class": "form-control"}),
-            "email": forms.EmailInput(attrs={"class": "form-control"}),
-            "church": forms.TextInput(attrs={"class": "form-control"}),
+            "name": forms.TextInput(attrs={"class": "form-control", "placeholder": "Nome completo do membro"}),
+            "email": forms.EmailInput(attrs={"class": "form-control", "placeholder": "email@exemplo.com"}),
+            "church": forms.TextInput(attrs={"class": "form-control", "placeholder": "Nome da paróquia / igreja"}),
             "entry_date": forms.DateInput(
-                attrs={"class": "form-control", "type": "date"}
+                attrs={"class": "form-control", "type": "date", "placeholder": "Data de entrada"}
             ),
             "roles": forms.Select(attrs={"class": "form-control px-1"}),
         }
@@ -107,6 +109,7 @@ class MemberChangeForm(forms.ModelForm):
             attrs={
                 "class": "form-control",
                 ":type": "hide_password ? 'password' : 'text'",
+                "placeholder": "Nova senha (deixe em branco para manter)",
             }
         ),
     )
@@ -118,6 +121,7 @@ class MemberChangeForm(forms.ModelForm):
             attrs={
                 "class": "form-control",
                 ":type": "hide_password ? 'password' : 'text'",
+                "placeholder": "Confirme a nova senha",
             }
         ),
     )
@@ -133,13 +137,14 @@ class MemberChangeForm(forms.ModelForm):
         ]
 
         widgets = {
-            "name": forms.TextInput(attrs={"class": "form-control"}),
-            "email": forms.EmailInput(attrs={"class": "form-control"}),
-            "church": forms.TextInput(attrs={"class": "form-control"}),
+            "name": forms.TextInput(attrs={"class": "form-control", "placeholder": "Nome completo do membro"}),
+            "email": forms.EmailInput(attrs={"class": "form-control", "placeholder": "email@exemplo.com"}),
+            "church": forms.TextInput(attrs={"class": "form-control", "placeholder": "Nome da paróquia / igreja"}),
             "entry_date": forms.DateInput(
                 attrs={
                     "class": "form-control",
                     "type": "date",
+                    "placeholder": "Data de entrada",
                 }
             ),
             "roles": forms.Select(

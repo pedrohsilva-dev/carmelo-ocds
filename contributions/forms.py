@@ -15,6 +15,9 @@ class ContributionForm(forms.ModelForm):
 
         widgets = {
             "date_pay": forms.DateInput(
-                attrs={"class": "form-control", "type": "date"}
+                attrs={"class": "form-control", "type": "date", "placeholder": "Data do pagamento"}
+            ),
+            "price": forms.NumberInput(
+                attrs={"class": "form-control", "placeholder": "Valor (ex: 50.00)"}
             ),
         }

@@ -7,16 +7,16 @@ class LoginForm(forms.Form):
 
     email = forms.EmailField(
         label="Email",
-        widget=forms.TextInput(attrs={"class": "form-control"}),
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "seu.email@carmelo.org"}),
         required=True,
     )
 
     password = forms.CharField(
         widget=forms.PasswordInput(
-            
             attrs={
                 "class": "form-control w-full",
                 ":type": "hide_password ? 'password' : 'text'",
+                "placeholder": "Digite sua senha",
             }
         ),
         label="Senha",
@@ -37,11 +37,11 @@ class AddressForm(forms.ModelForm):
         ]
 
         widgets = {
-            "street": forms.TextInput(attrs={"class": "form-control"}),
-            "number": forms.TextInput(attrs={"class": "form-control", "max": 3}),
-            "neighborhood": forms.TextInput(attrs={"class": "form-control"}),
-            "state": forms.TextInput(attrs={"class": "form-control"}),
-            "city": forms.TextInput(attrs={"class": "form-control"}),
+            "street": forms.TextInput(attrs={"class": "form-control", "placeholder": "Rua / Avenida / Logradouro"}),
+            "number": forms.TextInput(attrs={"class": "form-control", "max": 3, "placeholder": "Nº"}),
+            "neighborhood": forms.TextInput(attrs={"class": "form-control", "placeholder": "Bairro"}),
+            "state": forms.TextInput(attrs={"class": "form-control", "placeholder": "UF (ex: SP)"}),
+            "city": forms.TextInput(attrs={"class": "form-control", "placeholder": "Cidade"}),
             "zipcode": forms.TextInput(
                 attrs={
                     "class": "form-control",

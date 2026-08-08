@@ -1,0 +1,102 @@
+/* ==========================================================
+   MODULE 07: MODAIS E CAIXAS DE DIÁLOGO CARMELITANAS
+   ========================================================== */
+
+.modal,
+.modal-custom,
+.modal-backdrop {
+    background: rgba(18, 12, 9, .72) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.modal-custom {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1050;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    outline: 0;
+}
+
+.modal-dialog {
+    width: min(650px, 95%);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.modal-dialog-centered {
+    margin-top: 4rem;
+    align-items: flex-start !important;
+}
+
+.modal-content {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    color: var(--carmel-white);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--glass-shadow);
+    animation: carmel-modal-in .28s var(--ease-out);
+}
+
+@keyframes carmel-modal-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-header {
+    background: var(--gold-gradient) !important;
+    color: #140d06 !important;
+    border-bottom: 1px solid var(--border-color-strong);
+    padding: 1.1rem 1.6rem;
+}
+
+.modal-title {
+    font-weight: 700;
+    letter-spacing: .3px;
+    color: #140d06 !important;
+}
+
+.modal-header .btn-close {
+    filter: invert(0) brightness(0.2);
+    opacity: .85;
+    transition: var(--transition);
+}
+
+.modal-header .btn-close:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.modal-body {
+    background: var(--glass-bg-soft);
+    color: var(--carmel-white);
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    background: var(--glass-blur);
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.modal-footer .btn,
+.modal-body .btn {
+    width: auto !important;
+    max-width: fit-content;
+}

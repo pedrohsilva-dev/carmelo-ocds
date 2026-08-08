@@ -1,0 +1,182 @@
+/* ==========================================================
+   MODULE 02: BASE, ESTRUTURA, TIPOGRAFIA E UTILITÁRIOS
+   ========================================================== */
+
+html {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    width: 100%;
+    max-width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-weight: 400;
+    letter-spacing: .1px;
+    background:
+        radial-gradient(circle at top right, rgba(207, 168, 104, .15), transparent 35%),
+        radial-gradient(circle at bottom left, rgba(89, 57, 43, .22), transparent 30%),
+        linear-gradient(160deg, #140d0a, #1e1410 45%, #0b0706);
+    color: var(--carmel-white);
+    position: relative;
+}
+
+main {
+    overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--carmel-white);
+    letter-spacing: .1px;
+}
+
+a,
+a:visited {
+    color: var(--carmel-link);
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--carmel-link-hover);
+    text-decoration: none;
+}
+
+strong,
+.strong,
+.text-strong {
+    color: var(--carmel-white);
+    font-weight: 700;
+}
+
+hr {
+    border-color: var(--border-color);
+    opacity: 1;
+}
+
+/* Renda Carmelitana & Efeito de Brilho Dinâmico no Fundo */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: 100%;
+    background-image: url("../images/renda_carmo.png");
+    background-repeat: repeat;
+    background-size: 280px;
+    opacity: .045;
+    pointer-events: none;
+    z-index: -1;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background: radial-gradient(240px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+            rgba(207, 168, 104, .16) 0%,
+            rgba(89, 57, 43, .10) 35%,
+            transparent 70%);
+}
+
+/* Utilitários Carmelitanos */
+[x-cloak] {
+    display: none !important;
+}
+
+.w-full {
+    width: 100% !important;
+}
+
+.border-none {
+    border: none !important;
+}
+
+.bg-transparent {
+    background: transparent !important;
+    border: none;
+}
+
+.text-carmel {
+    color: var(--carmel-white) !important;
+}
+
+.text-muted {
+    color: var(--carmel-muted) !important;
+}
+
+.carmel-text-gold {
+    color: var(--carmel-gold) !important;
+}
+
+.carmel-text-brown {
+    color: var(--carmel-brown-light) !important;
+}
+
+.carmel-border-gold {
+    border-color: var(--carmel-gold) !important;
+}
+
+.carmel-glow {
+    box-shadow: var(--shadow-gold);
+}
+
+/* Espaçamentos e tamanhos de fonte extras */
+.ms-4 {
+    margin-left: 1.5rem !important;
+}
+
+.ms-5 {
+    margin-left: 3rem !important;
+}
+
+.me-4 {
+    margin-right: 1.5rem !important;
+}
+
+.me-5 {
+    margin-right: 3rem !important;
+}
+
+.mt-6 {
+    margin-top: 4rem !important;
+}
+
+.mb-6 {
+    margin-bottom: 4rem !important;
+}
+
+.p-6 {
+    padding: 4rem !important;
+}
+
+.fs-7 {
+    font-size: 0.875rem !important;
+}
+
+.fs-8 {
+    font-size: 0.75rem !important;
+}
+
+/* Animações de Revelação no Scroll */
+.scroll-reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity .85s var(--ease-out), transform .85s var(--ease-out);
+    will-change: opacity, transform;
+}
+
+.scroll-reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+}

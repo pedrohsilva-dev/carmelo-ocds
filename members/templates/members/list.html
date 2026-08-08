@@ -26,12 +26,12 @@
         <div class="d-flex align-items-center gap-2 flex-wrap justify-content-between mt-3">
 
             {% if total_pending_members %}
-                {% if user|can:'show_money' or user|can:'see_total_money' %}
-                <span class="badge rounded-pill bg-warning text-dark px-3 py-2 fs-6">
-                    <i class="bi bi-exclamation-circle me-1"></i>
-                    {{ total_pending_members }} pendentes
-                </span>
-                {% endif %}
+            {% if user|can:'show_money' or user|can:'see_total_money' %}
+            <span class="badge rounded-pill bg-warning text-dark px-3 py-2 fs-6">
+                <i class="bi bi-exclamation-circle me-1"></i>
+                {{ total_pending_members }} pendentes
+            </span>
+            {% endif %}
             {% endif %}
 
             {% if user|can:'create_member' %}
@@ -69,9 +69,9 @@
 
 
                 </div>
-                  <button class="btn btn-primary" @click="btnToggleFiltersMembers = !btnToggleFiltersMembers">
-                        <i class="bi bi-funnel"></i>
-                    </button>
+                <button class="btn btn-primary" @click="btnToggleFiltersMembers = !btnToggleFiltersMembers">
+                    <i class="bi bi-funnel"></i>
+                </button>
 
             </div>
 
@@ -79,17 +79,13 @@
 
         <div class="card-body pt-4" x-show="btnToggleFiltersMembers" x-cloak>
 
-            <form
-                id="filter_members_form"
-                class="row g-4"
-                hx-get="{% url 'list_filter_members' %}"
-                hx-trigger="keyup changed delay:400ms, change"
-                hx-target="#list_members"
+            <form id="filter_members_form" class="row g-4" hx-get="{% url 'list_filter_members' %}"
+                hx-trigger="keyup changed delay:400ms, change" hx-target="#list_members"
                 hx-include="#filter_members_form">
 
                 <!-- Nome -->
 
-                <div class="col-12 col-lg-6 col-xl-4">
+                <div class="col-12 col-lg-6 col-xl-4 ">
 
                     <label class="form-label fw-semibold">
 
@@ -107,11 +103,7 @@
 
                         </span>
 
-                        <input
-                            type="text"
-                            class="form-control"
-                            name="filter_name"
-                            placeholder="Digite o nome..."
+                        <input type="text" class="form-control py-4" name="filter_name" placeholder="Digite o nome..."
                             value="{{ filter_name }}">
 
                     </div>
@@ -130,9 +122,7 @@
 
                     </label>
 
-                    <select
-                        class="form-select"
-                        name="filter_role">
+                    <select class="form-select w-full px-3 py-3" name="filter_role">
 
                         <option value="">
                             Todas
@@ -140,9 +130,7 @@
 
                         {% for code,label in roles_choices %}
 
-                        <option
-                            value="{{ code }}"
-                            {% if filter_role == code %}selected{% endif %}>
+                        <option value="{{ code }}" {% if filter_role == code %}selected{% endif %}>
 
                             {{ label }}
 
@@ -166,22 +154,17 @@
 
                     </label>
 
-                    <select
-                        class="form-select"
-                        name="filter_active">
+                    <select class="form-select w-full px-3 py-3" name="filter_active">
 
-                        <option value="active"
-                            {% if filter_active == "active" %}selected{% endif %}>
+                        <option value="active" {% if filter_active == "active" %}selected{% endif %}>
                             Ativos
                         </option>
 
-                        <option value="inactive"
-                            {% if filter_active == "inactive" %}selected{% endif %}>
+                        <option value="inactive" {% if filter_active == "inactive" %}selected{% endif %}>
                             Inativos
                         </option>
 
-                        <option value="all"
-                            {% if filter_active == "all" %}selected{% endif %}>
+                        <option value="all" {% if filter_active == "all" %}selected{% endif %}>
                             Todos
                         </option>
 
@@ -201,17 +184,13 @@
 
                     </label>
 
-                    <select
-                        class="form-select"
-                        name="filter_pending">
+                    <select class="form-select w-full px-3 py-3" name="filter_pending">
 
-                        <option value=""
-                            {% if not filter_pending %}selected{% endif %}>
+                        <option value="" {% if not filter_pending %}selected{% endif %}>
                             Todos
                         </option>
 
-                        <option value="yes"
-                            {% if filter_pending == "yes" %}selected{% endif %}>
+                        <option value="yes" {% if filter_pending == "yes" %}selected{% endif %}>
                             Apenas pendentes
                         </option>
 

@@ -1,0 +1,444 @@
+/* ==========================================================
+   MODULE 05: BOTÕES, LINKS E BADGES CARMELITANOS
+   ========================================================== */
+
+
+/* ==========================================================
+   BOTÕES DOURADOS E PRINCIPAIS
+   ========================================================== */
+
+.btn-item,
+.btn-carmel,
+.btn-gold,
+.btn-primary {
+    background: var(--gold-gradient);
+    background-size: 200% 200%;
+    background-position: 0% 50%;
+
+    color: #24170d !important;
+
+    border: 1px solid rgba(226, 196, 119, .60);
+    border-radius: var(--radius-md);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .42),
+        0 4px 14px rgba(120, 82, 35, .18);
+
+    font-weight: 600;
+    letter-spacing: .3px;
+
+    transition: var(--transition-slow);
+}
+
+
+.btn-item:hover,
+.btn-carmel:hover,
+.btn-gold:hover,
+.btn-primary:hover {
+    background-position: 100% 50%;
+
+    color: #1b1208 !important;
+
+    border-color: var(--carmel-gold-light);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .52),
+        var(--shadow-md),
+        var(--shadow-gold);
+
+    transform: translateY(-1.5px);
+}
+
+
+.btn-item:active,
+.btn-carmel:active,
+.btn-gold:active,
+.btn-primary:active {
+    transform: translateY(0);
+
+    box-shadow:
+        inset 0 1px 4px rgba(0, 0, 0, .28);
+}
+
+
+/* ==========================================================
+   BOTÕES COM CONTORNO OURO
+   ========================================================== */
+
+.btn-outline-carmel,
+.btn-outline-gold {
+    background: transparent;
+
+    color: var(--carmel-gold-light) !important;
+
+    border: 1px solid var(--carmel-gold);
+
+    border-radius: var(--radius-md);
+
+    font-weight: 600;
+
+    transition: var(--transition-slow);
+}
+
+
+.btn-outline-carmel:hover,
+.btn-outline-gold:hover {
+    background: var(--gold-gradient);
+
+    color: #24170d !important;
+
+    border-color: var(--carmel-gold-light);
+
+    box-shadow:
+        var(--shadow-gold);
+
+    transform: translateY(-1.5px);
+}
+
+
+/* ==========================================================
+   BOTÕES DE STATUS
+   ========================================================== */
+
+.btn-success {
+    background: var(--success) !important;
+
+    color: #ffffff !important;
+
+    border: none;
+
+    border-radius: var(--radius-md);
+
+    box-shadow: var(--shadow-sm);
+
+    transition: var(--transition);
+}
+
+
+.btn-success:hover {
+    background: var(--carmel-brown-light) !important;
+
+    color: #72c985 !important;
+
+    border: 1px solid rgba(63, 158, 86, .45);
+
+    box-shadow: var(--shadow-md);
+}
+
+
+.btn-danger {
+    background: var(--danger) !important;
+
+    color: #ffffff !important;
+
+    border: none;
+
+    border-radius: var(--radius-md);
+
+    box-shadow: var(--shadow-sm);
+
+    transition: var(--transition);
+}
+
+
+.btn-danger:hover {
+    background: var(--carmel-brown-light) !important;
+
+    color: #e8756e !important;
+
+    border: 1px solid rgba(184, 69, 63, .45);
+
+    box-shadow: var(--shadow-md);
+}
+
+
+.btn-warning {
+    background: var(--warning) !important;
+
+    border: none;
+
+    color: #ffffff !important;
+
+    border-radius: var(--radius-md);
+
+    box-shadow: var(--shadow-sm);
+
+    transition: var(--transition);
+}
+
+
+.btn-warning:hover {
+    background: var(--carmel-brown-light) !important;
+
+    color: #efb95e !important;
+
+    border: 1px solid rgba(214, 148, 56, .45);
+
+    box-shadow: var(--shadow-md);
+}
+
+
+/* ==========================================================
+   BOTÕES NEUTROS
+   ========================================================== */
+
+.btn-light,
+.btn-white,
+.btn-secondary {
+    background: var(--carmel-brown-light) !important;
+
+    color: var(--carmel-white-soft) !important;
+
+    border: 1px solid var(--border-color) !important;
+
+    border-radius: var(--radius-md);
+
+    transition: var(--transition);
+}
+
+
+.btn-light:hover,
+.btn-white:hover,
+.btn-secondary:hover {
+    background: var(--gold-gradient) !important;
+
+    color: #24170d !important;
+
+    border-color: var(--carmel-gold-light) !important;
+
+    box-shadow: var(--shadow-gold);
+
+    transform: translateY(-1px);
+}
+
+
+/* ==========================================================
+   LINKS EM DESTAQUE
+   ========================================================== */
+
+.link-carmel {
+    border: 1px solid var(--carmel-gold);
+
+    border-radius: var(--radius-sm);
+
+    padding: 6px 15px !important;
+
+    color: var(--carmel-gold-light) !important;
+
+    text-decoration: none;
+
+    transition: var(--transition);
+}
+
+
+.link-carmel:hover {
+    background: var(--carmel-gold);
+
+    color: var(--carmel-bg-dark) !important;
+
+    box-shadow: var(--shadow-gold);
+}
+
+
+.card-link {
+    color: var(--carmel-link);
+
+    text-decoration: underline;
+}
+
+
+.card-link:hover {
+    color: var(--carmel-link-hover);
+}
+
+
+/* ==========================================================
+   BADGES E EMBLEMAS
+   ========================================================== */
+
+.badge {
+    border-radius: var(--radius-pill);
+
+    font-weight: 700;
+
+    letter-spacing: .2px;
+
+    padding: .42em .75em;
+}
+
+
+/* ==========================================================
+   BADGE PRINCIPAL / OURO
+   ========================================================== */
+
+.text-bg-primary,
+.badge.bg-primary,
+.carmel-badge-gold {
+    background: var(--gold-gradient) !important;
+
+    color: #24170d !important;
+
+    border: 1px solid rgba(226, 196, 119, .45);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .28),
+        0 3px 10px rgba(120, 82, 35, .14);
+}
+
+
+/* ==========================================================
+   BADGE SECONDARY
+   ========================================================== */
+
+.badge.bg-secondary {
+    background: rgba(180, 165, 145, .24) !important;
+
+    color: var(--carmel-white-soft) !important;
+
+    border: 1px solid rgba(180, 165, 145, .28);
+}
+
+
+/* ==========================================================
+   BADGE SUCCESS
+   ========================================================== */
+
+.badge.bg-success {
+    background: rgba(63, 158, 86, .20) !important;
+
+    color: #72c985 !important;
+
+    border: 1px solid rgba(63, 158, 86, .42);
+
+    box-shadow:
+        0 2px 8px rgba(63, 158, 86, .08);
+}
+
+
+/* ==========================================================
+   BADGE DANGER
+   ========================================================== */
+
+.badge.bg-danger {
+    background: rgba(184, 69, 63, .20) !important;
+
+    color: #e8756e !important;
+
+    border: 1px solid rgba(184, 69, 63, .42);
+
+    box-shadow:
+        0 2px 8px rgba(184, 69, 63, .08);
+}
+
+
+/* ==========================================================
+   BADGE WARNING
+   ========================================================== */
+
+.badge.bg-warning {
+    background: rgba(214, 148, 56, .20) !important;
+
+    color: #efb95e !important;
+
+    border: 1px solid rgba(214, 148, 56, .42);
+
+    box-shadow:
+        0 2px 8px rgba(214, 148, 56, .08);
+}
+
+
+/* ==========================================================
+   BADGES — MODO CLARO
+   ========================================================== */
+
+[data-bs-theme="light"] {
+
+    .btn-item,
+    .btn-carmel,
+    .btn-gold,
+    .btn-primary {
+        color: #2b1b0d !important;
+
+        border-color: rgba(154, 116, 46, .55);
+
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, .55),
+            0 4px 12px rgba(100, 70, 30, .14);
+    }
+
+
+    .btn-item:hover,
+    .btn-carmel:hover,
+    .btn-gold:hover,
+    .btn-primary:hover {
+        color: #24170b !important;
+    }
+
+
+    .btn-outline-carmel,
+    .btn-outline-gold {
+        color: var(--carmel-gold-dark) !important;
+
+        border-color: var(--carmel-gold);
+    }
+
+
+    .btn-outline-carmel:hover,
+    .btn-outline-gold:hover {
+        color: #24170d !important;
+    }
+
+
+    .btn-light,
+    .btn-white,
+    .btn-secondary {
+        background: var(--carmel-bg-soft) !important;
+
+        color: var(--carmel-white) !important;
+
+        border-color: var(--border-color) !important;
+    }
+
+
+    .btn-light:hover,
+    .btn-white:hover,
+    .btn-secondary:hover {
+        color: #24170d !important;
+    }
+
+
+    .badge.bg-secondary {
+        background: rgba(115, 94, 83, .14) !important;
+
+        color: var(--carmel-brown) !important;
+
+        border-color: rgba(115, 94, 83, .25);
+    }
+
+
+    .badge.bg-success {
+        background: rgba(63, 158, 86, .13) !important;
+
+        color: #28753b !important;
+
+        border-color: rgba(63, 158, 86, .30);
+    }
+
+
+    .badge.bg-danger {
+        background: rgba(184, 69, 63, .13) !important;
+
+        color: #9d302b !important;
+
+        border-color: rgba(184, 69, 63, .30);
+    }
+
+
+    .badge.bg-warning {
+        background: rgba(214, 148, 56, .15) !important;
+
+        color: #94601b !important;
+
+        border-color: rgba(214, 148, 56, .32);
+    }
+}

@@ -1,41 +1,38 @@
-<div
-x-data="{ modalFormVote: false }"
-
-{% if form.errors %}
-    x-init="modalFormVote = true"
-{% endif %}
-class="d-flex justify-content-end my-2"
-
->
+<div x-data="{ modalFormVote: false }" {% if form.errors %} x-init="modalFormVote = true" {% endif %} class="my-2">
     <button class="btn btn-item" type="button" @click="modalFormVote = true">Cadastrar novo nome do Voto</button>
     <div x-show="modalFormVote" class="modal-custom" x-cloak>
         <form class="modal-dialog ">
             <div class="modal-content bg-carmel">
-                <div class="modal-header bg-carmel-header border-none text-white" >
+                <div class="modal-header bg-carmel-header border-none text-white">
                     <h5 class="modal-title" id="staticBackdropLabel">Nome do Voto</h5>
-                    <button type="button" class="close text-white" @click="modalFormVote = false" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close text-white" @click="modalFormVote = false" data-dismiss="modal"
+                        aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     {% csrf_token %}
-                    <div class="form-group">
-                        <label for="id_name" >Nome do Voto</label>
+                    <div class="form-group mb-3">
+                        <label for="id_name">Nome do Voto</label>
                         {{form.name}}
                         {% for err in form.errors.name %}
-                            <div class="text-danger small">{{ err }}</div>
+                        <div class="text-danger small">{{ err }}</div>
                         {% endfor %}
                     </div>
-                    <div class="form-group">
-                        <label for="id_description" >Descrição do Voto</label>
+                    <div class="form-group mb-3">
+                        <label for="id_description">Descrição do Voto</label>
                         {{form.description}}
                         {% for err in form.errors.description %}
-                            <div class="text-danger small">{{ err }}</div>
+                        <div class="text-danger small">{{ err }}</div>
                         {% endfor %}
                     </div>
-                    <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-success" hx-post="{% url 'register_votes_registration' %}" hx-trigger="click" hx-target="#list-votes-registration">Cadastrar Nome de Voto</button>
-                    </div>
+                </div>
+                <div class="modal-footer border-none">
+                    <button type="button" class="btn btn-secondary btn-sm"
+                        @click="modalFormVote = false">Cancelar</button>
+                    <button type="button" class="btn btn-success btn-sm"
+                        hx-post="{% url 'register_votes_registration' %}" hx-trigger="click"
+                        hx-target="#list-votes-registration">Cadastrar Nome de Voto</button>
                 </div>
             </div>
 
@@ -47,17 +44,18 @@ class="d-flex justify-content-end my-2"
 </div>
 <ul class="list-group">
     {% for vote_registration in votes_registration %}
-        <li class="list-group-item d-flex justify-content-between align-items-center my-1 bg-carmel text-white">
-            <div class="flex-column">
-                <p>{{vote_registration.name}}</p>
-                <span class="text-wrap">{{vote_registration.description}}</span>
-            </div>
-            <div class="d-flex flex-column">
-
-                <button type="button" hx-get="{% url 'edit_vote_registration' id=vote_registration.id %}"
-                class="btn btn-warning mx-1 px-5" hx-trigger="click" hx-target="#edit_vote_registration">Alterar</button>
-                <button class="btn btn-danger" hx-get="{% url 'delete_votes_registration' id=vote_registration.id %}" hx-confirm="Deletar mesmo esse nome de voto?" hx-target="#list-votes-registration" hx-trigger="click">Excluir</button>
-            </div>
-        </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center my-1 bg-carmel text-white">
+        <div class="flex-column">
+            <p class="fw-bold mb-1">{{vote_registration.name}}</p>
+            <span class="text-wrap text-muted small">{{vote_registration.description}}</span>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="button" hx-get="{% url 'edit_vote_registration' id=vote_registration.id %}"
+                class="btn btn-warning btn-sm" hx-trigger="click" hx-target="#edit_vote_registration">Alterar</button>
+            <button class="btn btn-danger btn-sm" hx-get="{% url 'delete_votes_registration' id=vote_registration.id %}"
+                hx-confirm="Deletar mesmo esse nome de voto?" hx-target="#list-votes-registration"
+                hx-trigger="click">Excluir</button>
+        </div>
+    </li>
     {% endfor %}
 </ul>

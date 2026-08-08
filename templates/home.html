@@ -44,7 +44,6 @@ Página Inicial — OCDS Alegria da Sagrada Face
         color: var(--carmel-white-soft);
         font-size: 1.08rem;
         line-height: 1.7;
-        max-width: 480px;
     }
 
     [data-bs-theme="light"] .hero-lead {
@@ -57,10 +56,8 @@ Página Inicial — OCDS Alegria da Sagrada Face
     }
 
     .home-photo {
-        border-radius: var(--radius-lg);
         width: 100%;
-        object-fit: cover;
-        box-shadow: var(--shadow-lg);
+
     }
 
     /* Divisores de Seção */
@@ -288,13 +285,11 @@ Página Inicial — OCDS Alegria da Sagrada Face
 
 {% block content %}
 
-<!-- ============================================================
-     HERO
-     ============================================================ -->
+
 <section class="hero-section container" data-sr="fade-down" data-sr-duration="1000">
     <div class="row align-items-center gy-4">
 
-        <div class="col-lg-6 text-center text-lg-start">
+        <div class="col-lg-6 text-center text-lg-start my-4">
 
             <img src="{% static 'assets/top_login.png' %}" class="home-img-logo mb-4" alt="Brasão OCDS">
 
@@ -307,9 +302,7 @@ Página Inicial — OCDS Alegria da Sagrada Face
             <div class="section-divider text-start mb-3"></div>
 
             <p class="hero-lead mb-4">
-                Filhos e filhas de Nossa Senhora do Monte Carmelo,<br>
-                vivendo o carisma teresiano no mundo,<br>
-                em oração, contemplação e apostolado.
+                Filhos e filhas de Nossa Senhora do Monte Carmelo, vivendo o carisma teresiano no mundo, em oração, contemplação e apostolado.
             </p>
 
             <a href="{% url 'login' %}" class="btn btn-item px-4 py-2">
@@ -318,17 +311,13 @@ Página Inicial — OCDS Alegria da Sagrada Face
 
         </div>
 
-        <div class="col-lg-6 d-flex justify-content-center" data-sr="zoom-in" data-sr-duration="1000">
+        <div class="col-lg-6 d-flex justify-content-center  my-4" data-sr="zoom-in" data-sr-duration="1000">
             <img src="{% static 'logo.png' %}" class="home-photo" alt="Logo OCDS"
                 style="max-height: 480px; object-fit: contain;">
         </div>
 
     </div>
 </section>
-
-<!-- ============================================================
-     QUEM SOMOS — VIDRO FOSCO
-     ============================================================ -->
 <section class="container py-5">
     <div class="glass-card" data-sr="fade-up" data-sr-duration="900">
 

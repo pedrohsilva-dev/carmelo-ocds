@@ -112,13 +112,9 @@ id="create_vote_member"
                         {% endif %}
                     </div>
                 </div>
-                <div class="d-flex flex-column">
-                        <div class="d-flex justify-content-center my-1">
-                            <button type="button" class="btn btn-warning mx-1 px-5" hx-get="{% url 'edit_vote_member' user=user_current id=vote.id %}" hx-trigger="click" hx-target="#edit_vote_member">Alterar</button>
-                        </div>
-                         <div class="d-flex justify-content-center my-1">
-                            <button type="button" class="btn btn-danger mx-1 px-5" hx-confirm="Deseja Apagar esse voto?" hx-post="{% url 'delete_vote' id=vote.id %}" hx-trigger="click" hx-target="#response_votes">Apagar</button>
-                        </div>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-warning btn-sm" hx-get="{% url 'edit_vote_member' user=user_current id=vote.id %}" hx-trigger="click" hx-target="#edit_vote_member">Alterar</button>
+                    <button type="button" class="btn btn-danger btn-sm" hx-confirm="Deseja Apagar esse voto?" hx-post="{% url 'delete_vote' id=vote.id %}" hx-trigger="click" hx-target="#response_votes">Apagar</button>
                 </div>
             </form>
         </li>

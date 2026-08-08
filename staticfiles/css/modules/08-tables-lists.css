@@ -1,0 +1,86 @@
+/* ==========================================================
+   MODULE 08: TABELAS E LISTAS CARMELITANAS
+   ========================================================== */
+
+/* Tabelas */
+.table,
+.table-carmel {
+    color: var(--carmel-white);
+    border-color: var(--border-color);
+    --bs-table-bg: transparent;
+}
+
+.table > :not(caption) > * > * {
+    background-color: transparent;
+    color: inherit;
+    border-bottom-color: var(--border-color);
+    box-shadow: none;
+}
+
+.table > thead,
+.table-carmel > thead {
+    background: var(--carmel-gradient) !important;
+    color: var(--carmel-gold-light);
+    border-bottom: 2px solid var(--border-color-strong);
+}
+
+.table thead th,
+.table-carmel thead th {
+    color: var(--carmel-gold-light);
+    font-weight: 700;
+    letter-spacing: .3px;
+    padding: 0.85rem 1rem;
+    text-transform: uppercase;
+    font-size: .78rem;
+}
+
+.table > tbody > tr,
+.table-carmel > tbody > tr {
+    background: rgba(28, 20, 16, .45);
+    transition: var(--transition);
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+    background-color: rgba(195, 160, 106, .05);
+}
+
+.table-hover > tbody > tr:hover > *,
+.table-carmel > tbody > tr:hover {
+    background-color: rgba(207, 168, 104, .12) !important;
+    color: var(--carmel-white);
+}
+
+/* List Groups */
+.list-group-item {
+    background: rgba(18, 22, 28, .78);
+    color: var(--carmel-white);
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+.list-group-item h1, .list-group-item h2, .list-group-item h3,
+.list-group-item h4, .list-group-item h5, .list-group-item h6,
+.list-group-item p, .list-group-item span, .list-group-item strong {
+    color: var(--carmel-white);
+}
+
+.list-group-item small,
+.list-group-item .text-muted,
+.list-group-item .text-secondary {
+    color: var(--carmel-muted) !important;
+}
+
+.list-group-item-action { color: var(--carmel-white); }
+
+.list-group-item-action:hover,
+.list-group-item-action:focus {
+    background: rgba(195, 160, 106, .10);
+    color: var(--carmel-white);
+    z-index: 1;
+}
+
+.list-group-item.active {
+    background: var(--gold-gradient) !important;
+    border-color: var(--carmel-gold) !important;
+    color: #17130a !important;
+}

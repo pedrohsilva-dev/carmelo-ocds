@@ -1,0 +1,105 @@
+/* ==========================================================
+   MODULE 06: FORMULÁRIOS, INPUTS E CONTROLES
+   ========================================================== */
+
+.form-control,
+.form-select,
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+input[type="datetime-local"],
+textarea,
+select {
+    background: var(--glass-bg-soft) !important;
+    backdrop-filter: var(--glass-blur-soft);
+    -webkit-backdrop-filter: var(--glass-blur-soft);
+    border: 1px solid var(--border-color-strong) !important;
+    box-shadow: inset 0 1px 0 var(--glass-highlight);
+    color: var(--carmel-white) !important;
+    border-radius: var(--radius-md);
+    transition: var(--transition);
+}
+
+.form-select { padding-right: 2.5rem; }
+option { color: #140d06 !important; background: #fcf9f2; }
+
+.form-control:hover,
+.form-select:hover,
+input:hover,
+textarea:hover,
+select:hover {
+    border-color: var(--carmel-gold) !important;
+}
+
+.form-control:focus,
+.form-select:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    background: var(--glass-bg) !important;
+    border-color: var(--carmel-gold) !important;
+    color: var(--carmel-white) !important;
+    box-shadow: inset 0 1px 0 var(--glass-highlight), 0 0 0 4px rgba(195, 160, 106, .16) !important;
+    outline: none !important;
+}
+
+.form-label {
+    color: var(--carmel-white-soft);
+    font-weight: 500;
+    letter-spacing: .15px;
+}
+
+/* Placeholders de Formulário */
+input::placeholder,
+textarea::placeholder,
+select::placeholder,
+.form-control::placeholder,
+.form-select::placeholder {
+    color: rgba(207, 168, 104, .75) !important;
+    opacity: 1 !important;
+    font-style: italic;
+    letter-spacing: .2px;
+}
+
+.input-group-text {
+    background: var(--carmel-brown-dark);
+    border: 1px solid var(--border-color-strong);
+    color: var(--carmel-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+
+/* Checkbox, Radio, Switch & Range Slider */
+.form-check-input {
+    background-color: var(--glass-bg-soft);
+    border: 1px solid var(--border-color-strong);
+    transition: var(--transition);
+}
+
+.form-check-input:checked {
+    background-color: var(--carmel-gold);
+    border-color: var(--carmel-gold-light);
+    box-shadow: var(--shadow-gold);
+}
+
+.form-check-input:focus {
+    border-color: var(--carmel-gold);
+    box-shadow: 0 0 0 0.25rem rgba(150, 111, 44, 0.25);
+}
+
+.form-check-label { color: var(--carmel-white-soft); }
+
+.form-range::-webkit-slider-runnable-track {
+    background: rgba(255, 255, 255, .10);
+    border-radius: var(--radius-pill);
+}
+
+.form-range::-webkit-slider-thumb {
+    background: var(--carmel-gold);
+    box-shadow: var(--shadow-sm);
+}

@@ -52,7 +52,8 @@
         </div>
     </div>
     <div class="modal-footer border-none">
-        <button class="btn btn-success" hx-post="{% url 'update_vote_member' id=vote_id %}" hx-target="#response_votes" hx-trigger="click">Atualizar Voto</button>
+        <button type="button" class="btn btn-secondary btn-sm" @click="modalFormVote = false">Cancelar</button>
+        <button class="btn btn-success btn-sm" hx-post="{% url 'update_vote_member' id=vote_id %}" hx-target="#response_votes" hx-trigger="click">Atualizar Voto</button>
     </div>
 </div>
    </div>

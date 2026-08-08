@@ -1,0 +1,154 @@
+/* ==========================================================
+   MODULE 11: RESPONSIVIDADE (MEDIA QUERIES)
+   ========================================================== */
+
+@media (max-width: 991px) {
+    .btn-theme-toggle {
+        display: none;
+    }
+
+    .img-size {
+        max-width: 320px !important;
+    }
+
+    .nsc {
+        min-height: 320px;
+    }
+
+}
+
+@media (max-width: 767px) {
+    #login-carmel {
+        padding-top: 20px;
+        max-width: 90% !important;
+        margin: 1px auto;
+
+    }
+
+    #nsc-slider {
+        display: none;
+    }
+
+    .title-carmel {
+        font-size: 1.5rem;
+    }
+}
+
+/* ==========================================================
+   NOSSA SENHORA DO CARMO
+   ========================================================== */
+
+.nsc {
+
+    position:
+        relative;
+
+    min-height:
+        360px;
+
+    width:
+        100%;
+
+    max-width:
+        305px;
+
+    display:
+        flex;
+
+    justify-content:
+        center !important;
+
+    align-items:
+        center;
+    margin-bottom: 10px;
+}
+
+.nsc1,
+.nsc2 {
+
+    position:
+        absolute;
+
+    width:
+        100%;
+
+    transition:
+        all .6s ease;
+}
+
+.nsc1 {
+
+    top:
+        0;
+
+    left:
+        0;
+
+    z-index:
+        1;
+}
+
+.nsc2 {
+
+    top:
+        20px;
+
+    left:
+        30px;
+
+    z-index:
+        2;
+}
+
+.img-size {
+    border: none;
+    width:
+        250px;
+    max-width: 249px;
+    height: 361px;
+    max-width: 360px;
+    padding-top: 95px !important;
+}
+
+.img-size img {
+
+    width:
+        100%;
+    border: none !important;
+
+    transition:
+        transform .5s ease;
+}
+
+option {
+    color: black !important;
+}
+
+.img-size:hover {
+
+    transform: scale(1.01);
+
+    -webkit-filter: drop-shadow(0px 0px 40px var(--carmel-gold)) brightness(105%);
+    -moz-filter: drop-shadow(0px 0px 40px var(--carmel-gold)) brightness(105%);
+    -ms-filter: drop-shadow(0px 0px 40px var(--carmel-gold)) brightness(105%);
+    -o-filter: drop-shadow(0px 0px 40px var(--carmel-gold)) brightness(105%);
+    filter: drop-shadow(0px 0px 40px var(--carmel-gold)) brightness(105%);
+
+}
+
+.img-size img:hover {
+
+    transform: scale(1.01);
+
+    -webkit-filter: drop-shadow(0px 0px 40px var(--carmel-gold)) brightness(105%);
+    -moz-filter: drop-shadow(0px 0px 40px var(--carmel-gold)) brightness(105%);
+    -ms-filter: drop-shadow(0px 0px 40px var(--carmel-gold)) brightness(105%);
+    -o-filter: drop-shadow(0px 0px 40px var(--carmel-gold)) brightness(105%);
+    filter: drop-shadow(0px 0px 40px var(--carmel-gold)) brightness(105%);
+
+}
+
+.login-form {
+    /* max-width: 100%; */
+    max-width: 200rem;
+}

@@ -1,0 +1,74 @@
+/* ==========================================================
+   MODULE 03: LAYOUT, NAVBAR E SIDEBAR
+   ========================================================== */
+
+/* Navbar Carmelo com Renda Dourada */
+.bg-nav-carmel {
+    background: linear-gradient(to bottom, rgba(6, 7, 9, .96), rgba(10, 12, 16, 0));
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background-image: url('/static/renda_dourada.png');
+    background-size: 180px 25px;
+    background-repeat: repeat-x;
+    box-shadow: 0 1px 0 var(--border-color), 0 10px 24px rgba(0, 0, 0, .28);
+    max-width: 100%;
+}
+
+/* Botão Flutuante para Alternar Tema (Dark / Light) */
+.btn-theme-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1200;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-pill);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid var(--border-color-strong);
+    background: rgba(10, 12, 16, .55);
+    color: var(--carmel-gold);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.btn-theme-toggle:hover {
+    background: rgba(195, 160, 106, .14);
+    box-shadow: var(--shadow-md);
+}
+
+/* Sidebar & Menu Mobile */
+.sidebar-header {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-link {
+    color: var(--carmel-white);
+    font-weight: 500;
+    letter-spacing: .1px;
+    transition: var(--transition);
+}
+
+.sidebar-link:hover {
+    background: rgba(195, 160, 106, .12);
+    color: var(--carmel-gold-light);
+    box-shadow: inset 3px 0 0 var(--carmel-gold);
+}
+
+.sidebar-link.active {
+    background: rgba(195, 160, 106, .16);
+    color: var(--carmel-gold);
+    box-shadow: inset 3px 0 0 var(--carmel-gold);
+    font-weight: 600;
+}
+
+.sidebar-overlay {
+    background: rgba(0, 0, 0, .65);
+}
+
+.sidebar hr {
+    border-color: var(--border-color);
+    opacity: 1;
+}

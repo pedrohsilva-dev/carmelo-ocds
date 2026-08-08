@@ -72,5 +72,9 @@
       "comments": true,
       "strings": true
     }
-  }
+  },
+  "css.peek.paths": [
+    "static/css",
+    "**/static/css"
+  ],
 }

@@ -107,7 +107,20 @@
         inset 0 1px 0 var(--glass-highlight);
 }
 
+.text-body-secondary {
+    color: white !important;
+}
 
+[data-bs-theme="light"] {
+    .text-body-secondary {
+        color: var(--carmel-white-soft) !important;
+    }
+
+
+}
+
+
+theme light
 /* ==========================================================
    BODY
    ========================================================== */
@@ -386,7 +399,7 @@ footer {
 
     border: 1px solid var(--border-color);
 
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-sm);
 
     box-shadow:
         inset 0 0 0 1px rgba(207, 168, 104, .20),
@@ -624,9 +637,7 @@ footer {
     color: var(--carmel-white) !important;
 }
 
-[data-bs-theme="light"] .modal-custom {
-    background: rgba(60, 44, 18, .28);
-}
+
 
 
 /* ==========================================================
@@ -749,7 +760,7 @@ footer {
 [data-bs-theme="light"] .card-header-color {
     background:
         var(--gold-gradient) !important;
-    color: #fffaf0;
+    color: #fffaf0 !important;
 }
 
 #login-carmel {
@@ -1043,7 +1054,7 @@ a:hover {
         0% 50%;
 
     color:
-        #1c140a !important;
+        #f1e9de !important;
 
     border:
         1px solid rgba(207, 168, 104, .45);
@@ -1228,12 +1239,6 @@ a:hover {
     z-index:
         1050;
 
-    background:
-        rgba(18, 12, 9, .75);
-
-    backdrop-filter:
-        blur(10px);
-
     display:
         flex;
 
@@ -1242,6 +1247,7 @@ a:hover {
 
     align-items:
         center;
+
 }
 
 .modal-dialog {
@@ -1255,11 +1261,8 @@ a:hover {
     overflow:
         hidden;
 
-    box-shadow:
-        var(--shadow-lg), var(--shadow-carmel);
 
-    border:
-        1px solid var(--border-color-strong);
+
 }
 
 .modal-content {
@@ -1269,7 +1272,8 @@ a:hover {
     color: var(--carmel-white);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-lg);
-    box-shadow: var(--glass-shadow);
+
+    border: 0px 1px 1px 1px solid var(--border-color) !important;
     animation: carmel-modal-in .28s var(--ease-out);
 }
 
@@ -1290,7 +1294,7 @@ a:hover {
 .card-header-color,
 .card-header {
     background: var(--gold-gradient) !important;
-    color: #140d06 !important;
+    color: rgb(180, 175, 169) !important;
     font-weight: 700;
     letter-spacing: .3px;
     border-bottom: 1px solid var(--border-color-strong) !important;
@@ -1299,7 +1303,7 @@ a:hover {
 
 .modal-header {
     background: var(--gold-gradient) !important;
-    color: #140d06 !important;
+    color: #fafafa !important;
     border-bottom: 1px solid var(--border-color-strong);
     padding: 1.1rem 1.6rem;
 }
@@ -1325,11 +1329,13 @@ a:hover {
     background: var(--glass-bg-soft);
     color: var(--carmel-white);
     padding: 1.5rem;
+
 }
 
 .modal-footer {
-    background: var(--carmel-bg-soft);
-    border-top: 1px solid var(--border-color);
+    background: var(--glass-blur);
+
+
     padding: 1rem 1.5rem;
 }
 
@@ -1344,7 +1350,7 @@ a:hover {
 }
 
 [data-bs-theme="light"] .modal-footer {
-    background: var(--carmel-bg-dark);
+    background: var(--carmel-bg-soft);
 }
 
 /* ==========================================================
@@ -1753,6 +1759,11 @@ option {
     justify-content: center;
     flex-shrink: 0;
     padding: 0 !important;
+}
+
+.modal-dialog-centered {
+    margin-top: 4rem;
+    align-items: flex-start !important;
 }
 
 .card-filter .form-label {
@@ -2455,6 +2466,8 @@ h6 {
     letter-spacing: .1px;
 }
 
+
+
 .text-muted {
     color: var(--carmel-white);
 }
@@ -2556,7 +2569,7 @@ strong {
 }
 
 [data-bs-theme="light"] .card-header {
-    background: rgba(111, 82, 34, .07);
+    background: rgba(255, 251, 244, 0.753);
 }
 
 .card-footer {
@@ -2924,15 +2937,14 @@ canvas,
 [data-bs-theme="light"] .card-header-color *,
 [data-bs-theme="light"] .modal-header,
 [data-bs-theme="light"] .modal-header * {
-    color: #140d06 !important;
+    color: #f8f5f2 !important;
 }
 
 [data-bs-theme="light"] .bg-carmel,
 [data-bs-theme="light"] .bg-carmel *:not(.btn-carmel):not(.btn-gold):not(.badge-gold),
 [data-bs-theme="light"] .bg-carmel-body,
 [data-bs-theme="light"] .bg-carmel-body *:not(.btn-carmel):not(.btn-gold):not(.badge-gold),
-[data-bs-theme="light"] .card,
-[data-bs-theme="light"] .card *:not(.btn-carmel):not(.btn-gold):not(.badge-gold),
+
 [data-bs-theme="light"] .modal-content,
 [data-bs-theme="light"] .modal-body,
 [data-bs-theme="light"] .modal-body *:not(.btn-carmel):not(.btn-gold):not(.badge-gold),
@@ -3022,4 +3034,28 @@ a:hover {
 [data-bs-theme="light"] textarea::placeholder {
     color: rgba(100, 65, 30, .65) !important;
     font-style: italic;
+}
+
+.card-header>*.h1,
+*.h2,
+*.h3,
+*.h4,
+*.h5,
+*.h6 {
+    color: var(--carmel-white-soft) !important;
+}
+
+
+[data-bs-theme="light"] {
+
+    .card-header>*.h1,
+    *.h2,
+    *.h3,
+    *.h4,
+    *.h5,
+    *.h6,
+    .text-body-secondary {
+        color: white !important;
+    }
+
 }

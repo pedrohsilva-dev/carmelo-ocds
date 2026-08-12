@@ -1,0 +1,228 @@
+/* ==========================================================
+MODULE 12: UTILITÁRIOS GERAIS + SIDEBAR
+========================================================== */
+
+/* ---------- Cores semânticas auxiliares ---------- */
+
+.text-carmel-muted {
+    color: var(--carmel-muted) !important;
+}
+
+.text-carmel-gold {
+    color: var(--carmel-gold) !important;
+}
+
+.bg-card-body {
+    background: var(--carmel-bg-soft) !important;
+}
+
+[data-bs-theme="light"] .bg-card-body {
+    background: rgba(255, 255, 255, .92) !important;
+}
+
+/* ---------- Estado vazio ---------- */
+
+.empty-state-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: var(--radius-pill, 50rem);
+    background: rgba(201, 169, 110, .10);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.9rem;
+    color: var(--carmel-gold);
+}
+
+/* ---------- Sidebar (layout desktop/mobile) ---------- */
+
+.sidebar {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100dvh;
+    z-index: 1055;
+
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+
+    transform: translateX(-100%);
+    transition: transform .30s ease;
+
+    overscroll-behavior: contain;
+}
+
+.sidebar.show {
+    transform: translateX(0);
+}
+
+.sidebar-header {
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-content {
+    padding: 15px;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    padding: 14px;
+    border-radius: 10px;
+    transition: .2s;
+    color: var(--carmel-white);
+}
+
+.sidebar-link:hover {
+    background: rgba(201, 169, 110, .15);
+    color: var(--carmel-gold-light);
+}
+
+.sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1054;
+    background: rgba(0, 0, 0, .65);
+}
+
+[data-bs-theme="light"] .sidebar-overlay {
+    background: rgba(0, 0, 0, .35);
+}
+
+body.menu-open {
+    overflow: hidden;
+    touch-action: none;
+}
+
+.sidebar hr {
+    border-color: var(--border-color);
+    opacity: 1;
+}
+
+@media (min-width: 992px) {
+    .sidebar {
+        width: 260px;
+        height: 100vh;
+        inset: 0 auto 0 0;
+        transform: translateX(0);
+    }
+
+    .sidebar-overlay {
+        display: none !important;
+    }
+
+    /* A margem da sidebar só existe quando há sidebar (usuário logado).
+       Páginas públicas (login, home) não têm sidebar e devem ficar
+       centralizadas — sem esta classe o <main> ficaria deslocado 260px. */
+    body.is-authenticated main {
+        margin-left: 260px;
+    }
+
+    /* Garantia explícita: deslogado, o conteúdo fica centralizado,
+       nunca herdando a margem reservada à sidebar. */
+    body:not(.is-authenticated) main {
+        margin-left: 0;
+    }
+}
+
+/* ---------- Modais em telas pequenas ---------- */
+
+@media (max-width: 575px) {
+    .modal-custom .modal-dialog {
+        width: 100% !important;
+        margin: 0;
+        min-height: 100dvh;
+        border-radius: 0;
+    }
+
+    .modal-custom .modal-content {
+        border-radius: 0;
+        min-height: 100dvh;
+    }
+
+    .modal-custom .modal-body {
+        overflow-y: auto;
+        max-height: none;
+    }
+}
+
+.modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+/* ---------- Ações rápidas (home) ---------- */
+
+.quick-action {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--glass-bg-soft, rgba(20, 25, 32, .65));
+    text-decoration: none;
+    color: var(--carmel-white);
+    transition: var(--transition, all .3s ease);
+    height: 100%;
+}
+
+.quick-action:hover {
+    border-color: var(--carmel-gold);
+    box-shadow: var(--shadow-gold, 0 8px 25px rgba(201, 169, 110, .22));
+    transform: translateY(-3px);
+    color: var(--carmel-white);
+}
+
+.quick-action-icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: var(--radius-pill, 50rem);
+    background: var(--gold-gradient, linear-gradient(135deg, #99783d, #cfa868));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #140d06;
+    font-size: 1.15rem;
+}
+
+.quick-action strong {
+    display: block;
+    color: var(--carmel-gold-light);
+    font-size: .95rem;
+    margin-bottom: .15rem;
+}
+
+.quick-action span {
+    font-size: .83rem;
+    color: var(--carmel-muted);
+    line-height: 1.4;
+}
+
+[data-bs-theme="light"] .quick-action {
+    background: rgba(255, 255, 255, .88);
+}
+
+[data-bs-theme="light"] .quick-action strong {
+    color: #5a3c1a;
+}
+
+[data-bs-theme="light"] .quick-action span {
+    color: #5b4b3b;
+}
+
+/* ---------- Acessibilidade de foco ---------- */
+
+:focus-visible {
+    outline: 2px solid var(--carmel-gold);
+    outline-offset: 2px;
+}

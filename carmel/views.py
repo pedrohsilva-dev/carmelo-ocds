@@ -1,55 +1,70 @@
-from django.shortcuts import get_object_or_404, get_list_or_404, redirect, render
-from django.contrib.auth.decorators import login_required
-
-from carmel.forms import CarmelForm
-from carmel.models import Carmel
-from carmel.services.carmel_stats import get_carmel_statistics
-from contributions.models import Contribution
-from members.models import Member
-
 from django.contrib import messages
-
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, render
 from rolepermissions.decorators import has_permission_decorator
 
-# Agregações do Django
-from django.db.models.aggregates import Sum
+from carmel.forms import CarmelForm
+from carmel.services.carmel_stats import get_carmel_statistics
 
 # Create your views here.
+
+
+def _is_admin(user):
+    """Apenas staff/superuser (administradores do sistema) criam carmelos."""
+    return bool(user.is_authenticated and (user.is_staff or user.is_superuser))
+
+
+@login_required
+def create_carmel(request):
+    """Cria um novo carmelo — restrito a administradores do sistema."""
+    if not _is_admin(request.user):
+        messages.error(
+            request,
+            "Apenas administradores do sistema podem criar carmelos.",
+        )
+        return redirect("profile")
+
+    form = CarmelForm()
+
+    if request.method == "POST":
+        form = CarmelForm(request.POST)
+        if form.is_valid():
+            carmel = form.save()
+            messages.success(
+                request,
+                f"Carmelo '{carmel.name}' criado com sucesso!",
+            )
+            return redirect("carmel_profile")
+
+    return render(request, "create_carmel.html", {"form": form})
 
 
 @login_required
 @has_permission_decorator("edit_carmel")
 def edit_carmel(request):
-    """Edita as informações do carmelo associado ao usuário.
-
-    Permite que o líder do carmelo atualize os dados do carmelo (como nome, descrição).
-    """
+    """Salva a edição das informações do carmelo (POST)."""
     user = request.user
 
     if not user or not user.carmel:
         messages.error(
             request,
-            "Usuário incompleto para criar novos membros, entre em contato com o administrador dp sistema",
+            "Usuário incompleto para editar o carmelo. Entre em contato com o administrador do sistema.",
         )
         return redirect("/")
 
+    if request.method != "POST":
+        return redirect("carmel_profile")
+
     carmel = user.carmel
+    form = CarmelForm(request.POST, instance=carmel)
 
-    if request.method == "POST":
-        form = CarmelForm(request.POST, instance=carmel)
-        if form.is_valid():
-            form.save()
-            return redirect("carmel_profile")
+    if form.is_valid():
+        form.save()
+        messages.success(request, "Carmelo atualizado com sucesso!")
     else:
-        form = CarmelForm(instance=carmel)
+        messages.error(request, "Corrija os erros do formulário.")
 
-    return render(
-        request,
-        "carmel_edit.html",
-        {
-            "form": form,
-        },
-    )
+    return redirect("carmel_profile")
 
 
 @login_required
@@ -66,35 +81,16 @@ def carmel_profile(request):
 
     carmel = user.carmel
 
-    # MANUTENÇÃO: Usar .count() ou .values('id').count() para otimizar query
-    quantity = Member.objects.filter(
-        carmel=carmel
-    ).count()  # Mostra a quantidade de membros
-
-    # MANUTENÇÃO: Já está usando agregação corretamente com Sum
-    total_contribution = (
-        Contribution.objects.filter(member__carmel=carmel).aggregate(Sum("price"))[
-            "price__sum"
-        ]
-        or 0
-    )
-
+    # Estatísticas agregadas (uma única chamada de serviço)
     carmel_stats = get_carmel_statistics(carmel)
 
-    # edit carmel
+    # edit carmel (preenche o modal)
     form = CarmelForm(instance=carmel)
-
-    if request.method == "POST":
-        form = CarmelForm(request.POST, instance=carmel)
-        if form.is_valid():
-            form.save()
-            return redirect("carmel_profile")
 
     context = {
         "carmel": carmel,
-        "member_quantity": quantity,
-        "total_contribution": total_contribution,
         "form": form,
+        "is_admin": _is_admin(user),
         **carmel_stats,
     }
 

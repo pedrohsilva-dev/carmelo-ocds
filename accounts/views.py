@@ -16,8 +16,8 @@ from django.urls import reverse
 from accounts.forms import AddressForm, LoginForm
 
 # from accounts.models import ResetPasswordAccess
-from contributions.models import Contribution
-from contributions.views import month_empty
+from base.utils import paginate
+from contributions.services import month_empty
 from members.models import Address, Member, Phone
 from votes.models import Vote
 
@@ -25,30 +25,38 @@ from votes.models import Vote
 
 
 def login(request):
-    """Autentica um usuário no sistema.
+    """Autentica um usuário no sistema por e-mail OU nome.
 
-    Renderiza o formulário de login e, ao submeter, valida as credenciais.
-    Se válido, faz login; caso contrário, exibe mensagem de erro.
+    Se o usuário já estiver logado, redireciona para o perfil.
+    Suporta o parâmetro `next` para voltar à página de origem.
     """
+    if request.user.is_authenticated:
+        return redirect(reverse("profile"))
+
     form_login = LoginForm()
 
     if request.method == "POST":
         form_login = LoginForm(request.POST)
         if form_login.is_valid():
-            # MANUTENÇÃO: Considerar usar login.authenticate com email como backend
             user = authenticate(
                 request,
-                username=form_login.cleaned_data["email"],
+                identifier=form_login.cleaned_data["identifier"],
                 password=form_login.cleaned_data["password"],
             )
             if user:
                 login_auth(request, user)
-                messages.success(request, "Bem vindo ao sistema OCDS")
+                messages.success(request, f"Bem-vindo(a), {user.get_short_name()}!")
+
+                next_url = request.POST.get("next") or request.GET.get("next")
+                if next_url and next_url.startswith("/") and not next_url.startswith("//"):
+                    return redirect(next_url)
+
                 return redirect(reverse("profile"))
             else:
-                messages.error(request, "Erro ao Logar tente Novamente")
+                messages.error(request, "Email/Nome ou senha incorretos. Tente novamente.")
 
-    return render(request, "login.html", {"form": form_login})
+    next_url = request.GET.get("next") or request.POST.get("next")
+    return render(request, "login.html", {"form": form_login, "next": next_url})
 
 
 @login_required
@@ -69,11 +77,16 @@ def profile(request):
     Obtém e renderiza: telefones, votos, última contribuição e endereço do usuário.
     """
     phones = Phone.objects.filter(member=request.user)
-    votes = Vote.objects.filter(member=request.user).select_related(
-        "votes_registration"
+    votes = paginate(
+        Vote.objects.filter(member=request.user)
+        .select_related("votes_registration")
+        .order_by("-date"),
+        request,
+        per_page=10,
+        page_param="votes_page",
     )
-    contribution = Contribution.objects.filter(member=request.user).last()
 
+    # Situação das contribuições (meses pagos/faltantes) — agregação única
     contributions = month_empty(request.user)
 
     # MOSTRAR CONTRIBUIÇÕES NÃO PAGAS
@@ -184,9 +197,18 @@ def edit_address(request):
     """Atualiza o endereço do usuário logado.
 
     Recupera o endereço existente e permite edição via formulário.
+    Se o usuário não tiver endereço, redireciona para a criação.
     """
-    # MANUTENÇÃO: Validar se address existe antes de usar
-    address = request.user.address
+    address = getattr(request.user, "address", None)
+
+    if address is None:
+        messages.info(request, "Nenhum endereço cadastrado para editar.")
+        return render(
+            request,
+            "location.html",
+            {"address_form": AddressForm(), "address": None},
+        )
+
     form = AddressForm(instance=address)
 
     if request.method == "POST":
@@ -205,23 +227,18 @@ def edit_address(request):
 
 @login_required
 def delete_address(request):
-    """Deleta o endereço do usuário logado.
-
-    Remove o endereço associado e renderiza a página sem ele.
-    """
+    """Deleta o endereço do usuário logado, se existir."""
     form = AddressForm()
+    address = getattr(request.user, "address", None)
 
-    with transaction.atomic():
-        # MANUTENÇÃO: Verificar se address existe antes de deletar para evitar erro
-        request.user.address.delete()
-        address = None
+    if address is not None:
+        with transaction.atomic():
+            address.delete()
         messages.success(request, "Endereço deletado com sucesso!")
+    else:
+        messages.info(request, "Nenhum endereço cadastrado para deletar.")
 
-    # MANUTENÇÃO: Lógica redundante - 'address' sempre é None
-    if address:
-        messages.error(request, "Erro ao deletar endereço!")
-
-    return render(request, "location.html", {"address_form": form, "address": address})
+    return render(request, "location.html", {"address_form": form, "address": None})
 
 
 # def forgot_password(request):

@@ -1,3 +1,4 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from members.models import Member, TimeStampedModel
@@ -30,7 +31,10 @@ class Vote(TimeStampedModel):
     )
 
     year_duration = models.IntegerField(
-        verbose_name="Quantos Anos dura esse voto", null=True, blank=True
+        verbose_name="Quantos Anos dura esse voto",
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(1), MaxValueValidator(99)],
     )
 
     member = models.ForeignKey(Member, on_delete=models.CASCADE, verbose_name="Membro")

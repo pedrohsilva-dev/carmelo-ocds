@@ -1,12 +1,10 @@
 {% if form_update %}
 <div x-data="{ modalFormVote: true }">
-<form class="modal-custom" cloak x-show="modalFormVote">
+<form class="modal-custom" x-show="modalFormVote" x-cloak>
     {% csrf_token %}
    <input type="hidden" name="user_current" value="{{user_current}}">
    <div class="modal-dialog">
-    <div class="modal-content bg-carmel" x-data="{
-        type_vote: '{{form_update.type.value}}'
-    }">
+    <div class="modal-content bg-carmel">
         <div class="modal-header bg-carmel-header border-none text-white">
             <h5 class="modal-title" id="staticBackdropLabel">Editar Registro de Voto</h5>
             <button type="button" href="#Fechado" class="close text-white" @click="modalFormVote = false" aria-label="Close">

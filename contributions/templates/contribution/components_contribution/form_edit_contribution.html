@@ -1,0 +1,50 @@
+{% if form_update %}
+<div x-data="{ modalFormContribution: true }">
+    <form class="modal-custom" x-show="modalFormContribution" x-cloak>
+        {% csrf_token %}
+        <div class="modal-dialog">
+            <div class="modal-content bg-carmel">
+                <div class="modal-header bg-carmel-header border-none text-white">
+                    <h5 class="modal-title" id="staticBackdropLabel">Editar Contribuição</h5>
+                    <button type="button" class="close text-white" @click="modalFormContribution = false" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body bg-carmel-body border-none">
+                    {% if form_update.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for e in form_update.non_field_errors %}{{ e }}<br>{% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="form-group text-white mb-3">
+                        <label for="id_price">Valor da Contribuição</label>
+                        {{ form_update.price }}
+                        {% for err in form_update.errors.price %}
+                            <div class="text-danger small">{{ err }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group text-white mb-3">
+                        <label for="id_date_pay">Data do Pagamento</label>
+                        {{ form_update.date_pay }}
+                        {% for err in form_update.errors.date_pay %}
+                            <div class="text-danger small">{{ err }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="modal-footer border-none">
+                    <button type="button" class="btn btn-secondary btn-sm" @click="modalFormContribution = false">Cancelar</button>
+                    <button
+                        class="btn btn-success btn-sm"
+                        hx-post="{% url 'update_contribution' user=user_current id=contribution_id %}"
+                        hx-target="#list-contribution"
+                        hx-trigger="click">
+                        Atualizar Contribuição
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endif %}

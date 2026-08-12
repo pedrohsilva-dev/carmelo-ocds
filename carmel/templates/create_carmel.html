@@ -1,0 +1,60 @@
+{% extends 'partials/base.html' %}
+
+{% block head_title %}Criar Carmelo — Administração{% endblock head_title %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="d-flex justify-content-center">
+        <div class="col-12 col-lg-8">
+
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
+                <div>
+                    <h1 class="h3 mb-1">
+                        <i class="bi bi-bank2 me-2 text-warning"></i>Criar Carmelo
+                    </h1>
+                    <p class="text-carmel-muted mb-0">
+                        Cadastre uma nova comunidade OCDS. Apenas administradores do sistema.
+                    </p>
+                </div>
+                <a href="{% url 'carmel_profile' %}" class="btn btn-outline-carmel">
+                    <i class="bi bi-arrow-left me-2"></i>Voltar
+                </a>
+            </div>
+
+            <div class="card bg-carmel-body rounded-3 shadow-sm">
+                <div class="card-body p-4">
+
+                    <form method="POST" action="{% url 'create_carmel' %}">
+                        {% csrf_token %}
+
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                <i class="bi bi-exclamation-triangle me-1"></i>
+                                Corrija os erros abaixo para criar o carmelo.
+                            </div>
+                        {% endif %}
+
+                        <div class="row">
+                            {% include 'partials/components/form_field.html' with field=form.name col="col-12" %}
+                            {% include 'partials/components/form_field.html' with field=form.description col="col-12" %}
+                            {% include 'partials/components/form_field.html' with field=form.city col="col-md-6" %}
+                            {% include 'partials/components/form_field.html' with field=form.diocese col="col-md-6" %}
+                            {% include 'partials/components/form_field.html' with field=form.price_contribution_default col="col-md-6" %}
+                            {% include 'partials/components/form_field.html' with field=form.pay_day_contribution_default col="col-md-6" %}
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-2">
+                            <a href="{% url 'carmel_profile' %}" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check2-circle me-1"></i>Criar Carmelo
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock content %}

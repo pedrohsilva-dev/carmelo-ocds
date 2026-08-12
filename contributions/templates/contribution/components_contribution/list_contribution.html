@@ -1,94 +1,167 @@
+{% load permission_tags %}
 
-<div class="d-flex justify-content-end mb-2 mx-2 my-2 align-items-center">
-    <!-- centralizar os meses pagos e não pagos vertical cada items -->
-    <!-- class para colocar do bootstrap nesse proximo paragrafo -->
-    <p class=" px-4">Data de Entrada: <span class="h6">{{ date_entry }}</span>
+<div class="container py-2">
 
-    </p>
+    <!-- Resumo -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <p class="mb-0">
+            Data de Entrada: <span class="fw-bold">{{ date_entry }}</span>
+        </p>
+        <div class="d-flex gap-2">
+            <span class="badge bg-success fs-6 px-3 py-2">
+                Meses Pagos: <span class="fw-bold">{{ months.count_paid }}</span>
+            </span>
+            <span class="badge bg-danger fs-6 px-3 py-2">
+                Meses Faltantes: <span class="fw-bold">{{ months.count_missing }}</span>
+            </span>
+        </div>
+    </div>
 
-    <p class="bg-success mx-1 px-3 py-1"><span class="font-weight-bold">Meses Pagos</span> <span class="badge bg-white text-dark h4">{{months.count_paid}}</span></p>
-    <p class="bg-danger mx-1 px-3 py-1"><span class="font-weight-bold">Meses Faltantes</span> <span class="badge bg-white text-dark h4">{{months.count_missing}}</span></p>
-</div>
-<div class="container">
+    <!-- Pagamentos pendentes -->
+    <div class="mb-4">
+        <h5 class="fw-bold mb-3"><i class="bi bi-hourglass-split me-2 text-warning"></i>Pagamentos Pendentes</h5>
 
-    <p>Pagamentos Pendentes</p>
-    {% for missing_month in months.missing_months %}
-        <form class="d-flex px-2 py-1 alert-warning mb-1 justify-content-between align-items-center" x-data="{
-            date_pay_day: null,
-            price: '{{ price_default }}',
-            validate_pay_day(month, year){
-                const m = Number(month);
-                const y = Number(year);
-                let daysInMonth = 31;
+        {% if months.missing_months %}
+            {% for missing_month in months.missing_months %}
+                <form
+                    class="d-flex flex-column flex-sm-row flex-wrap justify-content-between align-items-stretch gap-2 alert alert-warning mb-2 px-3 py-2"
+                    x-data="{
+                        date_pay_day: null,
+                        price: '{{ price_default }}',
+                        validate_pay_day(month, year){
+                            const m = Number(month);
+                            const y = Number(year);
+                            let daysInMonth = 31;
+                            if (m === 2) {
+                                const isLeap = (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0);
+                                daysInMonth = isLeap ? 29 : 28;
+                            } else if ([4,6,9,11].includes(m)) {
+                                daysInMonth = 30;
+                            }
+                            if (this.date_pay_day > daysInMonth) this.date_pay_day = daysInMonth;
+                            if (this.date_pay_day < 1) this.date_pay_day = null;
+                        }
+                    }">
 
-                if (m === 2) {
-                    const isLeap = (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0);
-                    daysInMonth = isLeap ? 29 : 28;
-                } else if ([4,6,9,11].includes(m)) {
-                    daysInMonth = 30;
-                }
+                    {% csrf_token %}
 
-                if (this.date_pay_day > daysInMonth) this.date_pay_day = daysInMonth;
-                if (this.date_pay_day < 1) this.date_pay_day = null;
-            }
-        }">
+                    <div class="d-flex flex-wrap gap-3 align-items-center">
+                        <div>
+                            <span class="small text-muted d-block">No dia</span>
+                            <input
+                                type="number"
+                                placeholder="00"
+                                min="1"
+                                max="31"
+                                name="pay_day"
+                                x-model.number="date_pay_day"
+                                @input="validate_pay_day({{ missing_month.month }}, {{ missing_month.year }})"
+                                class="form-control"
+                                style="width: 90px;"
+                                required>
+                        </div>
+                        <div>
+                            <span class="small text-muted d-block">Valor</span>
+                            <input
+                                type="text"
+                                inputmode="decimal"
+                                name="price"
+                                x-model="price"
+                                class="form-control"
+                                style="width: 130px;"
+                                @input="price = price.replace(/[^0-9,\.]/g,'')"
+                                required>
+                        </div>
+                    </div>
 
+                    <input
+                        type="hidden"
+                        name="date_pay"
+                        :value="date_pay_day ? `{{ missing_month.year }}-{{ missing_month.month }}-${date_pay_day.toString().padStart(2, '0')}` : ''"
+                        required>
+
+                    <div class="d-flex align-items-center">
+                        <button
+                            type="button"
+                            class="btn btn-success w-100"
+                            @click="price = (price||'').replace(',','.')"
+                            hx-post="{% url 'register_contribution' user=user_current %}"
+                            hx-target="#list-contribution"
+                            hx-trigger="click">
+                            <i class="bi bi-check-circle me-1"></i>Pagar {{ missing_month.date_formatted }}
+                        </button>
+                    </div>
+
+                    {% for err in form_contribution.errors.date_pay %}
+                        <div class="text-danger small w-100">{{ err }}</div>
+                    {% endfor %}
+                    {% for err in form_contribution.errors.price %}
+                        <div class="text-danger small w-100">{{ err }}</div>
+                    {% endfor %}
+                </form>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-success mb-0">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                Todas as contribuições estão em dia!
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Pagamentos feitos -->
+    <div>
+        <h5 class="fw-bold mb-3"><i class="bi bi-clock-history me-2 text-carmel-gold"></i>Pagamentos Feitos</h5>
+
+        {% if contributions %}
+            <form class="list-group">
                 {% csrf_token %}
-                <div>
-                   <div class="d-flex pr-2 align-items-center">
-
+                {% for contribution in contributions %}
+                    <div class="list-group-item bg-carmel mb-1 d-flex justify-content-between align-items-center rounded-3">
                         <div>
-                            <span class="pr-1">No dia</span>
-                            <input type="number" placeholder="00" x-mask="99" min="1" max="31" name="pay_day" x-model.number="date_pay_day"
-                             @input="validate_pay_day({{ missing_month.month }}, {{ missing_month.year }})" required>
-                            {% for err in form_contribution.errors.date_pay %}
-                                <div class="text-danger small">{{ err }}</div>
-                            {% endfor %}
+                            <div class="fw-bold">R$ {{ contribution.price }}</div>
+                            <small class="text-carmel-muted">{{ contribution.date_pay|date:"d/m/Y" }}</small>
                         </div>
-                        <div>
-                            <span class="pr-1">Valor</span>
-                            <input type="text" inputmode="decimal" name="price" x-model="price" style="width:120px;display:inline-block" @input="price = price.replace(/[^0-9,\.]/g,'')" required>
-                        {% for err in form_contribution.errors.price %}
-                            <div class="text-danger small">{{ err }}</div>
-                        {% endfor %}
+                        <div class="d-flex gap-2">
+                            {% if user|can:'edit_contribute' %}
+                            <button
+                                type="button"
+                                class="btn btn-warning btn-sm"
+                                hx-get="{% url 'edit_contribution' id=contribution.id user=user_current %}"
+                                hx-target="#edit-contribution"
+                                hx-trigger="click">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            {% endif %}
+                            {% if user|can:'delete_contribute' %}
+                            <button
+                                type="button"
+                                class="btn btn-danger btn-sm"
+                                hx-post="{% url 'delete_contribution' id=contribution.id user=user_current %}"
+                                hx-confirm="Deseja deletar esta contribuição?"
+                                hx-target="#list-contribution"
+                                hx-trigger="click">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                            {% endif %}
                         </div>
-                   </div>
-
-                </div>
-                <input type="hidden" name="date_pay" :value="date_pay_day ? `{{missing_month.year}}-{{missing_month.month}}-${date_pay_day.toString().padStart(2, '0')}` : ''" required>
-                <div class="d-flex justify-content-between align-items-center">
-
-                    <button type="button" class="btn btn-success" @click="price = (price||'').replace(',','.')" hx-post="{% url 'register_contribution' user=user_current %}" hx-target="#list-contribution" hx-trigger="click">Pagar Mes {{ missing_month.date_formatted }}</button>
-                </div>
-
+                    </div>
+                {% endfor %}
             </form>
-    {% endfor %}
+
+            {% if contributions.has_other_pages %}
+                {% include "partials/components/pagination.html" with page_obj=contributions %}
+            {% endif %}
+        {% else %}
+            <div class="alert alert-warning mb-0">
+                <i class="bi bi-exclamation-circle me-2"></i>
+                Não existe nenhuma contribuição registrada.
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Formulário de edição (HTMX) -->
+    <div id="edit-contribution">
+        {% include 'contribution/components_contribution/form_edit_contribution.html' %}
+    </div>
+
 </div>
-
-    <div class="container ">
-        <p>Pagamentos Feitos</p>
-{% for contribution in contributions %}
-
-        <!-- Deixar qauntidade de meses pagos e não pagos bonitos com bootstrap-->
-
-        <ul class="list-group list-group-numbered">
-            <li class="list-group-item bg-carmel mb-1 d-flex justify-content-between align-items-center">
-                <div>
-                    <div>{{contribution.price}}</div>
-                    <div>{{contribution.date_pay}}</div>
-                </div>
-                <div>
-                    <button class="btn btn-danger" hx-get="{% url 'delete_contribution' id=contribution.id user=user_current %}" hx-confirm="Deseja Deletar Mesmo?" hx-target="#list-contribution" hx-trigger="click">Deletar</button>
-                </div>
-            </li>
-        </ul>
-
-{% empty %}
-    <div
-        class="alert alert-warning mx-2"
-        role="alert"
-    >
-        <strong>Não existe nenhuma Contribuição</strong>
-    </div>
-{% endfor %}
-    </div>

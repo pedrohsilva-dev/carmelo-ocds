@@ -1,0 +1,65 @@
+{% comment %}
+Componente padrão de paginação.
+Uso (HTMX):
+    {% include "partials/components/pagination.html" with page_obj=page_obj base_url="{% url 'name' slug=user_current %}" hx_target="#list" %}
+Uso (link normal):
+    {% include "partials/components/pagination.html" with page_obj=page_obj %}
+{% endcomment %}
+
+{% if page_obj.has_other_pages %}
+<nav aria-label="Navegação de páginas" class="mt-3">
+    <ul class="pagination pagination-sm justify-content-center">
+
+        {% with param=page_param|default:"page" %}
+
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link"
+                {% if hx_target %}
+                    hx-get="{{ base_url }}?{{ param }}={{ page_obj.previous_page_number }}{% if extra_params %}&{{ extra_params }}{% endif %}"
+                    hx-target="{{ hx_target }}"
+                {% else %}
+                    href="?{{ param }}={{ page_obj.previous_page_number }}"
+                {% endif %}>
+                <i class="bi bi-chevron-left"></i> Anterior
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link"><i class="bi bi-chevron-left"></i> Anterior</span></li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+        <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+            <a class="page-link"
+                {% if hx_target %}
+                    hx-get="{{ base_url }}?{{ param }}={{ num }}{% if extra_params %}&{{ extra_params }}{% endif %}"
+                    hx-target="{{ hx_target }}"
+                {% else %}
+                    href="?{{ param }}={{ num }}"
+                {% endif %}>
+                {{ num }}
+            </a>
+        </li>
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link"
+                {% if hx_target %}
+                    hx-get="{{ base_url }}?{{ param }}={{ page_obj.next_page_number }}{% if extra_params %}&{{ extra_params }}{% endif %}"
+                    hx-target="{{ hx_target }}"
+                {% else %}
+                    href="?{{ param }}={{ page_obj.next_page_number }}"
+                {% endif %}>
+                Próxima <i class="bi bi-chevron-right"></i>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">Próxima <i class="bi bi-chevron-right"></i></span></li>
+        {% endif %}
+
+        {% endwith %}
+
+    </ul>
+</nav>
+{% endif %}

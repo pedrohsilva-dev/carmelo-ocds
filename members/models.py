@@ -180,6 +180,13 @@ class Member(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
         return self.name
 
     def save(self, *args, **kwargs):
+        # Normaliza a data de entrada caso ainda seja string
+        if isinstance(self.entry_date, str):
+            from django.utils.dateparse import parse_date
+
+            parsed = parse_date(self.entry_date)
+            self.entry_date = parsed if parsed else date.today()
+
         if not self.entry_date:
             self.entry_date = date.today()
 
@@ -196,8 +203,43 @@ class Member(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
 
         super().save(*args, **kwargs)
 
-    # def phones(self):
-    #     return Phone.objects.filter(member=self).all()
+    # =========================
+    # HELPERS DE DOMÍNIO
+    # =========================
 
-    # def location(self):
-    #     return Address.objects.filter(member=self).first()
+    def get_full_name(self):
+        """Convenção do Django: nome completo do usuário."""
+        return self.name
+
+    def get_short_name(self):
+        return self.name.split(" ")[0] if self.name else self.name
+
+    @property
+    def role_label(self):
+        """Rótulo legível da função do membro no carmelo."""
+        return self.get_roles_display()
+
+    @property
+    def is_manager(self):
+        return self.roles == "MN"
+
+    @property
+    def is_finance(self):
+        return self.roles == "FN"
+
+    @property
+    def has_address(self):
+        return Address.objects.filter(member=self).exists()
+
+    @property
+    def address_or_none(self):
+        """Endereço do membro ou None (evita exceção de OneToOne)."""
+        try:
+            return self.address
+        except Address.DoesNotExist:
+            return None
+
+    @property
+    def full_address(self):
+        address = self.address_or_none
+        return address if address else None

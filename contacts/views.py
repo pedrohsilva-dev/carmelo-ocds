@@ -1,3 +1,4 @@
+from base.utils import paginate
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
@@ -14,16 +15,21 @@ from rolepermissions.decorators import has_permission_decorator
 # ==========================================================
 
 
-def get_contact_context(member):
+def get_contact_context(member, request=None):
     """
     Contexto compartilhado entre todos os componentes de contato.
+    Telefones são paginados para telas grandes.
     """
 
     address = getattr(member, "address", None)
+    phones = member.phones.all().order_by("name", "number")
+
+    if request:
+        phones = paginate(phones, request, per_page=12, page_param="phone_page")
 
     return {
         "member": member,
-        "phones": member.phones.all().order_by("name", "number"),
+        "phones": phones,
         "address": address,
         "form_phone": PhoneForm(),
         "form_address": AddressForm(instance=address),
@@ -42,7 +48,7 @@ def contacts(request, member_slug):
     return render(
         request,
         "contacts/index.html",
-        get_contact_context(member),
+        get_contact_context(member, request),
     )
 
 
@@ -96,7 +102,7 @@ def register_phone(request, member_slug):
     return render(
         request,
         "contacts/phones/index.html",
-        get_contact_context(member),
+        get_contact_context(member, request),
     )
 
 
@@ -123,7 +129,7 @@ def delete_phone(request, id):
     return render(
         request,
         "contacts/phones/index.html",
-        get_contact_context(member),
+        get_contact_context(member, request),
     )
 
 
@@ -167,7 +173,7 @@ def register_address(request, member_slug):
     return render(
         request,
         "contacts/address/index.html",
-        get_contact_context(member),
+        get_contact_context(member, request),
     )
 
 
@@ -206,7 +212,7 @@ def edit_address(request, member_slug):
     return render(
         request,
         "contacts/address/index.html",
-        get_contact_context(member),
+        get_contact_context(member, request),
     )
 
 
@@ -228,5 +234,5 @@ def delete_address(request, member_slug):
     return render(
         request,
         "contacts/address/index.html",
-        get_contact_context(member),
+        get_contact_context(member, request),
     )

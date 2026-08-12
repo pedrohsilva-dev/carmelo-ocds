@@ -1,173 +1,74 @@
 {% extends 'partials/base.html' %}
 {% load static %}
 
-{% comment %}
-{% block
-title %} Cadastro de Membro {% endblock %} {% block title_navbar %} Cadastro de
-Membros {% endblock %} {% endcomment %} {% comment %} {% block list_navbar %}
-<li>
-  <a
-    href="{% url 'list_member' %}"
-    class="block py-2 px-3 text-zinc-200 bg-[#3D1A00]"
-    aria-current="page"
-    >Listar Membros</a
-  >
-</li>
-{% endblock %}
-{% endcomment %}
+{% block title %}Atualizar Membro{% endblock %}
 
 {% block content %}
-<div class="container d-flex justify-content-center my-3">
-
-  <div class="card card-carmel" style="max-width: 600px;">
+<div class="container d-flex justify-content-center my-4">
+  <div class="card card-carmel w-100" style="max-width: 680px;">
     <div class="card-header card-header-color">
-      <h1 class="h3">Atualizar de Membro</h1>
+      <h1 class="h4 mb-0"><i class="bi bi-pencil-square me-2"></i>Atualizar Membro</h1>
     </div>
-    <form method="POST" class="form card-body card-body-color" action="{% url 'update_member' id=id %}">
+
+    <form method="POST" class="card-body card-body-color" action="{% url 'update_member' id=id %}" x-data="{ isUpdatePassword: {% if form.errors.password or form.errors.password2 %}true{% else %}false{% endif %} }">
       {% csrf_token %}
-      <div class="container" >
-       <div class="row">
-          <div class="col-6 flex flex-col text-white">
-            <label for="">Nome</label>
-            {{form.name}}
-            {% for error in form.errors.name %}
-                <div
-                    class="badge bg-danger px-3 py-2 my-1"
-                >
-                    {{error}}
-                </div>
 
-            {% endfor %}
-
-          </div>
-          <div class="col-6 flex flex-col text-white">
-            <label for="">Email</label>
-            {{form.email}}
-
-             {% for error in form.errors.email %}
-                <div
-                    class="badge bg-danger px-3 py-2 my-1"
-                >
-                    {{error}}
-                </div>
-
-            {% endfor %}
-          </div>
-       </div>
-       <div class="row" x-data="{isUpdatePassword:
-
-       {% if form.errors.password or form.errors.password2 %}
-       true
-       {% else %}
-       false
-       {% endif %}
-       }">
-        <div class="col-12 my-1">
-
-            <a class="btn btn-primary text-white" type="button" x-show="!isUpdatePassword" @click="isUpdatePassword = true">Trocar a senha?</a>
-            <a class="btn btn-primary text-white" type="button" x-show="isUpdatePassword" @click="isUpdatePassword = false">Não quero trocar mais</a>
-
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          {% for error in form.non_field_errors %}<div>{{ error }}</div>{% endfor %}
         </div>
-        <template x-if="
+      {% endif %}
 
-        isUpdatePassword
-
-
-        " x-cloak>
-          <div class="col-12">
-            <div class="row">
-                <div class="col-12 col-md-6 flex flex-col text-white">
-                <label for="password_id">Senha</label>
-                {{form.password}}
-                {% for error in form.errors.password %}
-                    <div
-                        class="badge bg-danger px-3 py-2 my-1"
-                    >
-                        {{error}}
-                    </div>
-
-                {% endfor %}
-            </div>
-            <div class=" col-12 col-md-6 flex flex-col text-white">
-                <label for="password2_id">Senha Novamente</label>
-                {{form.password2}}
-                {% for error in form.errors.password2 %}
-                    <div
-                        class="badge bg-danger px-3 py-2 my-1"
-                    >
-                        {{error}}
-                    </div>
-
-                {% endfor %}
-            </div>
-            </div>
-          </div>
-       </template>
-       </div>
-       <div class="row">
-          <div class="col-12 flex flex-col">
-            <div class="flex flex-col text-white">
-            <label for="">Comunidade</label>
-            {{form.church}}
-            {% for error in form.errors.church %}
-                <div
-                    class="badge bg-danger px-3 py-2 my-1"
-                >
-                    {{error}}
-                </div>
-
-            {% endfor %}
-            </div>
-          </div>
-       </div>
       <div class="row">
+        {% include 'partials/components/form_field.html' with field=form.name col="col-md-6" %}
+        {% include 'partials/components/form_field.html' with field=form.email col="col-md-6" %}
+      </div>
 
-        <div class="col-6 flex flex-row justify-between gap-5">
-          <div class="flex flex-col text-white">
-            <label for="">Tipo de Membro</label>
-            {{form.roles}}
-            {% for error in form.errors.roles %}
-
-
-                <div
-                    class="badge bg-danger px-3 py-2 my-1"
-                >
-                    {{error}}
-                </div>
-
-            {% endfor %}
-          </div>
-        </div>
-        <div class="col-6 flex flex-row justify-between gap-5">
-          <div class="flex flex-col text-white">
-            <label for="">Data de Entrada</label>
-
-            <input class="form-control" type="date" name="entry_date" id="entry_date_id" value="{{form.entry_date.value|date:'Y-m-d'}}">
-            {% for error in form.errors.entry_date %}
-                <div
-                    class="alert alert-danger"
-                    role="alert"
-                >
-                    {{error}}
-                </div>
-
-            {% endfor %}
-          </div>
+      <div class="row mb-1">
+        <div class="col-12">
+          <button type="button" class="btn btn-primary btn-sm" @click="isUpdatePassword = !isUpdatePassword">
+            <i class="bi bi-key me-1"></i>
+            <span x-show="!isUpdatePassword">Trocar a senha?</span>
+            <span x-show="isUpdatePassword">Não quero trocar mais</span>
+          </button>
         </div>
       </div>
 
+      <template x-if="isUpdatePassword" x-cloak>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="id_password" class="form-label text-carmel">Nova Senha</label>
+            {{ form.password }}
+            {% for err in form.errors.password %}<div class="text-danger small"><i class="bi bi-exclamation-circle me-1"></i>{{ err }}</div>{% endfor %}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="id_password2" class="form-label text-carmel">Confirmar Nova Senha</label>
+            {{ form.password2 }}
+            {% for err in form.errors.password2 %}<div class="text-danger small"><i class="bi bi-exclamation-circle me-1"></i>{{ err }}</div>{% endfor %}
+          </div>
+        </div>
+      </template>
 
-        <div class="d-flex justify-content-end mt-4 mb-1">
-          <button
-            class="btn btn-success px-3 py-2"
-            type="submit"
-          >
-            Atualizar Membro
+      <div class="row">
+        {% include 'partials/components/form_field.html' with field=form.church col="col-12" %}
+        {% include 'partials/components/form_field.html' with field=form.roles col="col-md-6" %}
+        <div class="col-md-6 mb-3">
+          <label for="entry_date_id" class="form-label text-carmel">Data de Entrada <span class="text-danger">*</span></label>
+          <input class="form-control" type="date" name="entry_date" id="entry_date_id" value="{{ form.entry_date.value|date:'Y-m-d' }}">
+          {% for err in form.errors.entry_date %}<div class="text-danger small"><i class="bi bi-exclamation-circle me-1"></i>{{ err }}</div>{% endfor %}
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-3">
+        <span class="text-carmel-muted small">Última atualização: {{ member.updated_at|date:"d/m/Y H:i" }}</span>
+        <div>
+          <a href="{% url 'list_member' %}" class="btn btn-secondary me-2">Cancelar</a>
+          <button class="btn btn-item px-4" type="submit">
+            <i class="bi bi-check-circle me-2"></i>Atualizar Membro
           </button>
         </div>
       </div>
     </form>
   </div>
 </div>
-
 {% endblock %}

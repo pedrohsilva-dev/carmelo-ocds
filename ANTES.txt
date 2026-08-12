@@ -1,0 +1,20 @@
+ANTES — O que eu achei do sistema antigo e do meu nível
+=======================================================
+
+Quando revisitei o projeto para esta avaliação, encontrei um sistema com uma
+identidade visual realmente bonita e autoral — o tema carmelita de ouro sobre
+mármore, o glassmorphism, os toasts, a sidebar e a animação do login mostram
+alguém com sensibilidade de design acima da média e com uma boa compreensão de
+front-end moderno (Bootstrap, Alpine.js, HTMX e até GSAP); porém, ao mesmo
+tempo, o projeto ainda não estava terminado, ainda estava em fase de ajustes, e
+isso ficava evidente nos detalhes: o backend de autenticação existia mas nunca
+foi registrado no settings (o login "funcionava" por acaso via USERNAME_FIELD),
+páginas de erro retornavam status 200, havia views com variáveis que estouravam
+se chamadas por GET, uma tela de edição do carmelo que apontava para um template
+que não existia, permissões com nomes divergentes que tornavam uma tela
+inacessível, código morto e quebrado em services, o requirements.txt corrompido
+em UTF-16, e zero testes automatizados — o que, na minha opinião, indica um
+desenvolvedor com muito potencial e bom gosto, mas ainda consolidando o
+backend: o código funciona nos caminhos felizes que ele mesmo percorria, mas
+sem as validações, as proteções e a organização que separam uma demo de um
+sistema de verdade, e é exatamente isso que esta revisão veio consolidar.

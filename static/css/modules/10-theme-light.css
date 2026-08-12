@@ -1,17 +1,18 @@
 /* ==========================================================
-   MODULE 10: MODO CLARO (PERGAMINHO CARMELITANO / SÉPIA QUENTE)
-   Garantia Total de Legibilidade e Contraste Sem Texto Invisível
+   MODULE 10: MODO CLARO (PERGAMINHO CLARO / NEUTRO QUENTE)
+   Legibilidade máxima, tons sutis e profissionais
    ========================================================== */
 
 [data-bs-theme="light"] body {
     background:
-        radial-gradient(circle at top right, rgba(150, 111, 44, .10), transparent 35%),
-        radial-gradient(circle at bottom left, rgba(100, 65, 30, .08), transparent 30%),
-        linear-gradient(160deg, #e9dcc8, #e0d0b8, #d6c5a6);
-    color: #241610 !important;
+        radial-gradient(circle at top right, rgba(150, 113, 58, .08), transparent 38%),
+        radial-gradient(circle at bottom left, rgba(90, 68, 40, .06), transparent 32%),
+        linear-gradient(160deg, #f9f5ee, #f4eee3, #eee5d6);
+    color: var(--carmel-white);
 }
 
-[data-bs-theme="light"] body::before { opacity: .035; }
+[data-bs-theme="light"] body::before { opacity: .025; }
+[data-bs-theme="light"] body::after { opacity: .5; }
 
 /* Tipografia Geral no Modo Claro */
 [data-bs-theme="light"] h1,
@@ -20,20 +21,45 @@
 [data-bs-theme="light"] h4,
 [data-bs-theme="light"] h5,
 [data-bs-theme="light"] h6,
-[data-bs-theme="light"] p,
-[data-bs-theme="light"] span,
-[data-bs-theme="light"] label,
-[data-bs-theme="light"] .form-label,
 [data-bs-theme="light"] .text-carmel {
-    color: #241610 !important;
+    color: var(--carmel-white) !important;
+}
+
+[data-bs-theme="light"] .text-carmel-gold {
+    color: var(--carmel-gold) !important;
 }
 
 [data-bs-theme="light"] .text-muted,
 [data-bs-theme="light"] .text-secondary,
 [data-bs-theme="light"] .text-body-secondary,
 [data-bs-theme="light"] small,
-[data-bs-theme="light"] .small {
-    color: #523b2e !important;
+[data-bs-theme="light"] .small,
+[data-bs-theme="light"] .text-carmel-muted {
+    color: var(--carmel-muted) !important;
+}
+
+/* "text-white" adaptável: em claro vira o marrom escuro legível
+   (aplicado apenas dentro de superfícies que mudam de cor no claro) */
+[data-bs-theme="light"] .bg-carmel-body .text-white,
+[data-bs-theme="light"] .bg-carmel-body .text-light,
+[data-bs-theme="light"] .card .text-white,
+[data-bs-theme="light"] .card-carmel .text-white,
+[data-bs-theme="light"] .card-member .text-white,
+[data-bs-theme="light"] .bg-nav-carmel .text-white,
+[data-bs-theme="light"] .bg-nav-carmel .text-light,
+[data-bs-theme="light"] .bg-nav-carmel .link-light {
+    color: var(--carmel-white) !important;
+}
+
+[data-bs-theme="light"] .text-white-50 {
+    color: var(--carmel-muted) !important;
+}
+
+/* Toasts coloridos: texto branco sempre (bg-success/bg-danger/bg-primary) */
+[data-bs-theme="light"] .toast.bg-success,
+[data-bs-theme="light"] .toast.bg-danger,
+[data-bs-theme="light"] .toast.bg-primary {
+    color: #fff !important;
 }
 
 /* Cards & Containers em Modo Claro */
@@ -47,51 +73,106 @@
     -webkit-backdrop-filter: var(--glass-blur);
     border: 1px solid var(--glass-border);
     box-shadow: var(--glass-shadow);
-    color: #241610 !important;
+    color: var(--carmel-white);
 }
 
 [data-bs-theme="light"] .card-header {
-    background: rgba(255, 251, 244, 0.85);
+    background: rgba(255, 252, 246, .82);
     border-bottom: 1px solid var(--border-color-strong);
-    color: #241610;
+    color: var(--carmel-white);
 }
 
 [data-bs-theme="light"] .card-footer {
-    background: rgba(111, 82, 34, .07);
+    background: rgba(150, 113, 58, .06);
     border-top: 1px solid var(--border-color-strong);
-    color: #523b2e;
+    color: var(--carmel-muted);
 }
 
 [data-bs-theme="light"] .card-body-color {
-    background: rgba(239, 228, 211, .94) !important;
-    color: #241610 !important;
+    background: rgba(253, 250, 245, .96) !important;
+    color: var(--carmel-white) !important;
 }
 
 [data-bs-theme="light"] .bg-carmel-body {
     background:
-        radial-gradient(circle at top right, rgba(150, 111, 44, .12), transparent 50%),
-        linear-gradient(155deg, rgba(239, 228, 211, .96), rgba(228, 214, 194, .98)) !important;
-    color: #241610 !important;
+        linear-gradient(155deg, rgba(255, 253, 249, .96), rgba(246, 240, 230, .98)) !important;
+    color: var(--carmel-white) !important;
     border: 1px solid var(--border-color-strong);
-    box-shadow: inset 0 0 0 1px rgba(150, 111, 44, .25), var(--shadow-sm);
+    box-shadow: inset 0 0 0 1px rgba(150, 113, 58, .14), var(--shadow-sm);
 }
 
 [data-bs-theme="light"] .bg-carmel-header {
     background: var(--gold-gradient) !important;
-    color: #140d06 !important;
-    border-bottom: 1px solid var(--border-color-strong);
-    box-shadow: 0 4px 12px rgba(70, 43, 31, .15);
+    color: #2b1b0d !important;
+    border-bottom: 1px solid rgba(90, 68, 40, .25);
+    box-shadow: 0 4px 12px rgba(60, 45, 30, .12);
+}
+
+/* Modal & Card headers dourados no modo claro: texto escuro legível */
+[data-bs-theme="light"] .modal-header,
+[data-bs-theme="light"] .card-header-color {
+    background: var(--gold-gradient) !important;
+    color: #2b1b0d !important;
+    border-bottom: 1px solid rgba(90, 68, 40, .22);
+}
+
+[data-bs-theme="light"] .modal-header .modal-title,
+[data-bs-theme="light"] .modal-title {
+    color: #2b1b0d !important;
+}
+
+/* Texto que os templates forçam com .text-white dentro de headers dourados
+   precisa virar marrom escuro no modo claro (senão fica ilegível) */
+[data-bs-theme="light"] .bg-carmel-header .text-white,
+[data-bs-theme="light"] .modal-header .text-white,
+[data-bs-theme="light"] .bg-carmel-header .close,
+[data-bs-theme="light"] .modal-header .close {
+    color: #2b1b0d !important;
+}
+
+[data-bs-theme="light"] .modal-header .btn-close {
+    filter: invert(0) brightness(0.25);
+}
+
+/* Botões dourados (btn-item / btn-primary / btn-carmel) no claro:
+   gradiente mais claro e sombra suave para respeitar o tema */
+[data-bs-theme="light"] .btn-item,
+[data-bs-theme="light"] .btn-carmel,
+[data-bs-theme="light"] .btn-gold,
+[data-bs-theme="light"] .btn-primary {
+    background: var(--gold-gradient);
+    background-size: 200% 200%;
+    background-position: 0% 50%;
+    color: #2b1b0d !important;
+    border: 1px solid rgba(120, 88, 40, .40);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .55),
+        0 4px 12px rgba(100, 70, 30, .14);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, .35);
+}
+
+[data-bs-theme="light"] .btn-item:hover,
+[data-bs-theme="light"] .btn-carmel:hover,
+[data-bs-theme="light"] .btn-gold:hover,
+[data-bs-theme="light"] .btn-primary:hover {
+    color: #24170b !important;
+    border-color: rgba(120, 88, 40, .60);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .65),
+        0 8px 18px rgba(100, 70, 30, .18),
+        0 6px 18px rgba(150, 113, 58, .18);
 }
 
 /* Navbar & Sidebar em Modo Claro */
 [data-bs-theme="light"] .bg-nav-carmel {
-    background: linear-gradient(to bottom, rgba(239, 228, 211, .98), rgba(228, 214, 194, .92));
+    background:
+        linear-gradient(to bottom, rgba(250, 247, 241, .97), rgba(242, 235, 224, .94));
     backdrop-filter: blur(14px) saturate(140%);
     -webkit-backdrop-filter: blur(14px) saturate(140%);
     background-image: url('/static/renda_dourada.png');
     background-size: 180px 25px;
     background-repeat: repeat-x;
-    box-shadow: 0 1px 0 var(--border-color-strong), 0 8px 20px rgba(70, 43, 31, .12);
+    box-shadow: 0 1px 0 var(--border-color-strong), 0 8px 20px rgba(60, 45, 30, .10);
 }
 
 [data-bs-theme="light"] .bg-nav-carmel .nav-link,
@@ -101,22 +182,23 @@
 [data-bs-theme="light"] .bg-nav-carmel i,
 [data-bs-theme="light"] .sidebar-link,
 [data-bs-theme="light"] .sidebar a,
-[data-bs-theme="light"] .sidebar span,
-[data-bs-theme="light"] .text-white,
-[data-bs-theme="light"] .text-light,
-[data-bs-theme="light"] .text-white-50,
-[data-bs-theme="light"] .link-light {
-    color: #241610 !important;
+[data-bs-theme="light"] .sidebar span {
+    color: var(--carmel-white) !important;
 }
 
 [data-bs-theme="light"] .bg-nav-carmel .nav-link:hover,
 [data-bs-theme="light"] .bg-nav-carmel a:hover,
 [data-bs-theme="light"] .sidebar-link:hover {
     color: var(--carmel-gold-dark) !important;
+    background: rgba(150, 113, 58, .10) !important;
+}
+
+[data-bs-theme="light"] .navbar .nav-link {
+    color: var(--carmel-white) !important;
 }
 
 [data-bs-theme="light"] .sidebar-overlay {
-    background: rgba(40, 30, 15, .32);
+    background: rgba(40, 30, 15, .28);
 }
 
 /* Formulários & Inputs em Modo Claro */
@@ -130,9 +212,10 @@
 [data-bs-theme="light"] input[type="datetime-local"],
 [data-bs-theme="light"] textarea,
 [data-bs-theme="light"] select {
-    background: rgba(233, 220, 201, .85) !important;
-    border: 1px solid rgba(150, 111, 44, .42) !important;
-    color: #241610 !important;
+    background: #fff !important;
+    border: 1px solid rgba(90, 68, 40, .22) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .8);
+    color: var(--carmel-white) !important;
 }
 
 [data-bs-theme="light"] .form-control:focus,
@@ -140,8 +223,8 @@
 [data-bs-theme="light"] input:focus,
 [data-bs-theme="light"] textarea:focus,
 [data-bs-theme="light"] select:focus {
-    border-color: #966f2c !important;
-    box-shadow: inset 0 1px 0 var(--glass-highlight), 0 0 0 4px rgba(150, 112, 46, .16) !important;
+    border-color: var(--carmel-gold) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9), 0 0 0 4px rgba(150, 113, 58, .14) !important;
 }
 
 [data-bs-theme="light"] input::placeholder,
@@ -149,18 +232,18 @@
 [data-bs-theme="light"] select::placeholder,
 [data-bs-theme="light"] .form-control::placeholder,
 [data-bs-theme="light"] .form-select::placeholder {
-    color: rgba(100, 65, 30, .65) !important;
+    color: rgba(90, 68, 40, .55) !important;
     font-style: italic;
 }
 
 [data-bs-theme="light"] .input-group-text {
-    background: var(--carmel-bg-soft);
+    background: #f4eee3;
     border: 1px solid var(--border-color-strong);
-    color: var(--carmel-gold);
+    color: var(--carmel-gold-dark);
 }
 
 [data-bs-theme="light"] .form-check-input {
-    background-color: rgba(255, 255, 255, .85);
+    background-color: #fff;
     border: 1px solid var(--border-color-strong);
 }
 
@@ -168,12 +251,12 @@
 [data-bs-theme="light"] .modal-content {
     background: var(--carmel-bg-soft);
     border: 1px solid var(--border-color-strong);
-    color: #241610 !important;
+    color: var(--carmel-white);
 }
 
 [data-bs-theme="light"] .modal-body {
     background: var(--carmel-bg);
-    color: #241610 !important;
+    color: var(--carmel-white);
 }
 
 [data-bs-theme="light"] .modal-footer {
@@ -199,19 +282,19 @@
 
 [data-bs-theme="light"] .table > tbody > tr,
 [data-bs-theme="light"] .table-carmel > tbody > tr {
-    background: rgba(253, 249, 242, .65);
-    color: #241610;
+    background: rgba(255, 253, 249, .55);
+    color: var(--carmel-white);
 }
 
 [data-bs-theme="light"] .table-hover > tbody > tr:hover > *,
 [data-bs-theme="light"] .table-carmel > tbody > tr:hover {
-    background: rgba(158, 117, 48, .12) !important;
-    color: #241610;
+    background: rgba(150, 113, 58, .10) !important;
+    color: var(--carmel-white);
 }
 
 [data-bs-theme="light"] .list-group-item {
-    background: rgba(233, 220, 201, .88);
-    color: #241610;
+    background: rgba(253, 250, 245, .9);
+    color: var(--carmel-white);
     border: 1px solid var(--border-color-strong);
 }
 
@@ -224,13 +307,13 @@
 [data-bs-theme="light"] .list-group-item p,
 [data-bs-theme="light"] .list-group-item span,
 [data-bs-theme="light"] .list-group-item strong {
-    color: #241610 !important;
+    color: var(--carmel-white) !important;
 }
 
 [data-bs-theme="light"] .list-group-item small,
 [data-bs-theme="light"] .list-group-item .text-muted,
 [data-bs-theme="light"] .list-group-item .text-secondary {
-    color: #523b2e !important;
+    color: var(--carmel-muted) !important;
 }
 
 /* Componentes em Modo Claro */
@@ -240,34 +323,34 @@
 }
 
 [data-bs-theme="light"] .dropdown-item {
-    color: #241610;
+    color: var(--carmel-white);
 }
 
 [data-bs-theme="light"] .accordion-button {
     background: rgba(255, 255, 255, .85);
-    color: #241610;
+    color: var(--carmel-white);
 }
 
 [data-bs-theme="light"] .accordion-button:not(.collapsed) {
     background: rgba(169, 128, 63, .14);
-    color: #241610;
+    color: var(--carmel-white);
 }
 
 [data-bs-theme="light"] .popover { background: #fff; }
-[data-bs-theme="light"] .offcanvas { background: #fdf9f0; }
+[data-bs-theme="light"] .offcanvas { background: #fdfaf5; }
 
 [data-bs-theme="light"] .toast {
     background: var(--glass-bg);
     backdrop-filter: var(--glass-blur-soft);
     -webkit-backdrop-filter: var(--glass-blur-soft);
-    color: #241610;
+    color: var(--carmel-white);
     box-shadow: var(--glass-shadow);
 }
 
 /* Alertas Carmel em Modo Claro */
 [data-bs-theme="light"] .alert-carmel,
 [data-bs-theme="light"] .alert-gold {
-    background: rgba(253, 249, 242, .92);
+    background: rgba(253, 250, 245, .94);
     border: 1px solid var(--carmel-gold);
     color: var(--carmel-brown-dark);
 }
@@ -282,18 +365,18 @@
 [data-bs-theme="light"] .bg-body-secondary,
 [data-bs-theme="light"] .bg-body-highlight {
     background-color: var(--carmel-bg-soft) !important;
-    color: #241610 !important;
+    color: var(--carmel-white) !important;
     border-color: var(--border-color-strong) !important;
 }
 
 /* Rótulos dos Gráficos em Modo Claro */
 [data-bs-theme="light"] canvas {
-    filter: drop-shadow(0 4px 12px rgba(70, 43, 31, 0.16));
+    filter: drop-shadow(0 4px 12px rgba(60, 45, 30, 0.12));
 }
 
 [data-bs-theme="light"] #chartjs-tooltip,
 [data-bs-theme="light"] .chartjs-tooltip {
     background: var(--carmel-bg-soft) !important;
-    color: #241610 !important;
+    color: var(--carmel-white) !important;
     border: 1px solid var(--border-color-strong) !important;
 }

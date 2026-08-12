@@ -1,5 +1,6 @@
 {% load static %}
 {% load permission_tags %}
+{% load nav_tags %}
 <!doctype html>
 <html lang="pt-BR" data-bs-theme="dark">
   <head>
@@ -26,11 +27,19 @@
         const savedTheme = localStorage.getItem(themeKey);
         const activeTheme = savedTheme || defaultTheme;
 
+        const updateThemeIcons = () => {
+          const theme = document.documentElement.getAttribute('data-bs-theme');
+          document.querySelectorAll('[data-theme-toggle-icon]').forEach((el) => {
+            el.className = theme === 'dark' ? 'bi bi-moon-stars' : 'bi bi-sun';
+          });
+        };
+
         const setTheme = (theme) => {
           document.documentElement.setAttribute('data-bs-theme', theme);
           document.documentElement.style.colorScheme = theme;
           document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'dark' ? '#0B0E13' : '#fff8ef');
           localStorage.setItem(themeKey, theme);
+          updateThemeIcons();
         };
 
         window.toggleTheme = () => {
@@ -39,6 +48,10 @@
         };
 
         setTheme(activeTheme);
+
+        // O script roda no <head>, antes do body existir: sincroniza os ícones
+        // assim que o DOM estiver pronto (garante ícone correto no 1º load).
+        document.addEventListener('DOMContentLoaded', updateThemeIcons);
       })();
     </script>
 
@@ -72,87 +85,78 @@
      HTMX
 ===================================================== -->
     <script src="{% static 'js/htmx.min.js' %}" defer></script>
+    <script>
+      // =====================================================
+      // CSRF para requisições HTMX (hx-post, hx-put, hx-delete...)
+      // 1) Lê o token do input csrfmiddlewaretoken da página;
+      // 2) Fallback: lê o cookie csrftoken do Django — funciona mesmo
+      //    quando o input não está renderizado (parciais HTMX, cache
+      //    ou páginas que não usam {% csrf_token %} em forms).
+      // Sem isso o Django responde 403 em qualquer hx-post.
+      //
+      // ATENÇÃO: este script fica no <head>, onde document.body ainda é
+      // null. `defer` em script inline é ignorado pelo navegador, então o
+      // registro do listener precisa esperar o DOMContentLoaded — senão o
+      // handler nunca é anexado (e todo hx-post fora de <form> dá 403).
+      // =====================================================
+      (function () {
+        function getCookie(name) {
+          let cookieValue = null;
+          if (document.cookie && document.cookie !== '') {
+            document.cookie.split(';').some((c) => {
+              const cookie = c.trim();
+              if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(
+                  cookie.substring(name.length + 1)
+                );
+                return true;
+              }
+              return false;
+            });
+          }
+          return cookieValue;
+        }
+
+        function attachHandler() {
+          document.body.addEventListener('htmx:configRequest', (e) => {
+            const method = String(e.detail.verb || '').toUpperCase();
+            if (!['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) return;
+
+            let token = null;
+            const input = document.querySelector('[name=csrfmiddlewaretoken]');
+            if (input && input.value) {
+              token = input.value;
+            }
+            if (!token) {
+              token = getCookie('csrftoken');
+            }
+            if (token) {
+              e.detail.headers['X-CSRFToken'] = token;
+            }
+          });
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', attachHandler);
+        } else {
+          attachHandler();
+        }
+      })();
+    </script>
     <!-- =====================================================
      EXTRA HEAD
 ===================================================== -->
     {% block extra_head %} {% endblock extra_head %}
-    {% if user.is_authenticated %}
-    <style>
-
-
-
-.sidebar{
-    position:fixed;
-    inset:0;
-    width:100vw;
-    height:100dvh;
-    z-index:1055;
-
-    overflow-y:auto;
-    -webkit-overflow-scrolling:touch;
-
-    transform:translateX(-100%);
-    transition:transform .30s ease;
-
-    overscroll-behavior:contain;
-}
-
-.sidebar.show{
-    transform:translateX(0);
-}
-
-.sidebar-header{
-    min-height:70px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:15px;
-}
-
-.sidebar-content{
-    padding:15px;
-}
-
-.sidebar-link{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    text-decoration:none;
-    padding:14px;
-    border-radius:10px;
-    transition:.2s;
-}
-
-body.menu-open{
-    overflow:hidden;
-    touch-action:none;
-}
-
-@media (min-width:992px){
-
-    .sidebar{
-        width:260px;
-        height:100vh;
-        inset:0 auto 0 0;
-        transform:translateX(0);
-    }
-
-    .sidebar-overlay{
-        display:none!important;
-    }
-
-    main{
-        margin-left:260px;
-    }
-
-}
-
-
-    </style>
-
-    {% endif %}
   </head>
-  <body>
+  <!-- Marca o body quando houver sidebar (usuário logado): o CSS usa essa
+       classe para aplicar a margem esquerda da sidebar apenas nessas páginas.
+       Páginas públicas (login/home) ficam centralizadas sem margem extra. -->
+  <body class="{% if user.is_authenticated %}is-authenticated{% endif %}">
+    <!-- Token CSRF global: garante que o handler HTMX (htmx:configRequest)
+         sempre encontre um token na página para requisições hx-post
+         (ex.: deletar contribuições/membros). Fica invisível ao usuário. -->
+    {% csrf_token %}
+
     <!-- =====================================================
      NAVBAR
 ===================================================== -->
@@ -195,11 +199,79 @@ body.menu-open{
                     alt="OCDS">
                </div>
 
-                <span class="text-carmel fw-bold fs-4 pt-2 pl-2">
+                <span class="text-carmel fw-bold fs-4 pt-2 ps-2">
                     OCDS
                 </span>
 
             </a>
+
+            <!-- Botão do menu (mobile) -->
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarLanding"
+                aria-controls="navbarLanding"
+                aria-expanded="false"
+                aria-label="Abrir menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div
+                class="collapse navbar-collapse"
+                id="navbarLanding">
+
+                <!-- Links de âncora — só aparecem na landing page -->
+                {% if request.resolver_match.url_name == 'home' %}
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-1">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#hp-inicio">
+                            <i class="bi bi-house-door me-1"></i>Início
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#hp-carmelo">O Carmelo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#hp-historia">História</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#hp-espiritualidade">Espiritualidade</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#hp-formacao">Formação</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#hp-contato">Contato</a>
+                    </li>
+                </ul>
+                {% endif %}
+
+                <div class="d-flex align-items-center gap-2 ms-lg-auto">
+
+                    <button
+                        type="button"
+                        class="btn btn-sm btn-outline-carmel d-flex align-items-center gap-2"
+                        onclick="toggleTheme()"
+                        aria-label="Alternar tema">
+                        <i class="bi bi-moon-stars" data-theme-toggle-icon></i>
+                        <span class="d-none d-sm-inline">Tema</span>
+                    </button>
+
+                    <!-- Na tela de login o botão Entrar não faz sentido (já se
+                         está na página de login) — fica visível nas demais. -->
+                    {% if request.resolver_match.url_name != 'login' %}
+                    <a
+                        href="{% url 'login' %}"
+                        class="btn btn-item px-4 d-flex align-items-center gap-2">
+                        <i class="bi bi-box-arrow-in-right"></i>
+                        Entrar
+                    </a>
+                    {% endif %}
+
+                </div>
+
+            </div>
 
         </div>
 
@@ -217,7 +289,7 @@ body.menu-open{
 
     <nav class="navbar bg-nav-carmel shadow-sm d-lg-none">
 
-        <div class="container-fluid">
+        <div class="container-fluid justify-content-between">
 
             <button
                 type="button"
@@ -228,6 +300,17 @@ body.menu-open{
                 <i class="bi bi-list text-carmel fs-2"></i>
 
             </button>
+
+            <a href="/" class="navbar-brand d-flex align-items-center mb-0">
+                <img
+                    src="{% static 'assets/brand_gold.png' %}"
+                    width="34"
+                    height="34"
+                    alt="OCDS">
+                <span class="text-carmel fw-bold ms-2 fs-5">OCDS</span>
+            </a>
+
+            <span class="d-inline-block" style="width: 44px;"></span>
 
         </div>
 
@@ -283,13 +366,30 @@ body.menu-open{
 
         <div class="sidebar-content">
 
+            <div class="d-flex align-items-center gap-2 mb-3 px-2">
+                <div
+                    class="rounded-circle bg-carmel-header d-flex align-items-center justify-content-center text-white fw-bold"
+                    style="width: 42px; height: 42px; flex-shrink: 0;">
+                    {{ user.get_short_name|slice:":1"|upper }}
+                </div>
+                <div class="text-truncate">
+                    <div class="fw-bold text-carmel text-truncate">{{ user.name }}</div>
+                    <small class="text-carmel-muted d-block">{{ user.role_label }}</small>
+                    {% if user.carmel %}
+                    <small class="text-carmel-gold d-block text-truncate mt-2">
+                        <i class="bi bi-bank2 me-1"></i>{{ user.carmel.name }}
+                    </small>
+                    {% endif %}
+                </div>
+            </div>
+
             <ul class="nav flex-column gap-2">
 
                 {% if user|can:'list_members' %}
                 <li>
 
                     <a
-                        class="sidebar-link"
+                        class="sidebar-link {% active_on 'list_member' 'list_filter_members' 'register_member' 'update_member' 'show_member' 'transfer_member' 'contribution_member' 'register_contribution' 'edit_contribution' 'update_contribution' 'delete_contribution' %}"
                         href="{% url 'list_member' %}"
                         @click="close()">
 
@@ -305,7 +405,7 @@ body.menu-open{
                 <li>
 
                     <a
-                        class="sidebar-link"
+                        class="sidebar-link {% active_on 'votes_registration' 'register_votes_registration' 'edit_vote_registration' 'update_vote_registration' 'delete_votes_registration' 'votes_members' 'vote_member' 'register_vote' 'edit_vote_member' 'update_vote_member' 'delete_vote' %}"
                         href="{% url 'votes_registration' %}"
                         @click="close()">
 
@@ -321,7 +421,7 @@ body.menu-open{
                 <li>
 
                     <a
-                        class="sidebar-link"
+                        class="sidebar-link {% active_on 'carmel_profile' 'edit_carmel' %}"
                         href="{% url 'carmel_profile' %}"
                         @click="close()">
 
@@ -333,12 +433,44 @@ body.menu-open{
                 </li>
                 {% endif %}
 
+                {% if user.is_staff or user.is_superuser %}
+                <li>
+
+                    <a
+                        class="sidebar-link {% active_on 'create_carmel' %}"
+                        href="{% url 'create_carmel' %}"
+                        @click="close()">
+
+                        <i class="bi bi-bank2"></i>
+                        <span>Criar Carmelo</span>
+
+                    </a>
+
+                </li>
+                {% endif %}
+
+                {% if user.is_staff or user|can:'see_total_money' %}
+                <li>
+
+                    <a
+                        class="sidebar-link {% active_on 'financial_report' %}"
+                        href="{% url 'financial_report' %}"
+                        @click="close()">
+
+                        <i class="bi bi-graph-up-arrow"></i>
+                        <span>Relatório Financeiro</span>
+
+                    </a>
+
+                </li>
+                {% endif %}
+
                 <hr>
 
                 <li>
 
                     <a
-                        class="sidebar-link"
+                        class="sidebar-link {% active_on 'profile' %}"
                         href="{% url 'profile' %}"
                         @click="close()">
 
@@ -356,7 +488,7 @@ body.menu-open{
                         class="sidebar-link btn btn-outline-secondary w-100 text-start"
                         onclick="toggleTheme()">
 
-                        <i class="bi bi-circle-half"></i>
+                        <i class="bi bi-moon-stars" data-theme-toggle-icon></i>
                         <span>Alternar tema</span>
 
                     </button>
@@ -430,7 +562,7 @@ body.menu-open{
         class="btn btn-theme-toggle"
         onclick="toggleTheme()"
         aria-label="Alternar tema">
-        <i class="bi bi-circle-half"></i>
+        <i class="bi bi-moon-stars" data-theme-toggle-icon></i>
     </button>
     {% endif %}
 

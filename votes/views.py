@@ -1,11 +1,14 @@
+from base.utils import paginate
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import ProtectedError
 from django.shortcuts import get_object_or_404, render
 from rolepermissions.decorators import has_permission_decorator
 
 from members.models import Member
 from votes.forms import VoteForm, VoteRegisterForm
 from votes.models import Vote, VotesRegistration
+from votes.services import get_member_votes, get_votes_registration
 
 # 'create_vote': True,
 # 'read_vote': True,
@@ -18,35 +21,38 @@ from votes.models import Vote, VotesRegistration
 @login_required
 @has_permission_decorator("create_vote")
 def register_vote(request):
-    """Registra um novo voto para um membro.
+    """Registra um novo voto para um membro (valida duplicidade)."""
+    form_vote = VoteForm()
 
-    Valida se o membro já possui esse voto; se não, cria o registro.
-    """
     user_current = request.POST.get("user_current")
-    user = Member.objects.filter(slug=user_current, carmel=request.user.carmel).first()
+    user = None
+    if user_current:
+        user = Member.objects.filter(
+            slug=user_current, carmel=request.user.carmel
+        ).first()
 
     if request.method == "POST":
         form_vote = VoteForm(request.POST)
 
         if form_vote.is_valid():
-            # MANUTENÇÃO: Usar .exists() em vez de .exists() para apenas verificar existência
-            vote_exists = Vote.objects.filter(
-                member=user,
-                votes_registration__name=form_vote.cleaned_data.get(
-                    "votes_registration"
-                ),
-            ).exists()
-            if not vote_exists:
-                vote = form_vote.save(commit=False)
-                vote.member = user
-                vote.save()
-                form_vote = VoteForm()
-
-                messages.success(request, "Voto Salvo com sucesso! ")
+            if user is None:
+                messages.error(request, "Membro não encontrado.")
             else:
-                messages.error(request, "O membro já possui esse voto!")
+                vote_exists = Vote.objects.filter(
+                    member=user,
+                    votes_registration=form_vote.cleaned_data["votes_registration"],
+                ).exists()
 
-    votes = Vote.objects.filter(member=user).select_related("votes_registration").all()
+                if not vote_exists:
+                    vote = form_vote.save(commit=False)
+                    vote.member = user
+                    vote.save()
+                    form_vote = VoteForm()
+                    messages.success(request, "Voto salvo com sucesso!")
+                else:
+                    messages.error(request, "O membro já possui esse voto!")
+
+    votes = paginate(get_member_votes(user), request, per_page=10) if user else []
 
     return render(
         request,
@@ -62,12 +68,9 @@ def register_vote(request):
 @login_required
 @has_permission_decorator("list_vote")
 def vote_member(request, user, id):
-    """Lista todas as opções de voto disponíveis para seleção.
-
-    Renderiza as opções de voto para associar a um membro.
-    """
-    # MANUTENÇÃO: Parâmetros 'user' e 'id' não são utilizados
-    votes = VotesRegistration.objects.all()
+    """Lista as opções de voto disponíveis para associação (HTMX)."""
+    get_object_or_404(Member, slug=user, carmel=request.user.carmel)
+    votes = get_votes_registration()
 
     return render(
         request,
@@ -79,18 +82,12 @@ def vote_member(request, user, id):
 @login_required
 @has_permission_decorator("edit_vote")
 def edit_vote_member(request, user, id):
-    """Carrega o formulário de edição de um voto específico.
+    """Carrega o formulário de edição de um voto específico (HTMX)."""
+    form = None
 
-    Renderiza o formulário preenchido com os dados do voto.
-    """
     if request.method == "GET":
-        # MANUTENÇÃO: Usar get_object_or_404 em vez de .first() para melhor tratamento de erro
-        vote = (
-            Vote.objects.filter(
-                member__slug=user, id=id, member__carmel=request.user.carmel
-            )
-            .select_related("votes_registration")
-            .first()
+        vote = get_object_or_404(
+            Vote, id=id, member__slug=user, member__carmel=request.user.carmel
         )
         form = VoteForm(instance=vote)
 
@@ -104,44 +101,35 @@ def edit_vote_member(request, user, id):
 @login_required
 @has_permission_decorator("edit_vote")
 def update_vote_member(request, id):
-    """Atualiza um voto existente com novos dados.
+    """Atualiza um voto existente (HTMX)."""
+    vote = get_object_or_404(Vote, id=id, member__carmel=request.user.carmel)
 
-    Processa a submissão do formulário e atualiza o voto no banco.
-    """
-    form_update = VoteForm(request.POST)
+    form_update = VoteForm(request.POST, instance=vote)
     if form_update.is_valid():
-        vote = Vote.objects.filter(id=id, member__carmel=request.user.carmel).first()
+        votes_registration = form_update.cleaned_data["votes_registration"]
 
-        if vote:
-            # MANUTENÇÃO: Refatorar para usar form.save()
-            vote.date = form_update.cleaned_data.get("date")  # type: ignore
-            vote.type = form_update.cleaned_data.get("type")  # type: ignore
-            vote.votes_registration_id = form_update.cleaned_data.get("votes_registration")  # type: ignore
-            if form_update.cleaned_data.get("type") == "TEMP":
-                vote.year_duration = form_update.cleaned_data.get("year_duration")
+        # Impede que o membro fique com o mesmo voto duplicado
+        duplicate = Vote.objects.filter(
+            member=vote.member, votes_registration=votes_registration
+        ).exclude(pk=vote.pk)
 
-            vote.save()
+        if duplicate.exists():
+            messages.error(request, "O membro já possui esse voto!")
+        else:
+            form_update.save()
+            messages.success(request, "Voto atualizado com sucesso!")
 
-            form_update = None
+    user_current = request.POST.get("user_current", vote.member.slug)
+    votes = paginate(get_member_votes(vote.member), request, per_page=10)
 
-            messages.success(request, "Voto atualizado com sucesso! ")
-
-    # atualizando a lista de votos do membro
-    user_current = request.POST.get("user_current")
-    votes = (
-        Vote.objects.select_related("votes_registration")
-        .filter(member__slug=user_current)
-        .all()
-    )
-    # renderizando a lista de votos do membro atualizado
     return render(
         request,
         "votes/components_votes/list_votes.html",
         {
             "votes": votes,
             "vote_id": id,
-            "form_update": form_update,
             "form": VoteForm(),
+            "form_update": form_update if form_update.errors else None,
             "user_current": user_current,
         },
     )
@@ -150,23 +138,16 @@ def update_vote_member(request, id):
 @login_required
 @has_permission_decorator("delete_vote")
 def delete_vote(request, id: int):
-    """Deleta um voto de um membro.
-
-    Remove o voto e renderiza a lista de votos atualizada.
-    """
+    """Deleta um voto de um membro (HTMX)."""
     form_vote = VoteForm()
-    user_current = request.POST.get("user_current")
+    vote = get_object_or_404(Vote, id=id, member__carmel=request.user.carmel)
+    member = vote.member
+    user_current = request.POST.get("user_current", member.slug)
 
-    vote = Vote.objects.filter(id=id, member__carmel=request.user.carmel).first()
+    vote.delete()
+    messages.success(request, "Voto deletado.")
 
-    if vote:
-        vote.delete()
-
-        messages.success(request, "Voto deletado")
-
-    votes = Vote.objects.filter(member__slug=user_current).select_related(
-        "votes_registration"
-    )
+    votes = paginate(get_member_votes(member), request, per_page=10)
 
     return render(
         request,
@@ -182,15 +163,9 @@ def delete_vote(request, id: int):
 @login_required
 @has_permission_decorator("list_vote")
 def votes_member(request, slug):
-    """Lista todos os votos de um membro específico.
-
-    Exibe o histórico de votos do membro com opção de adicionar novos.
-    """
-    votes = (
-        Vote.objects.filter(member__slug=slug)
-        .prefetch_related("votes_registration")
-        .all()
-    )
+    """Lista todos os votos de um membro específico."""
+    member = get_object_or_404(Member, slug=slug, carmel=request.user.carmel)
+    votes = paginate(get_member_votes(member), request, per_page=10)
     form_vote = VoteForm()
 
     return render(
@@ -200,23 +175,17 @@ def votes_member(request, slug):
     )
 
 
-# registration
+# ==========================================================
+# REGISTROS DE VOTO (catálogo)
+# ==========================================================
 
 
-# 'create_votes_registration': True,
-# 'read_votes_registration': True,
-# 'edit_votes_registration': True,
-# 'delete_votes_registration': True,
-# 'list_votes_registration': True,
 @login_required
 @has_permission_decorator("list_votes_registration")
 def votes_registration(request):
-    """Lista todas as opções de voto disponíveis no sistema.
-
-    Exibe as opções registradas e permite criar novas.
-    """
+    """Lista as opções de voto disponíveis no sistema."""
     form = VoteRegisterForm()
-    votes_registration = VotesRegistration.objects.all()
+    votes_registration = paginate(get_votes_registration(), request, per_page=12)
 
     return render(
         request,
@@ -228,25 +197,21 @@ def votes_registration(request):
 @login_required
 @has_permission_decorator("create_votes_registration")
 def register_votes_registration(request):
-    """Registra uma nova opção de voto no sistema.
-
-    Valida se não existe duplicata e salva o novo tipo de voto.
-    """
+    """Registra uma nova opção de voto (sem duplicatas)."""
     form = VoteRegisterForm(request.POST)
-    # MANUTENÇÃO: Usar form.data.get() pode falhar - melhor usar form.cleaned_data após validar
-    exists = VotesRegistration.objects.filter(name=form.data.get("name")).exists()
+    votes_registration = paginate(get_votes_registration(), request, per_page=12)
 
-    if exists:
-        messages.warning(request, "Voto Já cadastrado!")
+    if request.method == "POST" and form.is_valid():
+        name = form.cleaned_data["name"]
+        exists = VotesRegistration.objects.filter(name__iexact=name).exists()
 
-    if form.is_valid() and not exists:
-        messages.success(request, "Opção de Voto cadastrado com sucesso!")
-        form.save()
-        form = VoteRegisterForm(initial={})
-
-    # MANUTENÇÃO: Lógica confusa - sempre executa se not exists, mesmo se form não foi válido
-    if not exists:
-        votes_registration = VotesRegistration.objects.all()
+        if exists:
+            messages.warning(request, "Voto já cadastrado!")
+        else:
+            form.save()
+            messages.success(request, "Opção de voto cadastrada com sucesso!")
+            form = VoteRegisterForm()
+            votes_registration = paginate(get_votes_registration(), request, per_page=12)
 
     return render(
         request,
@@ -256,15 +221,13 @@ def register_votes_registration(request):
 
 
 @login_required
-@has_permission_decorator("edit_vote_registration")
+@has_permission_decorator("edit_votes_registration")
 def edit_vote_registration(request, id):
-    """Carrega o formulário de edição de uma opção de voto.
+    """Carrega o formulário de edição de uma opção de voto (HTMX)."""
+    form = None
 
-    Renderiza o formulário preenchido com os dados da opção.
-    """
     if request.method == "GET":
-        # MANUTENÇÃO: Usar get_object_or_404 para melhor tratamento de erro
-        vote = VotesRegistration.objects.get(id=id)
+        vote = get_object_or_404(VotesRegistration, id=id)
         form = VoteRegisterForm(instance=vote)
 
     return render(
@@ -277,34 +240,23 @@ def edit_vote_registration(request, id):
 @login_required
 @has_permission_decorator("edit_votes_registration")
 def update_vote_registration(request, id):
-    """Atualiza uma opção de voto existente.
+    """Atualiza uma opção de voto existente (HTMX)."""
+    vote_registration = get_object_or_404(VotesRegistration, id=id)
 
-    Processa a submissão do formulário e atualiza os dados da opção.
-    """
-    form_update = VoteRegisterForm(request.POST)
+    form_update = VoteRegisterForm(request.POST, instance=vote_registration)
     if form_update.is_valid():
-        # MANUTENÇÃO: Usar get_object_or_404 e form.save() para simplificar
-        vote_registration = VotesRegistration.objects.filter(id=id).first()
+        form_update.save()
+        messages.success(request, "Registro de voto atualizado com sucesso!")
 
-        if vote_registration:
-            vote_registration.name = form_update.cleaned_data.get("name")  # type: ignore
-            vote_registration.description = form_update.cleaned_data.get("description")  # type: ignore
-            vote_registration.save()
+    votes_registration = paginate(get_votes_registration(), request, per_page=12)
 
-            form_update = None
-
-            messages.success(request, "Registro de voto atualizado com sucesso! ")
-
-    # atualizando a lista de registros de votos
-    votes_registration = VotesRegistration.objects.all()
-    # renderizando a lista de registros de votos atualizada
     return render(
         request,
         "votes/components_votes/list_votes_registration.html",
         {
             "votes_registration": votes_registration,
-            "form_update": form_update,
             "form": VoteRegisterForm(),
+            "form_update": form_update if form_update.errors else None,
         },
     )
 
@@ -312,28 +264,24 @@ def update_vote_registration(request, id):
 @login_required
 @has_permission_decorator("delete_votes_registration")
 def delete_votes_registration(request, id):
-    """Deleta uma opção de voto do sistema.
+    """Deleta uma opção de voto do sistema (HTMX)."""
+    vote_registration = get_object_or_404(VotesRegistration, id=id)
 
-    Remove o tipo de voto e renderiza a lista atualizada.
-    """
-    # MANUTENÇÃO: Validar se a deleção foi bem-sucedida de forma melhor
-    is_votes_registration_deleted = get_object_or_404(
-        VotesRegistration, id=id
-    ).delete()[0]
-    form = VoteRegisterForm()
+    try:
+        vote_registration.delete()
+        messages.success(request, "Nome do voto deletado com sucesso.")
+    except ProtectedError:
+        messages.error(
+            request, "Não foi possível deletar: este voto está em uso por membros."
+        )
 
-    if is_votes_registration_deleted == 1:
-        messages.success(request, "Nome do Voto Deletado com Sucesso")
-    else:
-        messages.error(request, "Erro ao Deletar Nome do Voto")
-
-    votes_registration = VotesRegistration.objects.all()
+    votes_registration = paginate(get_votes_registration(), request, per_page=12)
 
     return render(
         request,
         "votes/components_votes/list_votes_registration.html",
         {
             "votes_registration": votes_registration,
-            "form": form,
+            "form": VoteRegisterForm(),
         },
     )

@@ -14,6 +14,36 @@
     max-width: 100%;
 }
 
+/* Navbar da landing (não autenticado) */
+.navbar .nav-link {
+    color: var(--carmel-white);
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    padding: .45rem .85rem;
+    transition: var(--transition);
+}
+
+.navbar .nav-link:hover {
+    color: var(--carmel-gold-light);
+    background: rgba(195, 160, 106, .12);
+}
+
+.navbar-toggler {
+    border: 1px solid var(--border-color-strong);
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 4px var(--carmel-gold-glow);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(198, 166, 126, 0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+[data-bs-theme="light"] .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(90, 68, 40, 0.85)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
 /* Botão Flutuante para Alternar Tema (Dark / Light) */
 .btn-theme-toggle {
     position: fixed;

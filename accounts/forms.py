@@ -5,18 +5,26 @@ from members.models import Address
 
 class LoginForm(forms.Form):
 
-    email = forms.EmailField(
-        label="Email",
-        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "seu.email@carmelo.org"}),
+    identifier = forms.CharField(
+        label="Email ou Nome",
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "seu.email@carmelo.org ou seu nome",
+                "autocomplete": "username",
+                "autofocus": True,
+            }
+        ),
         required=True,
     )
 
     password = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                "class": "form-control w-full",
+                "class": "form-control",
                 ":type": "hide_password ? 'password' : 'text'",
                 "placeholder": "Digite sua senha",
+                "autocomplete": "current-password",
             }
         ),
         label="Senha",

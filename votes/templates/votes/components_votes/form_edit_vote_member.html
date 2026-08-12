@@ -1,6 +1,6 @@
 {% if form_update %}
 <div x-data="{ modalFormVote: true }">
-<form class="modal-custom" cloak x-show="modalFormVote">
+<form class="modal-custom" x-show="modalFormVote" x-cloak>
     {% csrf_token %}
    <input type="hidden" name="user_current" value="{{user_current}}">
    <div class="modal-dialog">
@@ -42,7 +42,7 @@
                     <div class="text-danger small">{{ err }}</div>
                 {% endfor %}
             </div>
-            <div class="col-6 text-white" x-show="type_vote == 'TEMP'" cloak x-transition>
+            <div class="col-6 text-white" x-show="type_vote == 'TEMP'" x-cloak x-transition>
                 <label for="">Duração do Voto</label>
                 {{form_update.year_duration}}
                 {% for err in form_update.errors.year_duration %}

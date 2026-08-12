@@ -15,6 +15,7 @@ class FinanceMember(AbstractUserRole):
         "show_money": True,
         "carmel_dashboard": True,
         "list_members": True,
+        "read_member": True,
         # CONTROL CONTRIBUTION
         "create_Contribute": True,
         "read_contribute": True,

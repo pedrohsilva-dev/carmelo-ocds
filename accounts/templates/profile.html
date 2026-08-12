@@ -16,13 +16,20 @@
         <div class="d-flex justify-content-center ">
             <div class="d-flex flex-wrap">
                 <div class="container">
-                    <p class=" d-flex justify-content-between">
+                    <p class="d-flex justify-content-between">
                         <span class="align-self-center h6">Nome</span>
-                        <span class="align-self-center">{{user.name}}</span>
+                        <span class="align-self-center">{{user.name|default:"—"}}</span>
                     </p>
-                    <p class=" d-flex justify-content-between">
+                    <p class="d-flex justify-content-between">
                         <span class="align-self-center h6">Email</span>
-                        <span class="align-self-center">{{user.email}}</span>
+                        <span class="align-self-center">{{user.email|default:"—"}}</span>
+                    </p>
+                    <p class="d-flex justify-content-between mb-4">
+                        <span class="align-self-center h6">Carmelo</span>
+                        <span class="align-self-center">
+                            <i class="bi bi-bank2 me-1 text-carmel-gold"></i>
+                            {{ user.carmel.name|default:"—" }}
+                        </span>
                     </p>
 
                     <div class="d-flex justify-content-between">
@@ -163,14 +170,17 @@
                             {% for vote in votes %}
                                 <div class="list-group-item my-1 bg-carmel">
                                     <div class="flex-column">
-                                        <p>{{vote.votes_registration.name}}</p>
-                                        <span class="text-wrap">{{vote.votes_registration.description}}</span>
+                                        <p>{{vote.votes_registration.name|default:"—"}}</p>
+                                        <span class="text-wrap">{{vote.votes_registration.description|default:"—"}}</span>
                                     </div>
                                 </div>
                             {% empty %}
-                                <p  >Nenhum voto encontrado.</p>
+                                <p>Nenhum voto encontrado.</p>
                             {% endfor %}
                         </div>
+                        {% if votes.has_other_pages %}
+                            {% include "partials/components/pagination.html" with page_obj=votes page_param="votes_page" %}
+                        {% endif %}
                     </div>
 
 

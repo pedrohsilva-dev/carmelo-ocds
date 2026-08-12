@@ -15,7 +15,9 @@ class ResetPasswordAccess(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        self.token = token_urlsafe(nbytes=16)
-        self.expired_at = datetime.now() + timedelta(hours=1)
+        # Só gera um novo token quando o registro é criado (evita regenerar em edições)
+        if not self.token:
+            self.token = token_urlsafe(nbytes=16)
+            self.expired_at = datetime.now() + timedelta(hours=1)
 
         super().save(*args, **kwargs)

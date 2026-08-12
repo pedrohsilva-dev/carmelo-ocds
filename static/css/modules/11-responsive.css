@@ -18,19 +18,12 @@
 }
 
 @media (max-width: 767px) {
-    #login-carmel {
-        padding-top: 20px;
-        max-width: 90% !important;
-        margin: 1px auto;
-
-    }
-
     #nsc-slider {
         display: none;
     }
 
     .title-carmel {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
     }
 }
 

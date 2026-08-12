@@ -37,7 +37,7 @@
                         <a class="btn btn-warning btn-sm me-1" href="{% url 'update_member' id=member.id %}">Atualizar</a>
                     {% endif %}
                     {% if user|can:'delete_member' %}
-                        <a class="btn btn-danger btn-sm" hx-get="{% url 'delete_member' id=member.id %}" hx-confirm="Deseja confirmar?" hx-target="#list_members">Deletar</a>
+                        <button class="btn btn-danger btn-sm" hx-post="{% url 'delete_member' id=member.id %}" hx-confirm="Deseja confirmar?" hx-target="#list_members">Deletar</button>
                     {% endif %}
                 </div>
                 {% endif %}

@@ -4,292 +4,295 @@ MODULE 01: VARIÁVEIS GLOBAIS (DESIGN SYSTEM TOKENS)
 
 :root {
 
-        /* ======================================================
-       Hábito Carmelo & Fundo — Mármore Escuro Carmelitano
+    color-scheme: dark;
+
+    /* ======================================================
+       Hábito Carmelo — Superfícies (Mármore Escuro Sóbrio)
     ====================================================== */
 
-        --carmel-brown-dark: #1b120e;
-        --carmel-brown: #2d1d17;
-        --carmel-brown-light: #482f25;
-        --carmel-brown-accent: #6b4637;
+    --carmel-brown-dark: #171310;
+    --carmel-brown: #241d18;
+    --carmel-brown-light: #3a2f28;
+    --carmel-brown-accent: #57473c;
 
-        --carmel-bg: #120e0c;
-        --carmel-bg-soft: #1c1512;
-        --carmel-bg-dark: #0a0706;
+    /* Fundos — escuros, elegantes, sem poluição visual */
+    --carmel-bg: #100d0a;
+    --carmel-bg-soft: #181310;
+    --carmel-bg-dark: #0a0806;
 
 
-        /* ======================================================
-       Ouro Carmelitano Escovado — Estrela do Carmo
+    /* ======================================================
+       Ouro Carmelitano Escovado — só para destaques
     ====================================================== */
 
-        --carmel-gold: #cfa868;
-        --carmel-gold-light: #e6ce99;
-        --carmel-gold-dark: #99783d;
-        --carmel-gold-glow: rgba(207, 168, 104, 0.28);
+    --carmel-gold: #c6a67e;
+    --carmel-gold-light: #e2cdaa;
+    --carmel-gold-dark: #8f6f47;
+    --carmel-gold-glow: rgba(198, 166, 126, 0.18);
 
 
-        /* ======================================================
-       Texto — Marfim Sagrado / Pergaminho Carmelitano
+    /* ======================================================
+       Texto — Marfim Quente (alta legibilidade)
     ====================================================== */
 
-        --carmel-white: #c2aa73;
-        --carmel-white-soft: #dfd5c4;
-        --carmel-muted: #ab9b86;
+    --carmel-white: #f1ebe0;
+    --carmel-white-soft: #d6cdbf;
+    --carmel-muted: #a1968a;
 
 
-        /* ======================================================
+    /* ======================================================
        Links
     ====================================================== */
 
-        --carmel-link: #cfa868;
-        --carmel-link-hover: #e6ce99;
+    --carmel-link: #c6a67e;
+    --carmel-link-hover: #e2cdaa;
 
 
-        /* ======================================================
+    /* ======================================================
        Status
     ====================================================== */
 
-        --success: #3f9e56;
-        --danger: #b8453f;
-        --warning: #d69438;
+    --success: #58a66b;
+    --danger: #c05a53;
+    --warning: #c98f3d;
 
 
-        /* ======================================================
-       Bordas Carmelitas
+    /* ======================================================
+       Bordas Carmelitas — sutis
     ====================================================== */
 
-        --border-color: rgba(207, 168, 104, .24);
-        --border-color-strong: rgba(207, 168, 104, .48);
+    --border-color: rgba(198, 166, 126, .16);
+    --border-color-strong: rgba(198, 166, 126, .34);
 
 
-        /* ======================================================
+    /* ======================================================
        Sombras Elegantes
     ====================================================== */
 
-        --shadow-sm: 0 4px 14px rgba(0, 0, 0, .32);
-        --shadow-md: 0 12px 30px rgba(0, 0, 0, .42);
-        --shadow-lg: 0 22px 50px rgba(0, 0, 0, .54);
+    --shadow-sm: 0 4px 14px rgba(0, 0, 0, .30);
+    --shadow-md: 0 12px 30px rgba(0, 0, 0, .40);
+    --shadow-lg: 0 24px 54px rgba(0, 0, 0, .50);
 
-        --shadow-gold:
-                0 6px 20px rgba(207, 168, 104, .22);
+    --shadow-gold:
+            0 6px 20px rgba(198, 166, 126, .16);
 
-        --shadow-carmel:
-                0 8px 25px rgba(45, 29, 23, .45);
+    --shadow-carmel:
+            0 8px 25px rgba(0, 0, 0, .42);
 
 
-        /* ======================================================
+    /* ======================================================
        Radius Padronizado
     ====================================================== */
 
-        --radius-sm: 8px;
-        --radius-md: 14px;
-        --radius-lg: 22px;
-        --radius-pill: 999px;
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 22px;
+    --radius-pill: 999px;
 
 
-        /* ======================================================
+    /* ======================================================
        Transições Suaves
     ====================================================== */
 
-        --ease: cubic-bezier(.4, 0, .2, 1);
-        --ease-out: cubic-bezier(.16, 1, .3, 1);
+    --ease: cubic-bezier(.4, 0, .2, 1);
+    --ease-out: cubic-bezier(.16, 1, .3, 1);
 
-        --transition: all .2s var(--ease);
-        --transition-slow: all .28s var(--ease-out);
+    --transition: all .2s var(--ease);
+    --transition-slow: all .3s var(--ease-out);
 
 
-        /* ======================================================
-       Gradientes — Carmelo
+    /* ======================================================
+       Gradientes — Carmelo (menos saturados)
     ====================================================== */
 
-        --gold-gradient:
-                linear-gradient(135deg,
-                        #A77B32 0%,
-                        #D0A85C 50%,
-                        #F2D99A 100%);
+    --gold-gradient:
+            linear-gradient(135deg,
+                    #8a6a3f 0%,
+                    #b98f5c 50%,
+                    #e0c698 100%);
 
-        --carmel-gradient:
-                linear-gradient(145deg,
-                        #4A3024 0%,
-                        #76523D 50%,
-                        #A47A5B 100%);
+    --carmel-gradient:
+            linear-gradient(145deg,
+                    #33271f 0%,
+                    #4d3b2e 50%,
+                    #6b5340 100%);
 
-        --carmel-gold-gradient:
-                linear-gradient(135deg,
-                        #704A2F 0%,
-                        #B4864C 45%,
-                        #E7C980 100%);
+    --carmel-gold-gradient:
+            linear-gradient(135deg,
+                    #5f4326 0%,
+                    #9a7442 45%,
+                    #d6b878 100%);
 
-        --wood-tint:
-                rgba(150, 108, 72, .16);
+    --wood-tint:
+            rgba(160, 120, 80, .10);
 
 
-        /* ======================================================
+    /* ======================================================
        Glassmorphism Carmelo
     ====================================================== */
 
-        --glass-bg:
-                rgba(28, 20, 16, .78);
+    --glass-bg:
+            rgba(24, 19, 16, .72);
 
-        --glass-bg-soft:
-                rgba(35, 24, 20, .62);
+    --glass-bg-soft:
+            rgba(30, 24, 20, .55);
 
-        --glass-border:
-                rgba(207, 168, 104, .26);
+    --glass-border:
+            rgba(198, 166, 126, .16);
 
-        --glass-highlight:
-                rgba(255, 248, 235, .12);
+    --glass-highlight:
+            rgba(255, 246, 232, .07);
 
-        --glass-blur:
-                blur(20px) saturate(150%);
+    --glass-blur:
+            blur(20px) saturate(150%);
 
-        --glass-blur-soft:
-                blur(12px) saturate(140%);
+    --glass-blur-soft:
+            blur(12px) saturate(140%);
 
-        --glass-shadow:
-                0 18px 45px rgba(0, 0, 0, .48),
-                inset 0 1px 0 var(--glass-highlight);
+    --glass-shadow:
+            0 18px 45px rgba(0, 0, 0, .46),
+            inset 0 1px 0 var(--glass-highlight);
 }
 
 
 /* ==========================================================
    Tokens Modo Claro
-   Pergaminho Carmelitano / Sépia Quente
+   Pergaminho Claro / Neutro Quente
 ========================================================== */
 
 [data-bs-theme="light"] {
 
-        color-scheme: light;
+    color-scheme: light;
 
 
-        /* ======================================================
+    /* ======================================================
        Marrom Carmelitano
     ====================================================== */
 
-        --carmel-brown-dark: #2a1912;
-        --carmel-brown: #462b1f;
-        --carmel-brown-light: #664130;
-        --carmel-brown-accent: #875641;
+    --carmel-brown-dark: #26201b;
+    --carmel-brown: #3d3128;
+    --carmel-brown-light: #5b4a3c;
+    --carmel-brown-accent: #7a6250;
 
 
-        /* ======================================================
-       Fundos
+    /* ======================================================
+       Fundos — pergaminho claro e limpo
     ====================================================== */
 
-        --carmel-bg: #e6dac8;
-        --carmel-bg-soft: #efe4d3;
-        --carmel-bg-dark: #d8c8b2;
+    --carmel-bg: #f7f2ea;
+    --carmel-bg-soft: #fdfaf5;
+    --carmel-bg-dark: #ede4d5;
 
 
-        /* ======================================================
-       Ouro
+    /* ======================================================
+       Ouro — mais contido
     ====================================================== */
 
-        --carmel-gold: #966f2c;
-        --carmel-gold-light: #b88c3d;
-        --carmel-gold-dark: #6e501d;
+    --carmel-gold: #96713a;
+    --carmel-gold-light: #b18a4e;
+    --carmel-gold-dark: #6d4f22;
 
-        --carmel-gold-glow:
-                rgba(150, 111, 44, .25);
+    --carmel-gold-glow:
+            rgba(150, 113, 58, .18);
 
 
-        /* ======================================================
-       Texto
+    /* ======================================================
+       Texto — marrom quase preto (alto contraste)
     ====================================================== */
 
-        --carmel-white: #241610;
-        --carmel-white-soft: #48342a;
-        --carmel-muted: #735e53;
+    --carmel-white: #2b2119;
+    --carmel-white-soft: #4a3b30;
+    --carmel-muted: #80705f;
 
 
-        /* ======================================================
+    /* ======================================================
        Links
     ====================================================== */
 
-        --carmel-link: #8c6525;
-        --carmel-link-hover: #684a18;
+    --carmel-link: #8a6226;
+    --carmel-link-hover: #5f4519;
 
 
-        /* ======================================================
+    /* ======================================================
        Bordas
     ====================================================== */
 
-        --border-color:
-                rgba(70, 43, 31, .24);
+    --border-color:
+            rgba(90, 68, 40, .16);
 
-        --border-color-strong:
-                rgba(150, 111, 44, .48);
+    --border-color-strong:
+            rgba(150, 113, 58, .38);
 
 
-        /* ======================================================
+    /* ======================================================
        Sombras
     ====================================================== */
 
-        --shadow-sm:
-                0 4px 12px rgba(42, 25, 18, .12);
+    --shadow-sm:
+            0 4px 12px rgba(60, 45, 30, .10);
 
-        --shadow-md:
-                0 10px 26px rgba(42, 25, 18, .18);
+    --shadow-md:
+            0 10px 26px rgba(60, 45, 30, .14);
 
-        --shadow-lg:
-                0 20px 46px rgba(42, 25, 18, .24);
+    --shadow-lg:
+            0 20px 46px rgba(60, 45, 30, .18);
 
-        --shadow-gold:
-                0 6px 18px rgba(150, 111, 44, .26);
+    --shadow-gold:
+            0 6px 18px rgba(150, 113, 58, .18);
 
-        --shadow-carmel:
-                0 8px 24px rgba(70, 43, 31, .20);
+    --shadow-carmel:
+            0 8px 24px rgba(60, 45, 30, .12);
 
 
-        /* ======================================================
+    /* ======================================================
        Gradientes — Modo Claro
     ====================================================== */
 
-        --gold-gradient:
-                linear-gradient(135deg,
-                        #9A742E 0%,
-                        #C29A4B 50%,
-                        #E2C477 100%);
+    --gold-gradient:
+            linear-gradient(135deg,
+                    #a87c38 0%,
+                    #cfa968 50%,
+                    #ead3a2 100%);
 
-        --carmel-gradient:
-                linear-gradient(145deg,
-                        #684637 0%,
-                        #8D654D 50%,
-                        #B28A6A 100%);
+    --carmel-gradient:
+            linear-gradient(145deg,
+                    #5a4536 0%,
+                    #7d6250 50%,
+                    #a0846c 100%);
 
-        --carmel-gold-gradient:
-                linear-gradient(135deg,
-                        #805637 0%,
-                        #B4864C 45%,
-                        #DCC17D 100%);
+    --carmel-gold-gradient:
+            linear-gradient(135deg,
+                    #8a6a34 0%,
+                    #b8934e 45%,
+                    #ddc188 100%);
 
-        --wood-tint:
-                rgba(150, 108, 72, .12);
+    --wood-tint:
+            rgba(150, 113, 58, .10);
 
 
-        /* ======================================================
+    /* ======================================================
        Glassmorphism — Modo Claro
     ====================================================== */
 
-        --glass-bg:
-                rgba(239, 228, 211, .88);
+    --glass-bg:
+            rgba(253, 250, 245, .86);
 
-        --glass-bg-soft:
-                rgba(233, 220, 201, .78);
+    --glass-bg-soft:
+            rgba(250, 246, 238, .78);
 
-        --glass-border:
-                rgba(150, 111, 44, .32);
+    --glass-border:
+            rgba(150, 113, 58, .22);
 
-        --glass-highlight:
-                rgba(255, 248, 235, .65);
+    --glass-highlight:
+            rgba(255, 255, 255, .85);
 
-        --glass-blur:
-                blur(20px) saturate(140%);
+    --glass-blur:
+            blur(20px) saturate(140%);
 
-        --glass-blur-soft:
-                blur(12px) saturate(130%);
+    --glass-blur-soft:
+            blur(12px) saturate(130%);
 
-        --glass-shadow:
-                0 16px 38px rgba(42, 25, 18, .16),
-                inset 0 1px 0 var(--glass-highlight);
+    --glass-shadow:
+            0 16px 38px rgba(60, 45, 30, .12),
+            inset 0 1px 0 var(--glass-highlight);
 }

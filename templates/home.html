@@ -1,8 +1,9 @@
 {% extends 'partials/base.html' %}
 {% load static %}
+{% load permission_tags %}
 
 {% block head_title %}
-Página Inicial — OCDS Alegria da Sagrada Face
+{{ carmel.name|default:"OCDS Itapetininga" }} — Página Inicial
 {% endblock head_title %}
 
 {% block extra_head %}
@@ -10,21 +11,71 @@ Página Inicial — OCDS Alegria da Sagrada Face
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 <style>
     /* ============================================================
-       HOME — ESTILOS ESPECÍFICOS DA PÁGINA INICIAL
-       Responsivos, Carmelitanos, Premium
+       HOME — LANDING PAGE CARMELITA
+       Animações, respiro e convite à comunidade
        ============================================================ */
 
-    /* Hero */
+    .hp-section {
+        padding: 5.5rem 0;
+    }
+
+    .hp-section-sm {
+        padding: 4rem 0;
+    }
+
+    /* Compensa a altura da navbar ao navegar por âncoras */
+    .hp-section,
+    .hp-section-sm,
     .hero-section {
-        min-height: 88vh;
+        scroll-margin-top: 84px;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    /* ---------- Hero ---------- */
+
+    .hero-section {
+        min-height: 92vh;
         display: flex;
         align-items: center;
+        position: relative;
+        overflow: hidden;
     }
+
+    .hp-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(70px);
+        pointer-events: none;
+        opacity: .30;
+        z-index: 0;
+    }
+
+    .hp-orb--gold {
+        width: 420px;
+        height: 420px;
+        top: -120px;
+        right: -80px;
+        background: radial-gradient(circle, rgba(198, 166, 126, .55), transparent 70%);
+    }
+
+    .hp-orb--brown {
+        width: 380px;
+        height: 380px;
+        bottom: -140px;
+        left: -100px;
+        background: radial-gradient(circle, rgba(120, 90, 60, .55), transparent 70%);
+    }
+
+    [data-bs-theme="light"] .hp-orb--gold { opacity: .22; }
+    [data-bs-theme="light"] .hp-orb--brown { opacity: .18; }
 
     .hero-title {
         font-size: clamp(2rem, 5vw, 3.4rem);
         font-weight: 800;
-        line-height: 1.15;
+        line-height: 1.14;
         letter-spacing: -.5px;
         background: linear-gradient(135deg, var(--carmel-gold-light), var(--carmel-gold), var(--carmel-gold-dark));
         -webkit-background-clip: text;
@@ -33,21 +84,29 @@ Página Inicial — OCDS Alegria da Sagrada Face
     }
 
     .hero-subtitle {
-        font-size: clamp(1rem, 2.5vw, 1.25rem);
+        font-size: clamp(.95rem, 2.2vw, 1.15rem);
         font-weight: 600;
         color: var(--carmel-gold);
-        letter-spacing: .8px;
+        letter-spacing: 1.2px;
         text-transform: uppercase;
     }
 
     .hero-lead {
         color: var(--carmel-white-soft);
         font-size: 1.08rem;
-        line-height: 1.7;
+        line-height: 1.75;
+        max-width: 560px;
     }
 
     [data-bs-theme="light"] .hero-lead {
-        color: #48342a;
+        color: var(--carmel-white-soft);
+    }
+
+    .hero-divider {
+        width: 64px;
+        height: 3px;
+        background: var(--gold-gradient);
+        border-radius: var(--radius-pill);
     }
 
     .home-img-logo {
@@ -55,12 +114,154 @@ Página Inicial — OCDS Alegria da Sagrada Face
         filter: drop-shadow(0 8px 20px var(--carmel-gold-glow));
     }
 
-    .home-photo {
-        width: 100%;
-
+    .hp-hero-art {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
-    /* Divisores de Seção */
+    .hp-float {
+        animation: hpFloat 7s ease-in-out infinite;
+        will-change: transform;
+    }
+
+    @keyframes hpFloat {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-16px); }
+    }
+
+    .hp-hero-ring {
+        position: absolute;
+        inset: -18px;
+        border-radius: 50%;
+        border: 1px dashed var(--border-color-strong);
+        animation: hpSpin 60s linear infinite;
+        pointer-events: none;
+    }
+
+    @keyframes hpSpin {
+        to { transform: rotate(360deg); }
+    }
+
+    .hp-hero-ring--inner {
+        inset: 14px;
+        border-style: solid;
+        border-color: rgba(198, 166, 126, .10);
+        animation-duration: 40s;
+        animation-direction: reverse;
+    }
+
+    .home-photo {
+        width: 100%;
+        max-height: 460px;
+        object-fit: contain;
+        filter: drop-shadow(0 24px 50px rgba(0, 0, 0, .45));
+    }
+
+    /* Fotos das seções de conteúdo */
+    .hp-section-photo {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--shadow-md);
+        transition: var(--transition-slow);
+    }
+
+    .hp-section-photo:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--carmel-gold);
+    }
+
+    .hp-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        padding: .45rem 1rem;
+        border-radius: var(--radius-pill);
+        background: var(--glass-bg-soft);
+        border: 1px solid var(--glass-border);
+        color: var(--carmel-white-soft);
+        font-size: .85rem;
+        font-weight: 500;
+        backdrop-filter: var(--glass-blur-soft);
+    }
+
+    .hp-badge i {
+        color: var(--carmel-gold);
+    }
+
+    [data-bs-theme="light"] .hp-badge {
+        background: rgba(255, 255, 255, .85);
+        border-color: var(--border-color-strong);
+        color: var(--carmel-white-soft);
+    }
+
+    /* ---------- Faixa de números ---------- */
+
+    .hp-stats-card {
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-lg);
+        background: var(--glass-bg-soft);
+        backdrop-filter: var(--glass-blur-soft);
+        padding: 1.6rem 1rem;
+        text-align: center;
+        height: 100%;
+        transition: var(--transition-slow);
+    }
+
+    .hp-stats-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--carmel-gold);
+        box-shadow: var(--shadow-gold);
+    }
+
+    .hp-stats-number {
+        font-size: clamp(2rem, 4vw, 2.8rem);
+        font-weight: 800;
+        color: var(--carmel-gold);
+        line-height: 1;
+        letter-spacing: -.5px;
+    }
+
+    .hp-stats-number--sm {
+        font-size: clamp(1.1rem, 2.2vw, 1.45rem);
+        line-height: 1.25;
+        letter-spacing: -.2px;
+        margin-top: .35rem;
+    }
+
+    .hp-stats-icon {
+        font-size: 1.9rem;
+        color: var(--carmel-gold);
+        line-height: 1;
+    }
+
+    .hp-stats-label {
+        color: var(--carmel-white-soft);
+        font-size: .92rem;
+        margin-top: .6rem;
+    }
+
+    /* ---------- Títulos de seção ---------- */
+
+    .section-title {
+        font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+        font-weight: 800;
+        color: var(--carmel-white);
+        letter-spacing: -.3px;
+        margin-bottom: .4rem;
+    }
+
+    [data-bs-theme="light"] .section-title {
+        color: var(--carmel-white) !important;
+    }
+
     .section-divider {
         width: 60px;
         height: 3px;
@@ -73,41 +274,64 @@ Página Inicial — OCDS Alegria da Sagrada Face
         margin-left: 0;
     }
 
-    /* Section title */
-    .section-title {
-        font-size: clamp(1.5rem, 3.5vw, 2.2rem);
-        font-weight: 800;
-        color: var(--carmel-white);
-        letter-spacing: -.3px;
-        margin-bottom: .4rem;
+    /* ---------- Glass cards ---------- */
+
+    .glass-card {
+        background: var(--glass-bg);
+        backdrop-filter: var(--glass-blur);
+        -webkit-backdrop-filter: var(--glass-blur);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-lg);
+        padding: 2.75rem;
+        box-shadow: var(--glass-shadow);
     }
 
-    [data-bs-theme="light"] .section-title {
-        color: #241610 !important;
-    }
-
-    /* Glass cards na home */
     .saint-card {
         border: 1px solid var(--glass-border);
         border-radius: var(--radius-lg);
-        padding: 2rem 1.5rem;
+        padding: 2.25rem 1.5rem;
         background: var(--glass-bg-soft);
         backdrop-filter: var(--glass-blur-soft);
-        transition: var(--transition);
+        transition: var(--transition-slow);
         text-align: center;
         height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .saint-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 50% 0%, var(--carmel-gold-glow), transparent 65%);
+        opacity: 0;
+        transition: opacity var(--transition-slow);
+    }
+
+    .saint-card:hover::before {
+        opacity: 1;
     }
 
     .saint-card:hover {
         border-color: var(--carmel-gold);
-        transform: translateY(-4px);
+        transform: translateY(-6px);
         box-shadow: var(--shadow-gold);
     }
 
+    .saint-card > * {
+        position: relative;
+    }
+
     .saint-card .saint-icon {
-        font-size: 2.4rem;
-        margin-bottom: 1rem;
+        font-size: 2.5rem;
+        margin-bottom: 1.1rem;
         color: var(--carmel-gold);
+        display: inline-block;
+        transition: transform var(--transition-slow);
+    }
+
+    .saint-card:hover .saint-icon {
+        transform: translateY(-4px) scale(1.08);
     }
 
     .saint-card h4 {
@@ -121,27 +345,29 @@ Página Inicial — OCDS Alegria da Sagrada Face
         color: var(--carmel-white-soft);
         font-size: .95rem;
         margin-bottom: 0;
+        line-height: 1.65;
     }
 
     [data-bs-theme="light"] .saint-card {
-        background: rgba(233, 220, 201, .82);
+        background: rgba(255, 255, 255, .8);
         border-color: var(--border-color-strong);
     }
 
     [data-bs-theme="light"] .saint-card h4 {
-        color: #5a3c1a;
+        color: var(--carmel-gold-dark);
     }
 
     [data-bs-theme="light"] .saint-card p {
-        color: #48342a;
+        color: var(--carmel-white-soft);
     }
 
-    /* Pilares da Formação */
+    /* ---------- Pilares da formação ---------- */
+
     .pillar-item {
         display: flex;
         align-items: flex-start;
         gap: 1rem;
-        padding: .9rem 1.1rem;
+        padding: 1.05rem 1.25rem;
         border-radius: var(--radius-md);
         background: var(--glass-bg-soft);
         transition: var(--transition-slow);
@@ -149,12 +375,13 @@ Página Inicial — OCDS Alegria da Sagrada Face
     }
 
     .pillar-item:hover {
-        background: rgba(207, 168, 104, .10);
+        background: rgba(198, 166, 126, .10);
         border-left-color: var(--carmel-gold-light);
+        transform: translateX(6px);
     }
 
     .pillar-item i {
-        font-size: 1.4rem;
+        font-size: 1.5rem;
         color: var(--carmel-gold);
         flex-shrink: 0;
         margin-top: .1rem;
@@ -163,53 +390,55 @@ Página Inicial — OCDS Alegria da Sagrada Face
     .pillar-item strong {
         display: block;
         font-weight: 700;
-        font-size: .95rem;
+        font-size: .98rem;
         color: var(--carmel-gold-light);
     }
 
     .pillar-item span {
-        font-size: .85rem;
+        font-size: .86rem;
         color: var(--carmel-muted);
+        line-height: 1.5;
     }
 
     [data-bs-theme="light"] .pillar-item {
-        background: rgba(233, 220, 201, .75);
-        border-left-color: #966f2c;
+        background: rgba(255, 255, 255, .72);
+        border-left-color: var(--carmel-gold);
     }
 
     [data-bs-theme="light"] .pillar-item strong {
-        color: #462b1f;
+        color: var(--carmel-gold-dark);
     }
 
     [data-bs-theme="light"] .pillar-item span {
-        color: #5a3c1a;
+        color: var(--carmel-muted);
     }
 
-    /* Contact cards */
+    /* ---------- Contact cards ---------- */
+
     .contact-card {
         background: var(--glass-bg-soft);
         border: 1px solid var(--glass-border);
         border-radius: var(--radius-md);
-        padding: 1.5rem;
-        transition: var(--transition);
+        padding: 1.6rem;
+        transition: var(--transition-slow);
     }
 
     .contact-card:hover {
         border-color: var(--carmel-gold);
         box-shadow: var(--shadow-gold);
-        transform: translateY(-3px);
+        transform: translateY(-4px);
     }
 
     .contact-card .contact-icon {
-        width: 44px;
-        height: 44px;
+        width: 46px;
+        height: 46px;
         border-radius: var(--radius-pill);
         background: var(--gold-gradient);
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #140d06;
-        font-size: 1.2rem;
+        color: #2b1b0d;
+        font-size: 1.25rem;
         margin-bottom: 1rem;
     }
 
@@ -226,58 +455,159 @@ Página Inicial — OCDS Alegria da Sagrada Face
     }
 
     [data-bs-theme="light"] .contact-card {
-        background: rgba(233, 220, 201, .80);
+        background: rgba(255, 255, 255, .8);
         border-color: var(--border-color-strong);
     }
 
     [data-bs-theme="light"] .contact-card h5 {
-        color: #5a3c1a;
+        color: var(--carmel-gold-dark);
     }
 
     [data-bs-theme="light"] .contact-card p {
-        color: #48342a;
+        color: var(--carmel-muted);
     }
 
-    /* Quote banner */
+    /* ---------- CTA de convite ---------- */
+
+    .hp-cta-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--radius-lg);
+        background:
+            linear-gradient(145deg, rgba(35, 27, 21, .92), rgba(20, 15, 11, .95));
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--shadow-lg);
+        padding: 3.25rem 2.5rem;
+        text-align: center;
+    }
+
+    [data-bs-theme="light"] .hp-cta-card {
+        background:
+            linear-gradient(145deg, rgba(253, 250, 245, .96), rgba(244, 237, 226, .97));
+    }
+
+    .hp-cta-card::before {
+        content: "";
+        position: absolute;
+        top: -60%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        height: 120%;
+        background: radial-gradient(circle, var(--carmel-gold-glow), transparent 70%);
+        pointer-events: none;
+    }
+
+    .hp-cta-card > * {
+        position: relative;
+    }
+
+    .hp-cta-title {
+        font-size: clamp(1.4rem, 3.5vw, 2rem);
+        font-weight: 800;
+        color: var(--carmel-gold-light);
+        margin-bottom: .75rem;
+    }
+
+    .hp-cta-text {
+        color: var(--carmel-white-soft);
+        max-width: 620px;
+        margin: 0 auto 1.75rem;
+        line-height: 1.7;
+    }
+
+    [data-bs-theme="light"] .hp-cta-title { color: var(--carmel-gold-dark); }
+    [data-bs-theme="light"] .hp-cta-text { color: var(--carmel-white-soft); }
+
+    /* ---------- Quote banner ---------- */
+
     .quote-banner {
         background: var(--gold-gradient);
         border-radius: var(--radius-lg);
-        padding: 2rem 2.5rem;
+        padding: 2.5rem 2.75rem;
         text-align: center;
         box-shadow: var(--shadow-gold);
+        position: relative;
+        overflow: hidden;
     }
 
     .quote-banner blockquote {
         margin: 0;
-        font-size: clamp(.9rem, 2.5vw, 1.1rem);
+        font-size: clamp(.95rem, 2.5vw, 1.15rem);
         font-style: italic;
         font-weight: 500;
-        color: #140d06;
-        line-height: 1.7;
+        color: #2b1b0d;
+        line-height: 1.8;
     }
 
     .quote-banner cite {
         font-size: .82rem;
         font-weight: 700;
         font-style: normal;
-        color: #3d260d;
+        color: #4a3114;
         display: block;
-        margin-top: .75rem;
+        margin-top: .85rem;
     }
 
-    /* Responsive ajustes */
+    /* ---------- Galeria ---------- */
+
+    .hp-gallery-img {
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition-slow);
+    }
+
+    .hp-gallery-img:hover {
+        transform: translateY(-5px) scale(1.01);
+        box-shadow: var(--shadow-md);
+        border-color: var(--carmel-gold);
+    }
+
+    .hp-gallery-img img {
+        width: 100%;
+        height: 240px;
+        object-fit: cover;
+        display: block;
+    }
+
+    /* ---------- Responsivo ---------- */
+
+    @media (max-width: 991px) {
+        .hp-section-photo {
+            height: 320px;
+        }
+    }
+
     @media (max-width: 767px) {
         .hero-section {
             min-height: auto;
-            padding: 3rem 0 2rem;
+            padding: 2.5rem 0 3rem;
+        }
+
+        .hp-section {
+            padding: 3.5rem 0;
+        }
+
+        .hp-section-photo {
+            height: 260px;
+        }
+
+        .glass-card {
+            padding: 1.75rem 1.25rem;
         }
 
         .saint-card {
-            padding: 1.5rem 1rem;
+            padding: 1.75rem 1.1rem;
         }
 
-        .hero-lead {
-            max-width: 100%;
+        .hp-cta-card {
+            padding: 2.25rem 1.4rem;
+        }
+
+        .quote-banner {
+            padding: 1.75rem 1.25rem;
         }
     }
 </style>
@@ -285,40 +615,217 @@ Página Inicial — OCDS Alegria da Sagrada Face
 
 {% block content %}
 
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section class="hero-section container" id="hp-inicio">
+    <div class="hp-orb hp-orb--gold"></div>
+    <div class="hp-orb hp-orb--brown"></div>
 
-<section class="hero-section container" data-sr="fade-down" data-sr-duration="1000">
-    <div class="row align-items-center gy-4">
+    <div class="row align-items-center gy-5 w-100">
 
         <div class="col-lg-6 text-center text-lg-start my-4">
 
-            <img src="{% static 'assets/top_login.png' %}" class="home-img-logo mb-4" alt="Brasão OCDS">
+            <img src="{% static 'assets/top_login.png' %}" class="home-img-logo hero-logo mb-4" alt="Brasão OCDS">
 
             <h1 class="hero-title mb-2">
-                Ordem dos Carmelitas<br>Descalços Seculares
+                <span class="hero-title-line d-block">Ordem dos Carmelitas</span>
+                <span class="hero-title-line d-block">Descalços Seculares</span>
             </h1>
 
-            <p class="hero-subtitle mb-3">Comunidade Alegria da Sagrada Face</p>
+            <p class="hero-subtitle mb-3 mt-3">{{ carmel.name|default:"OCDS Itapetininga" }}</p>
 
-            <div class="section-divider text-start mb-3"></div>
+            <div class="hero-divider mb-4"></div>
 
             <p class="hero-lead mb-4">
-                Filhos e filhas de Nossa Senhora do Monte Carmelo, vivendo o carisma teresiano no mundo, em oração, contemplação e apostolado.
+                Filhos e filhas de Nossa Senhora do Monte Carmelo, vivendo o carisma
+                teresiano no mundo, em oração, contemplação e apostolado.
             </p>
 
-            <a href="{% url 'login' %}" class="btn btn-item px-4 py-2">
-                <i class="bi bi-box-arrow-in-right me-2"></i>Entrar no Sistema
-            </a>
+            <div class="d-flex flex-wrap gap-2 hero-cta mb-4">
+                {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}" class="btn btn-item px-4 py-2">
+                    <i class="bi bi-person-circle me-2"></i>Meu Perfil
+                </a>
+                {% if user|can:'list_members' %}
+                <a href="{% url 'list_member' %}" class="btn btn-outline-carmel px-4 py-2">
+                    <i class="bi bi-people me-2"></i>Membros
+                </a>
+                {% endif %}
+                {% if user|can:'carmel_dashboard' %}
+                <a href="{% url 'carmel_profile' %}" class="btn btn-outline-carmel px-4 py-2">
+                    <i class="bi bi-bank me-2"></i>Meu Carmelo
+                </a>
+                {% endif %}
+                {% else %}
+                <a href="{% url 'login' %}" class="btn btn-item px-4 py-2">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Entrar no Sistema
+                </a>
+                <a href="#hp-conheca" class="btn btn-outline-carmel px-4 py-2">
+                    <i class="bi bi-envelope-heart me-2"></i>Conheça a OCDS
+                </a>
+                {% endif %}
+            </div>
+
+            <div class="d-flex flex-wrap gap-2 hero-badges">
+                <span class="hp-badge"><i class="bi bi-calendar-heart"></i>Ereção Canônica 2018</span>
+                <span class="hp-badge"><i class="bi bi-geo-alt"></i>{{ carmel.city|default:"Itapetininga" }} — SP</span>
+                <span class="hp-badge"><i class="bi bi-flower1"></i>Carisma Teresiano</span>
+            </div>
 
         </div>
 
-        <div class="col-lg-6 d-flex justify-content-center  my-4" data-sr="zoom-in" data-sr-duration="1000">
-            <img src="{% static 'logo.png' %}" class="home-photo" alt="Logo OCDS"
-                style="max-height: 480px; object-fit: contain;">
+        <div class="col-lg-6 d-flex justify-content-center my-4 hp-hero-art">
+            <div class="hp-hero-ring"></div>
+            <div class="hp-hero-ring hp-hero-ring--inner"></div>
+            <img src="{% static 'logo.png' %}" class="home-photo hp-float" alt="Logo OCDS">
         </div>
 
     </div>
 </section>
-<section class="container py-5">
+
+<!-- ============================================================
+     AÇÕES RÁPIDAS (usuários logados)
+     ============================================================ -->
+{% if user.is_authenticated %}
+<section class="container hp-section-sm" data-sr="fade-up" data-sr-duration="700">
+    <div class="glass-card">
+
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+            <div>
+                <h2 class="section-title mb-0">
+                    <i class="bi bi-lightning-charge-fill me-2 text-warning"></i>
+                    Ações Rápidas
+                </h2>
+                <small class="text-carmel-muted">Bem-vindo(a), {{ user.get_short_name }} — acesse as principais tarefas do sistema.</small>
+            </div>
+            <a href="{% url 'profile' %}" class="btn btn-outline-carmel mt-2 mt-md-0">
+                <i class="bi bi-person-circle me-2"></i>Meu Perfil
+            </a>
+        </div>
+
+        <div class="row g-3">
+
+            {% if user|can:'create_member' %}
+            <div class="col-sm-6 col-lg-4">
+                <a class="quick-action" href="{% url 'register_member' %}">
+                    <div class="quick-action-icon"><i class="bi bi-person-plus-fill"></i></div>
+                    <div>
+                        <strong>Cadastrar Membro</strong>
+                        <span>Adicione um novo membro ao carmelo</span>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+
+            {% if user|can:'list_members' %}
+            <div class="col-sm-6 col-lg-4">
+                <a class="quick-action" href="{% url 'list_member' %}">
+                    <div class="quick-action-icon"><i class="bi bi-people-fill"></i></div>
+                    <div>
+                        <strong>Gerenciar Membros</strong>
+                        <span>Liste, filtre e acompanhe pendências</span>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+
+            {% if user|can:'list_contribute' %}
+            <div class="col-sm-6 col-lg-4">
+                <a class="quick-action" href="{% url 'list_member' %}">
+                    <div class="quick-action-icon"><i class="bi bi-wallet2"></i></div>
+                    <div>
+                        <strong>Registrar Contribuição</strong>
+                        <span>Abra um membro para lançar pagamentos</span>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+
+            {% if user|can:'list_votes_registration' %}
+            <div class="col-sm-6 col-lg-4">
+                <a class="quick-action" href="{% url 'votes_registration' %}">
+                    <div class="quick-action-icon"><i class="bi bi-check2-square"></i></div>
+                    <div>
+                        <strong>Votos do Carmelo</strong>
+                        <span>Gerencie os tipos de voto do sistema</span>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+
+            {% if user|can:'carmel_dashboard' %}
+            <div class="col-sm-6 col-lg-4">
+                <a class="quick-action" href="{% url 'carmel_profile' %}">
+                    <div class="quick-action-icon"><i class="bi bi-bank"></i></div>
+                    <div>
+                        <strong>Painel do Carmelo</strong>
+                        <span>Estatísticas, membros e contribuições</span>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+
+            {% if user|can:'edit_carmel' %}
+            <div class="col-sm-6 col-lg-4">
+                <a class="quick-action" href="{% url 'carmel_profile' %}">
+                    <div class="quick-action-icon"><i class="bi bi-pencil-square"></i></div>
+                    <div>
+                        <strong>Editar Carmelo</strong>
+                        <span>Atualize nome, descrição e contribuição</span>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+
+            {% if user.is_staff or user|can:'see_total_money' %}
+            <div class="col-sm-6 col-lg-4">
+                <a class="quick-action" href="{% url 'financial_report' %}">
+                    <div class="quick-action-icon"><i class="bi bi-graph-up-arrow"></i></div>
+                    <div>
+                        <strong>Relatório Financeiro</strong>
+                        <span>Veja totais e evolução por mês</span>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
+
+        </div>
+
+    </div>
+</section>
+{% endif %}
+
+<!-- ============================================================
+     NÚMEROS DA ORDEM
+     ============================================================ -->
+<section class="container" data-sr="fade-up" data-sr-duration="900">
+    <div class="row g-3">
+        <div class="col-6 col-md-4">
+            <div class="hp-stats-card">
+                <div class="hp-stats-number"><span data-count="2018">2018</span></div>
+                <div class="hp-stats-label">Ereção Canônica da Comunidade</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="hp-stats-card">
+                <div class="hp-stats-number"><span data-count="1562">1562</span></div>
+                <div class="hp-stats-label">Reforma Teresiana do Carmelo</div>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="hp-stats-card">
+                <div class="hp-stats-number"><span data-count="800" data-suffix="+">800+</span></div>
+                <div class="hp-stats-label">Anos de Carisma Carmelitano</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     QUEM SOMOS
+     ============================================================ -->
+<section class="container hp-section" id="hp-quem-somos">
     <div class="glass-card" data-sr="fade-up" data-sr-duration="900">
 
         <div class="text-center mb-4">
@@ -347,19 +854,68 @@ Página Inicial — OCDS Alegria da Sagrada Face
 </section>
 
 <!-- ============================================================
+     SOBRE O CARMELO (dados reais do banco)
+     ============================================================ -->
+<section class="container hp-section-sm" id="hp-carmelo">
+    <div class="glass-card" data-sr="fade-up" data-sr-duration="900">
+
+        <div class="text-center mb-4">
+            <h2 class="section-title">Sobre o Carmelo</h2>
+            <div class="section-divider"></div>
+            <p class="text-carmel-muted mt-1">Dados oficiais da comunidade</p>
+        </div>
+
+        <div class="row g-3">
+
+            <div class="col-sm-6 col-lg-4" data-sr="fade-up" data-sr-duration="800">
+                <div class="hp-stats-card">
+                    <div class="hp-stats-icon"><i class="bi bi-bank2"></i></div>
+                    <div class="hp-stats-label">Nome da Comunidade</div>
+                    <div class="hp-stats-number hp-stats-number--sm">{{ carmel.name|default:"OCDS Itapetininga" }}</div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-4" data-sr="fade-up" data-sr-duration="950">
+                <div class="hp-stats-card">
+                    <div class="hp-stats-icon"><i class="bi bi-geo-alt"></i></div>
+                    <div class="hp-stats-label">Cidade</div>
+                    <div class="hp-stats-number hp-stats-number--sm">{{ carmel.city|default:"Itapetininga" }}</div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-lg-4" data-sr="fade-up" data-sr-duration="1100">
+                <div class="hp-stats-card">
+                    <div class="hp-stats-icon"><i class="bi bi-buildings"></i></div>
+                    <div class="hp-stats-label">Diocese</div>
+                    <div class="hp-stats-number hp-stats-number--sm">{{ carmel.diocese|default:"Diocese de Itapetininga" }}</div>
+                </div>
+            </div>
+
+        </div>
+
+        {% if carmel.description %}
+        <p class="text-center text-carmel-muted mt-4 mb-0 mx-auto" style="max-width: 720px;">
+            {{ carmel.description }}
+        </p>
+        {% endif %}
+
+    </div>
+</section>
+
+<!-- ============================================================
      NOSSA HISTÓRIA
      ============================================================ -->
-<section class="container py-5">
+<section class="container hp-section" id="hp-historia">
     <div class="row align-items-center gy-4">
 
         <div class="col-lg-5 d-none d-lg-block" data-sr="fade-right" data-sr-duration="900">
-            <img src="{% static 'assets/home/photo1.png' %}" class="home-photo" alt="Comunidade Carmelo">
+            <img src="{% static 'assets/home/photo1.png' %}" class="hp-section-photo" alt="Comunidade Carmelo">
         </div>
 
         <div class="col-lg-7" data-sr="fade-left" data-sr-duration="900">
             <h2 class="section-title">Nossa História</h2>
             <div class="section-divider text-start mb-3"></div>
-            <p class="mb-2">A Comunidade Alegria da Sagrada Face nasceu em Itapetininga
+            <p class="mb-2">A {{ carmel.name|default:"Comunidade OCDS Itapetininga" }} nasceu em Itapetininga
                 através de leigos comprometidos com a Igreja, desejosos de viver o carisma teresiano.</p>
             <p class="mb-2">Após anos de retiros e formação, a comunidade foi
                 oficialmente estabelecida e recebeu a <strong>Ereção Canônica em 1º de outubro de 2018</strong>,
@@ -372,19 +928,18 @@ Página Inicial — OCDS Alegria da Sagrada Face
 </section>
 
 <!-- ============================================================
-     SANTOS PATRONOS
+     ESPIRITUALIDADE CARMELITA
      ============================================================ -->
-<section class="container py-5">
-
+<section class="container hp-section" id="hp-espiritualidade">
     <div class="text-center mb-4" data-sr="fade-down" data-sr-duration="900">
         <h2 class="section-title">Espiritualidade Carmelita</h2>
         <div class="section-divider"></div>
-        <p class="text-carmel opacity-75 mt-1">Nossos mestres e intercessores</p>
+        <p class="text-carmel-muted mt-1">Nossos mestres e intercessores</p>
     </div>
 
     <div class="row g-4">
 
-        <div class="col-sm-6 col-md-4" data-sr="fade-right" data-sr-duration="1000">
+        <div class="col-sm-6 col-md-4" data-sr="fade-up" data-sr-duration="900">
             <div class="saint-card">
                 <div class="saint-icon"><i class="bi bi-book-fill"></i></div>
                 <h4>Santa Teresa de Jesus</h4>
@@ -392,7 +947,7 @@ Página Inicial — OCDS Alegria da Sagrada Face
             </div>
         </div>
 
-        <div class="col-sm-6 col-md-4" data-sr="zoom-in" data-sr-duration="900">
+        <div class="col-sm-6 col-md-4" data-sr="fade-up" data-sr-duration="1000">
             <div class="saint-card">
                 <div class="saint-icon"><i class="bi bi-stars"></i></div>
                 <h4>São João da Cruz</h4>
@@ -400,7 +955,7 @@ Página Inicial — OCDS Alegria da Sagrada Face
             </div>
         </div>
 
-        <div class="col-sm-12 col-md-4" data-sr="fade-left" data-sr-duration="1000">
+        <div class="col-sm-12 col-md-4" data-sr="fade-up" data-sr-duration="1100">
             <div class="saint-card">
                 <div class="saint-icon"><i class="bi bi-flower1"></i></div>
                 <h4>Santa Teresinha</h4>
@@ -409,13 +964,12 @@ Página Inicial — OCDS Alegria da Sagrada Face
         </div>
 
     </div>
-
 </section>
 
 <!-- ============================================================
      FORMAÇÃO OCDS
      ============================================================ -->
-<section class="container py-5">
+<section class="container hp-section" id="hp-formacao">
     <div class="row align-items-center gy-4">
 
         <div class="col-lg-7" data-sr="fade-right" data-sr-duration="900">
@@ -462,7 +1016,7 @@ Página Inicial — OCDS Alegria da Sagrada Face
         </div>
 
         <div class="col-lg-5 d-none d-lg-block" data-sr="fade-left" data-sr-duration="900">
-            <img src="{% static 'assets/home/photo2.png' %}" class="home-photo" alt="Formação OCDS">
+            <img src="{% static 'assets/home/photo2.png' %}" class="hp-section-photo" alt="Formação OCDS">
         </div>
 
     </div>
@@ -471,14 +1025,14 @@ Página Inicial — OCDS Alegria da Sagrada Face
 <!-- ============================================================
      APOSTOLADO E MISSÃO
      ============================================================ -->
-<section class="container py-5">
+<section class="container hp-section" id="hp-apostolado">
     <div class="row align-items-center gy-4">
 
-        <div class="col-lg-5 d-none d-lg-block" data-sr="fade-left" data-sr-duration="900">
-            <img src="{% static 'assets/home/photo3.png' %}" class="home-photo" alt="Missão">
+        <div class="col-lg-5 d-none d-lg-block" data-sr="fade-right" data-sr-duration="900">
+            <img src="{% static 'assets/home/photo3.png' %}" class="hp-section-photo" alt="Missão">
         </div>
 
-        <div class="col-lg-7" data-sr="fade-right" data-sr-duration="900">
+        <div class="col-lg-7" data-sr="fade-left" data-sr-duration="900">
             <h2 class="section-title">Apostolado e Missão</h2>
             <div class="section-divider text-start mb-3"></div>
             <p class="mb-2">A oração e o apostolado são inseparáveis no carisma carmelitano.</p>
@@ -491,45 +1045,75 @@ Página Inicial — OCDS Alegria da Sagrada Face
 </section>
 
 <!-- ============================================================
+     CONVITE — VENHA FAZER PARTE
+     ============================================================ -->
+{% if not user.is_authenticated %}
+<section class="container hp-section" id="hp-conheca">
+    <div class="hp-cta-card" data-sr="zoom-in" data-sr-duration="1000">
+        <h2 class="hp-cta-title">
+            <i class="bi bi-stars me-2"></i>Venha caminhar conosco
+        </h2>
+        <p class="hp-cta-text">
+            Se você sente o chamado à oração, à contemplação e ao apostolado no mundo,
+            a comunidade carmelita de Itapetininga está de portas abertas.
+            Conheça nossa vocação, participe de um encontro e deixe que
+            Santa Teresa conduza seus passos: <em>“só Deus basta”</em>.
+        </p>
+        <div class="d-flex flex-wrap gap-2 justify-content-center">
+            <a href="#hp-contato" class="btn btn-item px-4 py-2">
+                <i class="bi bi-envelope-heart me-2"></i>Fale com a Comissão Vocacional
+            </a>
+            <a href="{% url 'login' %}" class="btn btn-outline-carmel px-4 py-2">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Entrar no Sistema
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- ============================================================
      NOSSA COMUNIDADE — GALERIA
      ============================================================ -->
-<section class="container py-5">
-
-    <div class="text-center mb-4">
+<section class="container hp-section" id="hp-comunidade">
+    <div class="text-center mb-4" data-sr="fade-down" data-sr-duration="900">
         <h2 class="section-title">Nossa Comunidade</h2>
         <div class="section-divider"></div>
     </div>
 
     <div class="row g-3">
-        <div class="col-sm-6 col-md-4" data-sr="fade-up" data-sr-duration="900">
-            <img src="{% static 'assets/home/photo3.png' %}" class="home-photo" alt="Comunidade OCDS">
+        <div class="col-sm-6 col-md-4" data-sr="fade-up" data-sr-duration="800">
+            <div class="hp-gallery-img">
+                <img src="{% static 'assets/home/photo3.png' %}" alt="Comunidade OCDS">
+            </div>
         </div>
-        <div class="col-sm-6 col-md-4" data-sr="fade-up" data-sr-duration="1000">
-            <img src="{% static 'assets/home/photo4.png' %}" class="home-photo" alt="Comunidade OCDS">
+        <div class="col-sm-6 col-md-4" data-sr="fade-up" data-sr-duration="950">
+            <div class="hp-gallery-img">
+                <img src="{% static 'assets/home/photo4.png' %}" alt="Comunidade OCDS">
+            </div>
         </div>
         <div class="col-sm-12 col-md-4" data-sr="fade-up" data-sr-duration="1100">
-            <img src="{% static 'assets/home/photo5.png' %}" class="home-photo" alt="Comunidade OCDS">
+            <div class="hp-gallery-img">
+                <img src="{% static 'assets/home/photo5.png' %}" alt="Comunidade OCDS">
+            </div>
         </div>
     </div>
-
 </section>
 
 <!-- ============================================================
      CONHEÇA A OCDS — CONTATOS
      ============================================================ -->
-<section class="container py-5">
-
+<section class="container hp-section-sm" id="hp-contato">
     <div class="glass-card" data-sr="fade-up" data-sr-duration="900">
 
         <div class="text-center mb-4">
             <h2 class="section-title">Conheça a OCDS</h2>
             <div class="section-divider"></div>
-            <p class="text-carmel opacity-75 mt-1">Entre em contato com nossas comissões</p>
+            <p class="text-carmel-muted mt-1">Entre em contato com nossas comissões</p>
         </div>
 
         <div class="row g-3">
 
-            <div class="col-sm-6" data-sr="fade-right" data-sr-duration="900">
+            <div class="col-sm-6" data-sr="fade-up" data-sr-duration="800">
                 <div class="contact-card">
                     <div class="contact-icon"><i class="bi bi-envelope-heart-fill"></i></div>
                     <h5>Comissão Vocacional</h5>
@@ -537,7 +1121,7 @@ Página Inicial — OCDS Alegria da Sagrada Face
                 </div>
             </div>
 
-            <div class="col-sm-6" data-sr="fade-left" data-sr-duration="900">
+            <div class="col-sm-6" data-sr="fade-up" data-sr-duration="950">
                 <div class="contact-card">
                     <div class="contact-icon"><i class="bi bi-globe-americas"></i></div>
                     <h5>Comissão Missionária</h5>
@@ -548,11 +1132,12 @@ Página Inicial — OCDS Alegria da Sagrada Face
         </div>
 
     </div>
-
 </section>
 
 <!-- ============================================================
      CITAÇÃO — SANTA TERESA
+     (última animação: vem de cima para baixo para não parecer
+      que há uma segunda rolagem abaixo)
      ============================================================ -->
 <section class="container pb-5" data-sr="fade-down" data-sr-duration="900">
     <div class="quote-banner">
@@ -571,6 +1156,20 @@ Página Inicial — OCDS Alegria da Sagrada Face
 <script>
     gsap.registerPlugin(ScrollTrigger);
 
+    // ---------- Animação de entrada do hero ----------
+    const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+    heroTl
+        .from('.hero-logo', { y: -28, opacity: 0, duration: .8 })
+        .from('.hero-title-line', { y: 42, opacity: 0, duration: .9, stagger: .14 }, '-=.45')
+        .from('.hero-subtitle', { y: 22, opacity: 0, duration: .7 }, '-=.6')
+        .from('.hero-divider', { scaleX: 0, transformOrigin: 'left center', duration: .6 }, '-=.4')
+        .from('.hero-lead', { y: 24, opacity: 0, duration: .8 }, '-=.5')
+        .from('.hero-cta .btn', { y: 18, opacity: 0, duration: .55, stagger: .1 }, '-=.55')
+        .from('.hero-badges .hp-badge', { y: 14, opacity: 0, duration: .55, stagger: .09 }, '-=.35')
+        .from('.hp-hero-art', { scale: .9, opacity: 0, duration: 1.1, ease: 'power2.out' }, '-=1.25');
+
+    // ---------- Reveal no scroll ----------
     gsap.utils.toArray('[data-sr]').forEach((el) => {
         const animationType = el.dataset.sr || 'fade-up';
         const duration = Number(el.dataset.srDuration) / 1000 || 0.9;
@@ -590,17 +1189,45 @@ Página Inicial — OCDS Alegria da Sagrada Face
         if (animationType === 'fade-left') { vars.x = 55; vars.y = 0; }
         if (animationType === 'fade-right') { vars.x = -55; vars.y = 0; }
         if (animationType === 'fade-down') { vars.y = -40; vars.x = 0; }
-        if (animationType === 'zoom-in') { vars.scale = 0.93; vars.y = 0; }
+        if (animationType === 'zoom-in') { vars.scale = 0.92; vars.y = 0; }
 
         gsap.from(el, vars);
     });
 
-    // Mouse glow
+    // ---------- Contadores ----------
+    document.querySelectorAll('[data-count]').forEach((el) => {
+        const target = Number(el.dataset.count);
+        const suffix = el.dataset.suffix || '';
+        const counter = { val: 0 };
+        el.textContent = '0';
+
+        gsap.to(counter, {
+            val: target,
+            duration: 2,
+            ease: 'power2.out',
+            scrollTrigger: {
+                trigger: el,
+                start: 'top 92%',
+                once: true
+            },
+            onUpdate: () => {
+                el.textContent = Math.round(counter.val) + suffix;
+            }
+        });
+    });
+
+    // ---------- Brilho suave que acompanha o mouse ----------
     let mx = window.innerWidth / 2, my = window.innerHeight / 2;
     let cx = mx, cy = my;
-    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+    document.addEventListener('mousemove', e => {
+        mx = e.clientX;
+        my = e.clientY;
+    });
+
     (function animate() {
-        cx += (mx - cx) * 0.08; cy += (my - cy) * 0.08;
+        cx += (mx - cx) * 0.08;
+        cy += (my - cy) * 0.08;
         document.body.style.setProperty('--mouse-x', `${cx}px`);
         document.body.style.setProperty('--mouse-y', `${cy}px`);
         requestAnimationFrame(animate);

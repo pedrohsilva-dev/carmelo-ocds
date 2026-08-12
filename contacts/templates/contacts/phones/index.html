@@ -18,6 +18,10 @@
 
         </div>
 
+        {% if phones.has_other_pages %}
+            {% include "partials/components/pagination.html" with page_obj=phones page_param="phone_page" %}
+        {% endif %}
+
     {% else %}
 
         <div class="alert alert-warning mt-3 mb-0">

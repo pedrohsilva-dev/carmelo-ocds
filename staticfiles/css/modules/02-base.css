@@ -17,15 +17,16 @@ body {
     font-weight: 400;
     letter-spacing: .1px;
     background:
-        radial-gradient(circle at top right, rgba(207, 168, 104, .15), transparent 35%),
-        radial-gradient(circle at bottom left, rgba(89, 57, 43, .22), transparent 30%),
-        linear-gradient(160deg, #140d0a, #1e1410 45%, #0b0706);
+        radial-gradient(circle at top right, rgba(198, 166, 126, .08), transparent 42%),
+        radial-gradient(circle at bottom left, rgba(120, 90, 60, .09), transparent 36%),
+        linear-gradient(160deg, #0d0a08, #16110d 45%, #0a0806);
     color: var(--carmel-white);
     position: relative;
 }
 
 main {
     overflow-x: hidden;
+    padding-bottom: 2.5rem;
 }
 
 h1,
@@ -72,7 +73,7 @@ body::before {
     background-image: url("../images/renda_carmo.png");
     background-repeat: repeat;
     background-size: 280px;
-    opacity: .045;
+    opacity: .03;
     pointer-events: none;
     z-index: -1;
 }
@@ -83,9 +84,9 @@ body::after {
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    background: radial-gradient(240px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-            rgba(207, 168, 104, .16) 0%,
-            rgba(89, 57, 43, .10) 35%,
+    background: radial-gradient(260px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+            rgba(198, 166, 126, .09) 0%,
+            rgba(120, 90, 60, .05) 35%,
             transparent 70%);
 }
 

@@ -50,7 +50,7 @@ id="create_vote_member"
                 {% endfor %}
 
                 </div>
-                 <div class="col-6 text-white" x-show="type_vote == 'TEMP'" cloak x-transition>
+                 <div class="col-6 text-white" x-show="type_vote == 'TEMP'" x-cloak x-transition>
                     <label for="">Duração do Voto</label>
                     {{form_vote.year_duration}}
                     {% for err in form_vote.errors.year_duration %}
@@ -119,13 +119,12 @@ id="create_vote_member"
             </form>
         </li>
     {% empty %}
-        <li
-            class="alert alert-warning col-12"
-            role="alert"
-        >
-            <strong>Não existe nenhum Voto</strong>
-        </li>
+        {% include "partials/components/empty_state.html" with icon="bi-journal-x" title="Nenhum voto registrado" text="Registre o primeiro voto deste membro clicando em Novo Voto." %}
     {% endfor %}
 
 
 </ul>
+
+{% if votes.has_other_pages %}
+    {% include "partials/components/pagination.html" with page_obj=votes %}
+{% endif %}

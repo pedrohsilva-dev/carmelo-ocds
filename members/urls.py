@@ -8,6 +8,7 @@ urlpatterns = [
     path("cadastrar/", views.register_member, name="register_member"),
     path("editar/<int:id>", views.update_member, name="update_member"),
     path("delete/<int:id>", views.delete_member, name="delete_member"),
+    path("transferir/<int:id>", views.transfer_member, name="transfer_member"),
     # ASSOCIATIONS
     path("votos/", include("votes.urls")),
     path("contribuicoes/", include("contributions.urls")),

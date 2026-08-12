@@ -57,8 +57,8 @@ textarea::placeholder,
 select::placeholder,
 .form-control::placeholder,
 .form-select::placeholder {
-    color: rgba(207, 168, 104, .75) !important;
-    opacity: 1 !important;
+    color: var(--carmel-muted) !important;
+    opacity: .8 !important;
     font-style: italic;
     letter-spacing: .2px;
 }

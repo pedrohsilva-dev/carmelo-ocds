@@ -71,29 +71,37 @@ def get_carmel_statistics(carmel):
         "Dezembro",
     ]
 
-    monthly_totals = []
+    # Totais mensais dos últimos 6 meses — UMA query com agregação condicional
+    month_targets = []
     for offset in range(5, -1, -1):
         month = current_month - offset
         year = current_year
         if month <= 0:
             month += 12
             year -= 1
+        month_targets.append((month, year))
 
-        total = (
-            contribution_queryset.filter(
-                date_pay__year=year,
-                date_pay__month=month,
-            ).aggregate(total=Sum("price"))["total"]
-            or 0
-        )
+    monthly_agg = contribution_queryset.aggregate(
+        **{
+            f"m{idx}_total": Sum(
+                "price",
+                filter=Q(
+                    date_pay__year=target_year,
+                    date_pay__month=target_month,
+                ),
+            )
+            for idx, (target_month, target_year) in enumerate(month_targets)
+        }
+    )
 
-        monthly_totals.append(
-            {
-                "label": month_labels[month - 1],
-                "year": year,
-                "total": total,
-            }
-        )
+    monthly_totals = [
+        {
+            "label": month_labels[month - 1],
+            "year": year,
+            "total": monthly_agg.get(f"m{idx}_total") or 0,
+        }
+        for idx, (month, year) in enumerate(month_targets)
+    ]
 
     # Grupos de contribuição por membro
     contribution_by_member = (

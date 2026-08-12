@@ -1,144 +1,66 @@
 {% extends 'partials/base.html' %}
 {% load static %}
-{% comment %} {% block
-title %} Cadastro de Membro {% endblock %} {% block title_navbar %} Cadastro de
-Membros {% endblock %} {% endcomment %}
 
-{% comment %}
-{% block list_navbar %}
-<li>
-  <a
-    href="{% url 'list_member' %}"
-    class="block py-2 px-3 text-zinc-200 bg-[#3D1A00]"
-    aria-current="page"
-    >Listar Membros</a
-  >
-</li>
-{% endblock %}
-{% endcomment %}
+{% block title %}Cadastro de Membro{% endblock %}
+
 {% block content %}
-<div class="container d-flex flex-column align-items-center my-3 ">
-  <div class="card card-carmel" style="max-width: 600px;">
+<div class="container d-flex justify-content-center my-4">
+  <div class="card card-carmel w-100" style="max-width: 680px;">
     <div class="card-header card-header-color">
-      <h1 class="h3">Cadastro de Membro</h1>
+      <h1 class="h4 mb-0"><i class="bi bi-person-plus-fill me-2"></i>Cadastro de Membro</h1>
     </div>
-    <form method="POST"   class="form card-body card-body-color" action="{% url 'register_member' %}">
+
+    <form method="POST" class="card-body card-body-color" action="{% url 'register_member' %}" x-data="{ hide_password: true, hide_password2: true }">
       {% csrf_token %}
-      <div class="container" >
-       <div class="row">
-          <div class="col-6 flex flex-col text-white">
-            <label for="">Nome</label>
-            {{form.name}}
-              {% for err in form.errors.name %}
-                <div class="text-danger small">{{ err }}</div>
-              {% endfor %}
-          </div>
-          <div class="col-6 flex flex-col text-white">
-            <label for="">Email</label>
-            {{form.email}}
-              {% for err in form.errors.email %}
-                <div class="text-danger small">{{ err }}</div>
-              {% endfor %}
-          </div>
-       </div>
-       <div class="row">
-          <div class="col-12 col-md-6 flex flex-col text-white">
-            <label for="">Senha</label>
-            <div x-data="{ hide_password: true }" class="position-relative">
-              {{form.password}}
-              <span
-                  class="position-absolute password-toggle"
-                  style="right:12px;top:10px;"
-                  @click="hide_password=!hide_password"
-              >
 
-                  <span x-show="hide_password">
-                        <i class="bi bi-eye-slash" aria-hidden="true"></i>
-                  </span>
-
-                  <span x-show="!hide_password">
-                      <i class="bi bi-eye" aria-hidden="true"></i>
-                  </span>
-
-              </span>
-               {% for err in form.errors.password %}
-                <div class="text-danger small">{{ err }}</div>
-              {% endfor %}
-            </div>
-
-          </div>
-          <div class=" col-12 col-md-6 flex flex-col text-white">
-            <label for="">Senha Novamente</label>
-            <div x-data="{ hide_password: true }" class="position-relative">
-              {{form.password2}}
-              <span
-                  class="position-absolute password-toggle"
-                  style="right:12px;top:10px;"
-                  @click="hide_password=!hide_password"
-              >
-
-                  <span x-show="hide_password">
-                        <i class="bi bi-eye-slash" aria-hidden="true"></i>
-                  </span>
-
-                  <span x-show="!hide_password">
-                      <i class="bi bi-eye" aria-hidden="true"></i>
-                  </span>
-
-              </span>
-               {% for err in form.errors.password2 %}
-                <div class="text-danger small">{{ err }}</div>
-              {% endfor %}
-            </div>
-
-
-          </div>
-       </div>
-       <div class="row">
-          <div class="col-12 flex flex-col">
-            <div class="flex flex-col text-white">
-            <label for="">Comunidade</label>
-            {{form.church}}
-                 {% for err in form.errors.church %}
-                <div class="text-danger small">{{ err }}</div>
-              {% endfor %}
-            </div>
-          </div>
-       </div>
-      <div class="row">
-
-        <div class="col-6 flex flex-row justify-between gap-5">
-          <div class="flex flex-col text-white">
-            <label for="">Tipo de Membro</label>
-            {{form.roles}}
-            {% for err in form.errors.roles %}
-                <div class="text-danger small">{{ err }}</div>
-              {% endfor %}
-          </div>
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          {% for error in form.non_field_errors %}<div>{{ error }}</div>{% endfor %}
         </div>
-        <div class="col-6 flex flex-row justify-between gap-5">
-          <div class="flex flex-col text-white">
-            <label for="">Data de Entrada</label>
-            {{form.entry_date}}
-              {% for err in form.errors.entry_date %}
-                <div class="text-danger small">{{ err }}</div>
-              {% endfor %}
+      {% endif %}
+
+      <div class="row">
+        {% include 'partials/components/form_field.html' with field=form.name col="col-md-6" %}
+        {% include 'partials/components/form_field.html' with field=form.email col="col-md-6" %}
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="id_password" class="form-label text-carmel">Senha <span class="text-danger">*</span></label>
+          <div class="position-relative">
+            {{ form.password }}
+            <span class="position-absolute password-toggle" style="right:12px;top:10px;" @click="hide_password=!hide_password" role="button">
+              <i class="bi" :class="hide_password ? 'bi-eye-slash' : 'bi-eye'"></i>
+            </span>
           </div>
+          {% for err in form.errors.password %}<div class="text-danger small"><i class="bi bi-exclamation-circle me-1"></i>{{ err }}</div>{% endfor %}
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label for="id_password2" class="form-label text-carmel">Confirmar Senha <span class="text-danger">*</span></label>
+          <div class="position-relative">
+            {{ form.password2 }}
+            <span class="position-absolute password-toggle" style="right:12px;top:10px;" @click="hide_password2=!hide_password2" role="button">
+              <i class="bi" :class="hide_password2 ? 'bi-eye-slash' : 'bi-eye'"></i>
+            </span>
+          </div>
+          {% for err in form.errors.password2 %}<div class="text-danger small"><i class="bi bi-exclamation-circle me-1"></i>{{ err }}</div>{% endfor %}
         </div>
       </div>
 
+      <div class="row">
+        {% include 'partials/components/form_field.html' with field=form.church col="col-12" %}
+        {% include 'partials/components/form_field.html' with field=form.roles col="col-md-6" %}
+        {% include 'partials/components/form_field.html' with field=form.entry_date col="col-md-6" %}
+      </div>
 
-        <div class="d-flex justify-content-end mt-4 mb-1">
-          <button
-            class="btn btn-success px-3 py-2"
-            type="submit"
-          >
-            Cadastrar Membro
-          </button>
-        </div>
+      <div class="d-flex justify-content-end mt-3">
+        <a href="{% url 'list_member' %}" class="btn btn-secondary me-2">Cancelar</a>
+        <button class="btn btn-item px-4" type="submit">
+          <i class="bi bi-check-circle me-2"></i>Cadastrar Membro
+        </button>
       </div>
     </form>
   </div>
 </div>
-
 {% endblock %}

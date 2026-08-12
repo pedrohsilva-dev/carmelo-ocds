@@ -1,25 +1,38 @@
 {
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
   "python.terminal.activateEnvironment": true,
-  "python.analysis.languageServerMode": "default",
-  "python.analysis.typeCheckingMode": "basic",
-  "python.analysis.diagnosticMode": "workspace",
+  "python.languageServer": "Pylance",
+
+  // Pylance: modo de tipos desligado (projeto Django sem type hints) e
+  // diagnóstico apenas nos arquivos abertos — elimina erros falsos do editor
+  "python.analysis.typeCheckingMode": "off",
+  "python.analysis.diagnosticMode": "openFiles",
   "python.analysis.autoImportCompletions": true,
   "python.analysis.completeFunctionParens": true,
   "python.analysis.autoSearchPaths": true,
   "python.analysis.extraPaths": [
     "${workspaceFolder}"
   ],
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportMissingImports": "information",
+    "reportMissingModuleSource": "none",
+    "reportUndefinedVariable": "warning",
+    "reportGeneralTypeIssues": "none"
+  },
+
+  // Django
   "python.analysis.djangoSettingsModule": "core.settings",
-  "python.languageServer": "Pylance",
-  "python.analysis.indexing": true,
   "django.enabled": true,
+
+  // Bootstrap IntelliSense
   "bootstrapIntelliSense": {
     "enable": true,
     "bsVersion": "5.3.8",
     "showSuggestions": true,
     "autoComplete": true
   },
+
+  // Associações de arquivo
   "files.associations": {
     "*.html": "html",
     "*.django": "django-html",
@@ -31,18 +44,23 @@
     "*.js": "javascript",
     "*.jsx": "javascriptreact"
   },
+
   "emmet.includeLanguages": {
     "django-html": "html",
     "javascript": "javascriptreact"
   },
-  "css.validate": true,
+
+  // Validações: não reclamar de JS/CSS inline nos templates Django
+  "html.validate.scripts": false,
+  "html.validate.styles": false,
+  "html.suggest.html5": true,
+  "css.validate": false,
   "css.completion.triggerPropertyValueCompletion": true,
   "css.completion.completePropertyWithSemicolons": true,
-  "html.validate.scripts": true,
-  "html.validate.styles": true,
-  "html.suggest.html5": true,
+
   "javascript.suggest.completeFunctionCalls": true,
   "javascript.suggest.names": true,
+
   "editor.quickSuggestions": {
     "other": true,
     "comments": true,
@@ -54,6 +72,8 @@
   "editor.formatOnSave": true,
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
+
+  // Formatadores (instalar as extensões recomendadas em extensions.json)
   "[html]": {
     "editor.defaultFormatter": "vscode.html-language-features"
   },
@@ -64,7 +84,8 @@
     "editor.defaultFormatter": "vscode.typescript-language-features"
   },
   "[python]": {
-    "editor.defaultFormatter": "ms-python.black-formatter"
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true
   },
   "[django-html]": {
     "editor.quickSuggestions": {
@@ -73,8 +94,25 @@
       "strings": true
     }
   },
+
+  // Arquivos que não devem aparecer nem atrapalhar a busca
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.pyc": true,
+    "**/.venv": true,
+    "**/staticfiles": true,
+    "**/.pytest_cache": true,
+    "**/.coverage": true,
+    "**/htmlcov": true
+  },
+  "search.exclude": {
+    "**/__pycache__": true,
+    "**/.venv": true,
+    "**/staticfiles": true
+  },
+
   "css.peek.paths": [
     "static/css",
     "**/static/css"
-  ],
+  ]
 }

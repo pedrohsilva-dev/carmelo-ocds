@@ -8,9 +8,6 @@
     "bibhasdn.django-html",
     "ecmel.vscode-html-css",
     "thekalinga.bootstrap4-vscode",
-    "alpine-vscode.alpine-vscode",
-    "pcbowers.alpine-intellisense",
-    "picomet.alpinejs",
-    "alexcvzz.vscode-sqlite"
+    "picomet.alpinejs"
   ]
 }

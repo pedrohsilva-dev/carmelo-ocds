@@ -52,10 +52,14 @@
         <div class="d-flex gap-2">
             <button type="button" hx-get="{% url 'edit_vote_registration' id=vote_registration.id %}"
                 class="btn btn-warning btn-sm" hx-trigger="click" hx-target="#edit_vote_registration">Alterar</button>
-            <button class="btn btn-danger btn-sm" hx-get="{% url 'delete_votes_registration' id=vote_registration.id %}"
+            <button class="btn btn-danger btn-sm" hx-post="{% url 'delete_votes_registration' id=vote_registration.id %}"
                 hx-confirm="Deletar mesmo esse nome de voto?" hx-target="#list-votes-registration"
                 hx-trigger="click">Excluir</button>
         </div>
     </li>
     {% endfor %}
 </ul>
+
+{% if votes_registration.has_other_pages %}
+    {% include "partials/components/pagination.html" with page_obj=votes_registration %}
+{% endif %}

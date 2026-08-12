@@ -2,6 +2,16 @@ from django.contrib import admin
 
 from carmel.models import Carmel
 
-# Register your models here.
 
-admin.site.register(Carmel)
+@admin.register(Carmel)
+class CarmelAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "city",
+        "diocese",
+        "price_contribution_default",
+        "pay_day_contribution_default",
+        "created_at",
+    )
+    search_fields = ("name", "city", "diocese")
+    ordering = ("name",)

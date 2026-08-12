@@ -9,7 +9,12 @@ class Carmel(TimeStampedModel):
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField(max_length=4000)
     # brand = models.ImageField('Logo do carmelo', upload_to="media")
-    price_contribution_default = models.DecimalField(max_digits=1000, decimal_places=2)
+    price_contribution_default = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        validators=[MinValueValidator(0.01)],
+        verbose_name="Contribuição padrão",
+    )
     pay_day_contribution_default = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(31)]
     )

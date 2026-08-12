@@ -11,15 +11,176 @@ Sistema do Carmelo
 {% endblock %}
 
 {% block extra_head %}
+<style>
+    /* Fundo próprio — escuro no dark, claro no light (sem imagem externa) */
+    #login-carmel {
+        min-height: calc(100dvh - 120px);
+        display: flex;
+        align-items: center;
+        position: relative;
+        padding: 3rem 0;
+        background:
+            radial-gradient(circle at 15% 20%, rgba(198, 166, 126, .10), transparent 34%),
+            radial-gradient(circle at 85% 80%, rgba(120, 90, 60, .12), transparent 40%),
+            linear-gradient(160deg, #080604, #120d09 45%, #0a0806);
+    }
+
+    [data-bs-theme="light"] #login-carmel {
+        background:
+            radial-gradient(circle at 15% 20%, rgba(150, 113, 58, .08), transparent 34%),
+            radial-gradient(circle at 85% 80%, rgba(90, 68, 40, .06), transparent 40%),
+            linear-gradient(160deg, #f9f5ee, #f2ebdf 45%, #ece3d3);
+    }
+
+    /* Card de login — quase preto no dark, branco no light */
+    #login-carmel .card-carmel {
+        background: rgba(8, 6, 4, .94);
+        border: 1px solid rgba(198, 166, 126, .20);
+        box-shadow: 0 26px 64px rgba(0, 0, 0, .62);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+    }
+
+    [data-bs-theme="light"] #login-carmel .card-carmel {
+        background: rgba(255, 255, 255, .97);
+        border: 1px solid rgba(90, 68, 40, .16);
+        box-shadow: 0 22px 54px rgba(60, 45, 30, .20);
+    }
+
+    #login-carmel .card-header {
+        background: rgba(14, 11, 8, .55);
+        border-bottom: 1px solid rgba(198, 166, 126, .16);
+        color: #fff;
+    }
+
+    [data-bs-theme="light"] #login-carmel .card-header {
+        background: rgba(255, 255, 255, .50);
+        border-bottom: 1px solid rgba(90, 68, 40, .14);
+        color: #1c140d;
+    }
+
+    #login-carmel .card-body-color {
+        background: transparent !important;
+    }
+
+    /* Labels — brancos no dark, escuros no light */
+    #login-carmel .form-label {
+        color: #fff !important;
+    }
+
+    [data-bs-theme="light"] #login-carmel .form-label {
+        color: #1c140d !important;
+    }
+
+    /* Inputs — pretos no dark, brancos no light */
+    #login-carmel .form-control {
+        background: rgba(0, 0, 0, .55) !important;
+        border: 1px solid rgba(255, 255, 255, .16) !important;
+        color: #fff !important;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05) !important;
+    }
+
+    #login-carmel .form-control:focus {
+        background: rgba(0, 0, 0, .70) !important;
+        border-color: var(--carmel-gold) !important;
+        color: #fff !important;
+        box-shadow: 0 0 0 4px rgba(198, 166, 126, .18) !important;
+    }
+
+    #login-carmel .form-control::placeholder {
+        color: rgba(255, 255, 255, .42) !important;
+    }
+
+    [data-bs-theme="light"] #login-carmel .form-control {
+        background: #fff !important;
+        border: 1px solid rgba(0, 0, 0, .18) !important;
+        color: #141414 !important;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9) !important;
+    }
+
+    [data-bs-theme="light"] #login-carmel .form-control:focus {
+        background: #fff !important;
+        border-color: var(--carmel-gold) !important;
+        color: #141414 !important;
+        box-shadow: 0 0 0 4px rgba(150, 113, 58, .18) !important;
+    }
+
+    [data-bs-theme="light"] #login-carmel .form-control::placeholder {
+        color: rgba(0, 0, 0, .42) !important;
+    }
+
+    /* Textos auxiliares com contraste */
+    #login-carmel .text-carmel-muted {
+        color: var(--carmel-muted) !important;
+    }
+
+    [data-bs-theme="light"] #login-carmel .text-carmel-muted {
+        color: #6b5c4c !important;
+    }
+
+    /* Animação de entrada do card */
+    .login-card-anim {
+        animation: loginCardIn .7s cubic-bezier(.22, 1, .36, 1) both;
+    }
+
+    @keyframes loginCardIn {
+        from {
+            opacity: 0;
+            transform: translateY(28px) scale(.98);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .login-form {
+        margin-inline: auto;
+        max-width: 460px;
+        width: 100%;
+    }
+
+    /* Botão com brilho suave */
+    .btn-login-glow {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-login-glow::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -80%;
+        width: 60%;
+        height: 100%;
+        background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .35), transparent);
+        transform: skewX(-20deg);
+        animation: btnShine 3.2s ease-in-out infinite;
+    }
+
+    @keyframes btnShine {
+        0%, 60% { left: -80%; }
+        100% { left: 140%; }
+    }
+
+    @media (max-width: 991px) {
+        #login-carmel { padding: 2rem 0; }
+    }
+
+    @media (max-width: 767px) {
+        #nsc-slider { display: none; }
+        #login-carmel { padding: 1.5rem 1rem; }
+        .title-carmel { font-size: 1.4rem; }
+    }
+</style>
 {% endblock extra_head %}
 
 {% block content %}
 
 <section id="login-carmel">
-    <div class="row align-items-center w-full container-fluid">
+    <div class="row align-items-center w-100 g-4 mx-0">
 
         <!-- IMAGENS -->
-
         <div id="nsc-slider" class="col-12 col-md-6 text-center">
 
             <div
@@ -37,15 +198,13 @@ Sistema do Carmelo
                         z-index:${active ? '1':'2'};
                         position:absolute;
                         transition:.6s ease;
-                          background-image: url({% static 'assets/background_nsc.png' %});
+                        background-image: url({% static 'assets/background_nsc.png' %});
                         background-size: cover;
                     `"
-
                 >
                     <img
                         class="img-fluid"
-                            style="width: 140px; height: 190px;"
-                         style="background-image: url({% static 'assets/background_nsc.png' %});background-size: cover;"
+                        style="width: 140px; height: 190px;"
                         src="{% static 'assets/nsc.png' %}"
                         alt="Nossa Senhora do Carmo"
                     >
@@ -61,15 +220,11 @@ Sistema do Carmelo
                         transition:.6s ease;
                         background-image: url({% static 'assets/background_nsc.png' %});
                         background-size: cover;
-
-                    `
-
-                    "
-
+                    `"
                 >
                     <img
                         class="img-fluid"
-                       style="width: 160px; height: 200px;"
+                        style="width: 160px; height: 200px;"
                         src="{% static 'assets/brand_nsc.png' %}"
                         alt="Nossa Senhora do Carmo"
                     >
@@ -78,32 +233,23 @@ Sistema do Carmelo
             </div>
 
             <div class="py-1">
-
                 <h2 class="title-carmel">
                     Ordem dos Carmelitas Descalços Seculares
                 </h2>
-
                 <p class="subtitle-carmel">
                     Sistema de Gestão do Carmelo
                 </p>
-
             </div>
 
         </div>
 
         <!-- LOGIN -->
+        <div class="col-12 col-md-6 d-flex justify-content-center">
 
-        <div class="col-12 col-md-6"
-         {% comment %} x-data="{ show_forgot_password: false }" {% endcomment %}
-         >
+            <div class="card card-carmel login-form login-card-anim">
 
-            <div class="card card-carmel login-form">
-
-                <div class="card-header text-center h4 d-flex flex-column align-items-center">
-
-                    <span>
-                        Login do Sistema
-                    </span>
+                <div class="card-header text-center h5 d-flex flex-column align-items-center py-3">
+                    <span>Login do Sistema</span>
                 </div>
 
                 <div class="card-body card-body-color">
@@ -111,119 +257,97 @@ Sistema do Carmelo
                     <form
                         action="{% url 'login' %}"
                         method="POST"
-
-                        x-data="{
-                            hide_password:true
-                        }"
+                        x-data="{ hide_password: true, loading: false }"
+                        @submit="loading = true"
                     >
 
                         {% csrf_token %}
-
-                        <div>
-                            {% comment %} {% for message in messages %}
-                                {% if message.tags == "error" %}
-                                    <div
-                                        class="alert alert-danger"
-                                        role="alert"
-                                    >
-                                        <strong>{{message}}</strong>
-                                    </div>
-
-                                {% elif message.tags == "success" %}
-                                <div
-                                        class="alert alert-success"
-                                        role="alert"
-                                    >
-                                    <strong>{{message}}</strong>
-                                </div>
-                                {% endif %}
-                            {% endfor %} {% endcomment %}
-                        </div>
+                        {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
 
                         <div class="mb-3">
 
-                            <label
-                                for="id_email"
-                                class="form-label text-carmel"
-                            >
-                                Email
+                            <label for="id_identifier" class="form-label text-carmel">
+                                Email ou Nome
                             </label>
 
-                            {{ form.email }}
-                            {% for err in form.errors.email %}
+                            {{ form.identifier }}
+
+                            {% for err in form.errors.identifier %}
                                 <div class="text-danger small">{{ err }}</div>
                             {% endfor %}
 
+                            <small class="form-text text-carmel-muted d-block mt-1">
+                                Entre com seu e-mail ou nome de membro.
+                            </small>
+
                         </div>
 
                         <div class="mb-3">
 
-                            <label
-                                for="id_password"
-                                class="form-label text-carmel"
-                            >
+                            <label for="id_password" class="form-label text-carmel">
                                 Senha
                             </label>
 
                             <div class="position-relative">
 
                                 {{ form.password }}
+
                                 {% for err in form.errors.password %}
-                                <div class="text-danger small">{{ err }}</div>
+                                    <div class="text-danger small">{{ err }}</div>
                                 {% endfor %}
 
                                 <span
                                     class="position-absolute password-toggle"
                                     style="right:12px;top:10px;"
                                     @click="hide_password=!hide_password"
+                                    role="button"
+                                    aria-label="Mostrar ou ocultar senha"
                                 >
-
                                     <span x-show="hide_password">
-                                         <i class="bi bi-eye-slash" aria-hidden="true"></i>
+                                        <i class="bi bi-eye-slash" aria-hidden="true"></i>
                                     </span>
-
                                     <span x-show="!hide_password">
                                         <i class="bi bi-eye" aria-hidden="true"></i>
                                     </span>
-
                                 </span>
 
                             </div>
 
                         </div>
 
-                        {% comment %} <div class="text-end">
-
-                            <a type="button" @click="show_forgot_password = true" class="text-decoration-none text-white" style="font-size: 14px;">
-                                Esqueceu sua senha?
-                            </a>
-
-                        </div> {% endcomment %}
-
-
-                        <div class=" mt-5">
+                        <div class="mt-4">
 
                             <button
                                 type="submit"
-                                class="btn btn-item w-full"
+                                class="btn btn-item w-100 btn-login-glow"
+                                :disabled="loading"
                             >
-                                Entrar no Sistema
+                                <span x-show="!loading">
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>Entrar no Sistema
+                                </span>
+                                <span x-show="loading">
+                                    <span class="spinner-border spinner-border-sm me-2"></span>Entrando...
+                                </span>
                             </button>
-                              <div style="max-width: 280px;" class="mx-auto my-2">
-                        <img class="w-full"  src="{% static 'assets/top_login.png' %}" alt="Logo Dourada Ordem dos Carmelitas Descalços Seculares ">
-                    </div>
-                            <p class="text-center my-2" style="font-size: 8px;">"Que nada te perturbe, Nada te Espante, Tudo passa,<br>Deus não muda, A paciência tudo alcança;<br>Quem a Deus tem, Nada lhe falta: Só Deus basta."</p>
-                        </div>
 
+                            <div style="max-width: 280px;" class="mx-auto my-3">
+                                <img class="w-100" src="{% static 'assets/top_login.png' %}" alt="Logo Dourada Ordem dos Carmelitas Descalços Seculares">
+                            </div>
+
+                            <p class="text-center my-2 text-carmel-muted" style="font-size: 11px; line-height: 1.5;">
+                                "Que nada te perturbe, nada te espante, tudo passa,<br>
+                                Deus não muda, a paciência tudo alcança;<br>
+                                quem a Deus tem, nada lhe falta: só Deus basta."
+                            </p>
+
+                        </div>
 
                     </form>
 
                 </div>
 
             </div>
-            {% comment %} {% include "forgot_password.html" %} {% endcomment %}
 
-            </div>
         </div>
 
     </div>
@@ -235,29 +359,31 @@ Sistema do Carmelo
 
 <script>
 
-function nscSlider(){
+function nscSlider() {
 
     return {
 
-        active:false,
+        active: false,
 
-        interval:null,
+        interval: null,
 
-        init(){
+        init() {
 
-            if(this.interval){
+            if (this.interval) {
                 clearInterval(this.interval)
             }
 
             this.interval = setInterval(() => {
                 this.active = !this.active
-            },5000)
+            }, 5000)
+
         }
+
     }
+
 }
 
-
-// Animação de Grow
+// Animação de Grow (glow do mouse)
 let mouseX = window.innerWidth / 2;
 let mouseY = window.innerHeight / 2;
 
@@ -265,27 +391,15 @@ let currentX = mouseX;
 let currentY = mouseY;
 
 document.addEventListener('mousemove', e => {
-
     mouseX = e.clientX;
     mouseY = e.clientY;
-
 });
 
 function animate() {
-
     currentX += (mouseX - currentX) * 0.08;
     currentY += (mouseY - currentY) * 0.08;
-
-    document.body.style.setProperty(
-        '--mouse-x',
-        `${currentX}px`
-    );
-
-    document.body.style.setProperty(
-        '--mouse-y',
-        `${currentY}px`
-    );
-
+    document.body.style.setProperty('--mouse-x', `${currentX}px`);
+    document.body.style.setProperty('--mouse-y', `${currentY}px`);
     requestAnimationFrame(animate);
 }
 
